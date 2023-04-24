@@ -15,6 +15,7 @@ import { useConfigApp } from "@/hooks/useConfigApp";
 import { AppContext } from "@/context/AppContext";
 import { Checkout } from "@/components/Checkout";
 import { Loading } from "@/components/Loading";
+import { Header } from "@/components/Header";
 
 // import "@fontsource/roboto/300.css";
 // import "@fontsource/roboto/400.css";
@@ -44,9 +45,10 @@ export default function MyApp(props: MyAppProps) {
         <ThemeProvider theme={theme}>
           {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
           <CssBaseline />
-          {isLoading && <Loading />}
+          <Loading isLoading={isLoading} />
           <CheckoutContext.Provider value={checkoutConfig}>
             <AppContext.Provider value={appConfig}>
+              <Header />
               <Component {...pageProps} />
               <Checkout />
             </AppContext.Provider>
