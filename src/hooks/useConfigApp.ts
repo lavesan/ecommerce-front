@@ -3,6 +3,7 @@ import { useState } from "react";
 
 export const useConfigApp = () => {
   const [enterprises, setEnterprises] = useState<IEnterprise[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const setEnterpriseMenu = (enterprise: IEnterprise) => {
     setEnterprises((actual) =>
@@ -16,5 +17,7 @@ export const useConfigApp = () => {
     enterprises,
     setEnterprises,
     setEnterpriseMenu,
+    isLoading,
+    setIsLoading,
   };
 };

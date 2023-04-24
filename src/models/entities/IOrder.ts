@@ -1,6 +1,6 @@
-import { PaymentType } from "@enums/PaymentType.enum";
+import { PaymentType } from "@/enums/PaymentType.enum";
 import { IEnterprise } from "./IEnterprise";
-import { OrderStatus } from "@enums/OrderStatus.enum";
+import { OrderStatus } from "@/enums/OrderStatus.enum";
 import { IOrderProduct } from "./IOrderProduct";
 import { IFreight } from "./IFreight";
 import { IClient } from "./IClient";

@@ -1,4 +1,4 @@
-import { WeekDay } from "@enums/WeekDay.enum";
+import { WeekDay } from "@/enums/WeekDay.enum";
 import { IEnterprise } from "./IEnterprise";
 import { IPromotionProduct } from "./IPromotionProduct";
 

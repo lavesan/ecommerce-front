@@ -1,4 +1,4 @@
-import { ProductAdditionalType } from "@enums/ProductAdditionalType.enum";
+import { ProductAdditionalType } from "@/enums/ProductAdditionalType.enum";
 import { IProduct } from "./IProduct";
 import { IProductAdditional } from "./IProductAdditional";
 

@@ -1,4 +1,5 @@
 import { server } from "@/config/axios.config";
+import { IFindAllEnterpriseRequest } from "@/models/IFindAllEnterpriseRequest";
 import { IEnterprise } from "@/models/entities/IEnterprise";
 
 export class EnterpriseService {
@@ -6,6 +7,15 @@ export class EnterpriseService {
 
   async findMenu(id: string): Promise<IEnterprise> {
     const response = await server.get<IEnterprise>(`/enterprise/menu/${id}`);
+    return response.data;
+  }
+
+  async findAll(
+    params: Partial<IFindAllEnterpriseRequest> = {}
+  ): Promise<IEnterprise[]> {
+    const response = await server.get<IEnterprise[]>("/enterprise/all", {
+      params,
+    });
     return response.data;
   }
 
