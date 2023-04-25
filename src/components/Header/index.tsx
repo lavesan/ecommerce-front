@@ -58,9 +58,12 @@ export const Header = () => {
 
   return (
     <AppBar
-      position="static"
       color="transparent"
-      sx={{ boxShadow: (theme) => `1px 1px 3px ${theme.palette.grey[600]}` }}
+      position="sticky"
+      sx={{
+        boxShadow: (theme) => `1px 1px 3px ${theme.palette.grey[600]}`,
+        backgroundColor: "white",
+      }}
     >
       <Container maxWidth="100%">
         <Toolbar disableGutters>

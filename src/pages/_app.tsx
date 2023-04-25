@@ -3,9 +3,10 @@ import Head from "next/head";
 import { AppProps } from "next/app";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
-
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
+import { GlobalStyles } from "@mui/material";
+
 import { CacheProvider, EmotionCache } from "@emotion/react";
 import theme from "../config/theme";
 import createEmotionCache from "../config/createEmotionCache";
@@ -45,6 +46,16 @@ export default function MyApp(props: MyAppProps) {
         <ThemeProvider theme={theme}>
           {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
           <CssBaseline />
+          <GlobalStyles
+            styles={{
+              html: {
+                scrollBehavior: "smooth",
+              },
+              body: {
+                overflowX: "hiddeh",
+              },
+            }}
+          />
           <Loading isLoading={isLoading} />
           <CheckoutContext.Provider value={checkoutConfig}>
             <AppContext.Provider value={appConfig}>
