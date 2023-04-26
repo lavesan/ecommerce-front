@@ -1,4 +1,5 @@
 import {
+  useRef,
   useState,
   forwardRef,
   useImperativeHandle,
@@ -16,6 +17,7 @@ interface ICategoriresTabsProps extends TabsProps {
 
 export interface IUseCategoriesTabsRef {
   changeCategory: (index: number) => void;
+  tabsRef: any;
 }
 
 const CategoriesTabs: ForwardRefRenderFunction<
@@ -25,6 +27,7 @@ const CategoriesTabs: ForwardRefRenderFunction<
   const { isMobile } = useResponsive();
 
   const [tab, setTab] = useState(0);
+  const tabsRef = useRef(null);
 
   const handleChange = (_: React.SyntheticEvent, newValue: number) => {
     const a = document.createElement("a");
@@ -38,11 +41,13 @@ const CategoriesTabs: ForwardRefRenderFunction<
     changeCategory: (index: number) => {
       setTab(index);
     },
+    tabsRef,
   }));
 
   return (
     <Tabs
       {...tabsProps}
+      ref={tabsRef}
       value={tab}
       onChange={handleChange}
       indicatorColor="primary"
@@ -52,8 +57,9 @@ const CategoriesTabs: ForwardRefRenderFunction<
       scrollButtons="auto"
       sx={{
         position: "sticky",
-        top: isMobile ? "3.125rem" : "4.063rem",
+        top: isMobile ? "3.125rem" : "3.75rem",
         left: 0,
+        zIndex: 10,
         backgroundColor: "white",
       }}
     >

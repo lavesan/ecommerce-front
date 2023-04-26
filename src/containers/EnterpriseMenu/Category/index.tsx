@@ -1,4 +1,4 @@
-import { useMemo, useRef, useEffect } from "react";
+import { useMemo, useCallback } from "react";
 import {
   Card,
   Stack,
@@ -8,63 +8,52 @@ import {
   BoxProps,
   Link as MUILink,
 } from "@mui/material";
-// @ts-ignore
-import { useIsVisible } from "react-is-visible";
 
-import { ICategory } from "@/models/entities/ICategory";
 import { getImgUrl } from "@/helpers/image.helper";
 import { maskMoney } from "@/helpers/money.helper";
 import Link from "next/link";
 import { useResponsive } from "@/hooks/useResponsive";
 import { elemCategoryId } from "@/helpers/category.helper";
+import { IPromotion } from "@/models/entities/IPromotion";
+import { IEnterpriseMenuCategory } from "@/models/pages/IEnterpriseMenuProps";
 
 interface ICategoryProps extends BoxProps {
-  category: ICategory;
   index: number;
-  onVisibilityChange: (index: number, isShow: boolean) => void;
+  category: IEnterpriseMenuCategory;
+  promotions: IPromotion[];
+  addCategoryRef: (ref: HTMLDivElement) => void;
 }
 
-export const Category = ({
-  category,
+const Category = ({
   index,
-  onVisibilityChange,
+  category,
+  promotions,
+  addCategoryRef,
   ...boxProps
 }: ICategoryProps) => {
   const { isMobile } = useResponsive();
 
-  const elemRef = useRef<HTMLHeadingElement>(null);
-  const isVisible = useIsVisible(elemRef);
+  const onRefChange = useCallback((node: HTMLDivElement) => {
+    if (node) {
+      addCategoryRef(node);
+    }
+  }, []);
 
   const products = useMemo(() => {
     return (
-      category?.products?.map(({ value, ...product }) => ({
+      category?.products?.map(({ value, promotionValue, ...product }) => ({
         ...product,
         value: maskMoney(value),
+        promotionValue: promotionValue
+          ? maskMoney(promotionValue)
+          : promotionValue,
       })) || []
     );
   }, [category.products]);
 
-  const onScroll = () => {
-    if (
-      elemRef.current &&
-      elemRef.current?.offsetTop > document.body.scrollTop
-    ) {
-      console.log("elemRef.current?.offsetTop: ", elemRef.current?.offsetTop);
-      console.log("document.body.scrollTop: ", document.body.scrollTop);
-      onVisibilityChange(index, true);
-    }
-  };
-
-  useEffect(() => {
-    // onVisibilityChange(index, isVisible);
-    window.onscroll = onScroll;
-  }, []);
-
   return (
-    <Box {...boxProps}>
+    <Box {...boxProps} ref={onRefChange}>
       <Typography
-        ref={elemRef}
-        id={elemCategoryId(category.id)}
         variant="h2"
         fontWeight="bold"
         marginBottom={2}
@@ -72,7 +61,7 @@ export const Category = ({
       >
         {category.name}
       </Typography>
-      <Stack spacing={2} direction="row" useFlexGap flexWrap="wrap">
+      <Stack spacing={4} direction="row" useFlexGap flexWrap="wrap">
         {products.map((product) => (
           <MUILink
             key={`product_${product.id}`}
@@ -121,9 +110,24 @@ export const Category = ({
                     variant="body2"
                     color="primary"
                     fontSize="large"
+                    fontWeight="bold"
                     marginTop="auto"
                   >
-                    {product.value}
+                    <Box
+                      component="span"
+                      sx={
+                        product.promotionValue
+                          ? (theme) => ({
+                              textDecoration: "line-through",
+                              textDecorationColor: theme.palette.primary.main,
+                              marginRight: "0.5rem",
+                            })
+                          : {}
+                      }
+                    >
+                      {product.value}
+                    </Box>
+                    {product.promotionValue && product.promotionValue}
                   </Typography>
                 </CardContent>
                 <Box
@@ -141,3 +145,5 @@ export const Category = ({
     </Box>
   );
 };
+
+export default Category;
