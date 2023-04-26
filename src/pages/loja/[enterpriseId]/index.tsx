@@ -1,5 +1,6 @@
 import { AppLayout } from "@/components/AppLayout";
 import EnterpriseMenu from "@/containers/EnterpriseMenu";
+import { getWeekDay } from "@/helpers/date.helper";
 import { IEnterprise } from "@/models/entities/IEnterprise";
 import { IPromotion } from "@/models/entities/IPromotion";
 import { IPromotionProduct } from "@/models/entities/IPromotionProduct";
@@ -18,6 +19,12 @@ export const getServerSideProps: GetServerSideProps<
 
   const menu: IEnterprise = await enterpriseService.findMenu(enterpriseId);
 
+  const todayWeekDay = getWeekDay();
+
+  const todayPromotions = menu.promotions?.filter(
+    ({ weekDay }) => weekDay === todayWeekDay
+  );
+
   const mappedMenu = {
     ...menu,
     categories:
@@ -28,7 +35,7 @@ export const getServerSideProps: GetServerSideProps<
             let promoProduct: IPromotionProduct = {} as IPromotionProduct;
             let promotion: IPromotion = {} as IPromotion;
 
-            menu.promotions?.every(({ promotionProducts, ...promo }) => {
+            todayPromotions?.every(({ promotionProducts, ...promo }) => {
               return promotionProducts?.every((prodPromo) => {
                 if (prodPromo.product?.id === product.id) {
                   promoProduct = prodPromo;

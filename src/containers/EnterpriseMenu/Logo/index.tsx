@@ -28,7 +28,7 @@ export const Logo = ({ src }: ILogoProps) => {
         border={(theme) => `thin solid ${theme.palette.grey[400]}`}
         src={src}
         onLoad={() => {
-          //   setIsLoading(false);
+          setIsLoading(false);
         }}
         onError={() => {
           setIsError(true);

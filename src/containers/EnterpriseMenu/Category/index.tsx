@@ -8,14 +8,15 @@ import {
   BoxProps,
   Link as MUILink,
 } from "@mui/material";
-
-import { getImgUrl } from "@/helpers/image.helper";
-import { maskMoney } from "@/helpers/money.helper";
 import Link from "next/link";
+
+import { maskMoney } from "@/helpers/money.helper";
 import { useResponsive } from "@/hooks/useResponsive";
-import { elemCategoryId } from "@/helpers/category.helper";
 import { IPromotion } from "@/models/entities/IPromotion";
 import { IEnterpriseMenuCategory } from "@/models/pages/IEnterpriseMenuProps";
+import { ProductImage } from "./ProductImage";
+import { ProductCard } from "@/components/ProductCard";
+import { IProductProductCard } from "@/models/components/IProductProductCard";
 
 interface ICategoryProps extends BoxProps {
   index: number;
@@ -39,15 +40,16 @@ const Category = ({
     }
   }, []);
 
-  const products = useMemo(() => {
+  const products = useMemo<IProductProductCard[]>(() => {
     return (
-      category?.products?.map(({ value, promotionValue, ...product }) => ({
-        ...product,
-        value: maskMoney(value),
-        promotionValue: promotionValue
-          ? maskMoney(promotionValue)
-          : promotionValue,
-      })) || []
+      category?.products?.map(
+        ({ value, promotionValue, promotionId, ...product }) => ({
+          ...product,
+          promotionId: promotionId || undefined,
+          value: maskMoney(value),
+          promotionValue: promotionValue ? maskMoney(promotionValue) : "",
+        })
+      ) || []
     );
   }, [category.products]);
 
@@ -63,83 +65,14 @@ const Category = ({
       </Typography>
       <Stack spacing={4} direction="row" useFlexGap flexWrap="wrap">
         {products.map((product) => (
-          <MUILink
+          <ProductCard
             key={`product_${product.id}`}
-            component={Link}
-            color="inherit"
-            href={`/produto/${product.id}`}
-            underline="none"
-            sx={{ width: isMobile ? "100%" : "49%" }}
-          >
-            <Card
-              sx={{
-                transition: "0.3s",
-                ":hover": {
-                  boxShadow: "1px 1px 8px gray",
-                },
-              }}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-                padding={[2, 4]}
-              >
-                <CardContent
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    padding: 0,
-                    paddingRight: "0.5rem",
-                  }}
-                >
-                  <Typography
-                    variant="h3"
-                    fontWeight="bold"
-                    fontSize={["1rem", "2rem"]}
-                    marginBottom={[0, 2]}
-                  >
-                    {product.name}
-                  </Typography>
-                  <Typography variant="body2" fontSize={["small", "medium"]}>
-                    {product.description}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    color="primary"
-                    fontSize="large"
-                    fontWeight="bold"
-                    marginTop="auto"
-                  >
-                    <Box
-                      component="span"
-                      sx={
-                        product.promotionValue
-                          ? (theme) => ({
-                              textDecoration: "line-through",
-                              textDecorationColor: theme.palette.primary.main,
-                              marginRight: "0.5rem",
-                            })
-                          : {}
-                      }
-                    >
-                      {product.value}
-                    </Box>
-                    {product.promotionValue && product.promotionValue}
-                  </Typography>
-                </CardContent>
-                <Box
-                  component="img"
-                  alt={`produto ${product.name}`}
-                  src={getImgUrl(product.imageKey)}
-                  width={["3.125rem", "30%"]}
-                  height={["3.125rem", "auto"]}
-                />
-              </Box>
-            </Card>
-          </MUILink>
+            product={product}
+            onClick={() => {}}
+            sx={{
+              width: isMobile ? "100%" : "49%",
+            }}
+          />
         ))}
       </Stack>
     </Box>

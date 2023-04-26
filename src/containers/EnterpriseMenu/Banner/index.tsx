@@ -28,7 +28,13 @@ export const Banner = ({ src, ...boxProps }: IBannerProps) => {
 
   return isLoading ? (
     <Box {...boxProps} height={[200, 300]}>
-      <Skeleton animation="wave" height="100%" width="100%" />
+      <Skeleton
+        animation="wave"
+        variant="rectangular"
+        height="100%"
+        width="100%"
+        sx={{ borderRadius: 3 }}
+      />
     </Box>
   ) : (
     <Box

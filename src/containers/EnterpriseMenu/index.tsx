@@ -25,21 +25,23 @@ const EnterpriseMenu = ({ menu }: IEnterpriseMenuProps) => {
   const onScroll: EventListener = debounce((_: Event): any => {
     const tabsElem = categoriesTabsRef.current?.tabsRef?.current;
 
-    const TABS_HEIGHT = 60; // It's parsed to rem on the elem
+    if (tabsElem) {
+      const TABS_HEIGHT = 60; // It's parsed to rem on the elem
 
-    const tabsTopEnd = getOffset(tabsElem).top + TABS_HEIGHT;
+      const tabsTopEnd = getOffset(tabsElem).top + TABS_HEIGHT;
 
-    categoryRefs.forEach((ref, index) => {
-      if (ref) {
-        const categoryTop = getOffset(ref).top;
-        const categoryTopEnd = getOffset(ref).top + ref.offsetHeight;
+      categoryRefs.forEach((ref, index) => {
+        if (ref) {
+          const categoryTop = getOffset(ref).top;
+          const categoryTopEnd = getOffset(ref).top + ref.offsetHeight;
 
-        if (tabsTopEnd >= categoryTop && tabsTopEnd <= categoryTopEnd) {
-          categoriesTabsRef.current?.changeCategory(index);
-          return;
+          if (tabsTopEnd >= categoryTop && tabsTopEnd <= categoryTopEnd) {
+            categoriesTabsRef.current?.changeCategory(index);
+            return;
+          }
         }
-      }
-    });
+      });
+    }
   }, 200);
 
   useEffect(() => {
@@ -52,7 +54,7 @@ const EnterpriseMenu = ({ menu }: IEnterpriseMenuProps) => {
 
   return (
     <Stack direction="column" spacing={{ xs: 1, sm: 2, md: 4 }}>
-      <Box paddingX={4} paddingTop={4}>
+      <Box paddingX={4} marginBottom={[4, 0]}>
         <Banner src={getImgUrl(menu.bannerKey)} width="100%" />
       </Box>
       <Stack direction="row" alignItems="center" spacing={2} paddingX={4}>
