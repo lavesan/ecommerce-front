@@ -55,13 +55,13 @@ const CategoriesTabs: ForwardRefRenderFunction<
       variant={isMobile ? "scrollable" : "fullWidth"}
       aria-label="categories list"
       scrollButtons="auto"
-      sx={{
+      sx={(theme) => ({
         position: "sticky",
         top: isMobile ? "3.125rem" : "3.75rem",
         left: 0,
         zIndex: 10,
-        backgroundColor: "white",
-      }}
+        backgroundColor: theme.palette.background.default,
+      })}
     >
       {categories.map(({ id, name }) => (
         <Tab

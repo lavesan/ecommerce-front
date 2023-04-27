@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { Stack, Typography, Box } from "@mui/material";
 
 import { getImgUrl } from "@/helpers/image.helper";
@@ -11,12 +11,20 @@ import Category from "./Category";
 import { debounce } from "@/helpers/debounce.helper";
 import { getOffset } from "@/helpers/document.helper";
 import { elemCategoryId } from "@/helpers/category.helper";
+import { AddProduct } from "@/components/AddProduct";
+import { IProductProductCard } from "@/models/components/IProductProductCard";
 
 const EnterpriseMenu = ({ menu }: IEnterpriseMenuProps) => {
-  //   const openDetails = () => {};
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [selectedProd, setSelectedProd] = useState<IProductProductCard>();
   const categoriesTabsRef = useRef<IUseCategoriesTabsRef>(null);
 
   let categoryRefs: HTMLDivElement[] = [];
+
+  const openModal = (product: IProductProductCard) => {
+    setSelectedProd(product);
+    setModalIsOpen(true);
+  };
 
   const addCategoryRef = (ref: HTMLDivElement) => {
     categoryRefs = [...categoryRefs, ref];
@@ -86,10 +94,16 @@ const EnterpriseMenu = ({ menu }: IEnterpriseMenuProps) => {
               index={index}
               promotions={menu.promotions || []}
               addCategoryRef={addCategoryRef}
+              setSelectedProd={openModal}
             />
           </Box>
         ))}
       </Box>
+      <AddProduct
+        isOpen={modalIsOpen}
+        product={selectedProd}
+        onClose={() => setModalIsOpen((actual) => !actual)}
+      />
     </Stack>
   );
 };

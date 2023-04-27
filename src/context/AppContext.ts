@@ -10,4 +10,7 @@ export const AppContext = React.createContext({
   setIsLoading: (isLoading: boolean) => {},
   setEnterpriseMenu: (enterprise: IEnterprise) => {},
   setEnterprises: (enterprises: IEnterprise[]) => {},
+  themeMode: "light",
+  isDarkMode: false,
+  toogleThemeMode: () => {},
 });

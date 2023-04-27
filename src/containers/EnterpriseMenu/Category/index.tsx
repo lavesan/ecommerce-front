@@ -1,20 +1,10 @@
 import { useMemo, useCallback } from "react";
-import {
-  Card,
-  Stack,
-  Typography,
-  CardContent,
-  Box,
-  BoxProps,
-  Link as MUILink,
-} from "@mui/material";
-import Link from "next/link";
+import { Stack, Typography, Box, BoxProps } from "@mui/material";
 
 import { maskMoney } from "@/helpers/money.helper";
 import { useResponsive } from "@/hooks/useResponsive";
 import { IPromotion } from "@/models/entities/IPromotion";
 import { IEnterpriseMenuCategory } from "@/models/pages/IEnterpriseMenuProps";
-import { ProductImage } from "./ProductImage";
 import { ProductCard } from "@/components/ProductCard";
 import { IProductProductCard } from "@/models/components/IProductProductCard";
 
@@ -23,6 +13,7 @@ interface ICategoryProps extends BoxProps {
   category: IEnterpriseMenuCategory;
   promotions: IPromotion[];
   addCategoryRef: (ref: HTMLDivElement) => void;
+  setSelectedProd: (product: IProductProductCard) => void;
 }
 
 const Category = ({
@@ -30,6 +21,7 @@ const Category = ({
   category,
   promotions,
   addCategoryRef,
+  setSelectedProd,
   ...boxProps
 }: ICategoryProps) => {
   const { isMobile } = useResponsive();
@@ -68,10 +60,10 @@ const Category = ({
           <ProductCard
             key={`product_${product.id}`}
             product={product}
-            onClick={() => {}}
             sx={{
-              width: isMobile ? "100%" : "49%",
+              width: isMobile ? "100%" : "48%",
             }}
+            onClick={setSelectedProd}
           />
         ))}
       </Stack>

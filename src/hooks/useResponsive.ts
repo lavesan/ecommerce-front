@@ -5,7 +5,7 @@ interface IUseResponsiveReturn {
 }
 
 export const useResponsive = (): IUseResponsiveReturn => {
-  const matches = useMediaQuery("(max-width:600px)");
+  const matches = useMediaQuery("(max-width:910px)");
 
   return {
     isMobile: matches,

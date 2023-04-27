@@ -1,15 +1,23 @@
 import { useState, useRef, useEffect } from "react";
-import { Box, Skeleton } from "@mui/material";
+import { Box, Skeleton, BoxProps } from "@mui/material";
 
 import { getImgUrl } from "@/helpers/image.helper";
 import { useResponsive } from "@/hooks/useResponsive";
 
-interface IProductImageProps {
+interface IProductImageProps extends BoxProps {
   imageKey: string;
   productName: string;
+  width?: string[];
+  height?: string[];
 }
 
-export const ProductImage = ({ productName, imageKey }: IProductImageProps) => {
+export const ProductImage = ({
+  productName,
+  imageKey,
+  width = ["3.125rem", "30%"],
+  height = ["3.125rem", "auto"],
+  ...boxProps
+}: IProductImageProps) => {
   const { isMobile } = useResponsive();
 
   const [isLoading, setIsLoading] = useState(true);
@@ -27,9 +35,9 @@ export const ProductImage = ({ productName, imageKey }: IProductImageProps) => {
       variant="rectangular"
       sx={{
         position: "relative",
-        width: isMobile ? "3.125rem" : "30%",
+        width: isMobile ? width[0] : width[1],
         height: 0,
-        paddingBottom: isMobile ? "3.125rem" : "30%",
+        paddingBottom: isMobile ? height[0] : height[1],
       }}
     >
       <Box
@@ -37,8 +45,8 @@ export const ProductImage = ({ productName, imageKey }: IProductImageProps) => {
         component="img"
         alt={`Produto ${productName}`}
         src={getImgUrl(imageKey)}
-        width={["3.125rem", "30%"]}
-        height={["3.125rem", "auto"]}
+        width={width}
+        height={height}
         onLoad={() => {
           setIsLoading(false);
         }}
@@ -49,12 +57,13 @@ export const ProductImage = ({ productName, imageKey }: IProductImageProps) => {
     </Skeleton>
   ) : (
     <Box
+      {...boxProps}
       ref={imgRef}
       component="img"
       alt={`Produto ${productName}`}
       src={getImgUrl(imageKey)}
-      width={["3.125rem", "30%"]}
-      height={["3.125rem", "auto"]}
+      width={width}
+      height={height}
       onError={() => {
         setIsError(true);
       }}

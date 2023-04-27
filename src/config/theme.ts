@@ -1,16 +1,17 @@
 import { createTheme, responsiveFontSizes } from "@mui/material/styles";
-import { grey } from "@mui/material/colors";
+import { PaletteMode } from "@mui/material";
 
-const theme = createTheme({
-  palette: {
-    text: {
-      primary: grey[800],
-    },
-  },
-  typography: {
-    // fontSize: {
-    // }
-  },
-});
+const theme = (mode: PaletteMode = "light") =>
+  responsiveFontSizes(
+    createTheme({
+      palette: {
+        mode,
+        text: {
+          // primary: {
+          // },
+        },
+      },
+    })
+  );
 
-export default responsiveFontSizes(theme);
+export default theme;

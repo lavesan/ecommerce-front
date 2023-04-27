@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import Head from "next/head";
 import { AppProps } from "next/app";
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -37,13 +37,18 @@ export default function MyApp(props: MyAppProps) {
   const checkoutConfig = useConfigCheckout();
   const { isLoading, ...appConfig } = useConfigApp();
 
+  const materialTheme = useMemo(
+    () => theme(appConfig.themeMode),
+    [appConfig.themeMode]
+  );
+
   return (
     <QueryClientProvider client={queryClient}>
       <CacheProvider value={emotionCache}>
         <Head>
           <meta name="viewport" content="initial-scale=1, width=device-width" />
         </Head>
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={materialTheme}>
           {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
           <CssBaseline />
           <GlobalStyles
