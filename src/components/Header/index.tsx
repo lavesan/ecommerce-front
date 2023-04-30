@@ -114,7 +114,7 @@ export const Header = () => {
         backgroundColor: theme.palette.background.default,
       })}
     >
-      <Container maxWidth="100%">
+      <Container sx={{ maxWidth: "100%" }}>
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
           <Typography
