@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Box, Skeleton, BoxProps, Link as MUILink } from "@mui/material";
 import Link from "next/link";
 
@@ -16,7 +16,7 @@ export const PromotionCard = ({
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
 
-  const onInit = () => {
+  const onInit = useCallback(() => {
     const img = new Image();
     img.src = getImgUrl(promotion.imageKey);
     if (img.complete) setIsLoading(false);
@@ -27,11 +27,11 @@ export const PromotionCard = ({
       setIsError(true);
     };
     return;
-  };
+  }, [promotion.imageKey]);
 
   useEffect(() => {
     onInit();
-  }, []);
+  }, [onInit]);
 
   return isLoading ? (
     <Box {...boxProps} height={[150, 200]}>

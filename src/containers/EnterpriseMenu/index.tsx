@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 import { Stack, Typography, Box } from "@mui/material";
 
 import { getImgUrl } from "@/helpers/image.helper";
@@ -26,31 +26,36 @@ const EnterpriseMenu = ({ menu }: IEnterpriseMenuProps) => {
     setModalIsOpen(true);
   };
 
-  const addCategoryRef = (ref: HTMLDivElement) => {
+  const addCategoryRef = useCallback((ref: HTMLDivElement) => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     categoryRefs = [...categoryRefs, ref];
-  };
+  }, []);
 
-  const onScroll: EventListener = debounce((_: Event): any => {
-    const tabsElem = categoriesTabsRef.current?.tabsRef?.current;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const onScroll: EventListener = useCallback(
+    debounce((_: Event): any => {
+      const tabsElem = categoriesTabsRef.current?.tabsRef?.current;
 
-    if (tabsElem) {
-      const TABS_HEIGHT = 60; // It's parsed to rem on the elem
+      if (tabsElem) {
+        const TABS_HEIGHT = 60; // It's parsed to rem on the elem
 
-      const tabsTopEnd = getOffset(tabsElem).top + TABS_HEIGHT;
+        const tabsTopEnd = getOffset(tabsElem).top + TABS_HEIGHT;
 
-      categoryRefs.forEach((ref, index) => {
-        if (ref) {
-          const categoryTop = getOffset(ref).top;
-          const categoryTopEnd = getOffset(ref).top + ref.offsetHeight;
+        categoryRefs.forEach((ref, index) => {
+          if (ref) {
+            const categoryTop = getOffset(ref).top;
+            const categoryTopEnd = getOffset(ref).top + ref.offsetHeight;
 
-          if (tabsTopEnd >= categoryTop && tabsTopEnd <= categoryTopEnd) {
-            categoriesTabsRef.current?.changeCategory(index);
-            return;
+            if (tabsTopEnd >= categoryTop && tabsTopEnd <= categoryTopEnd) {
+              categoriesTabsRef.current?.changeCategory(index);
+              return;
+            }
           }
-        }
-      });
-    }
-  }, 200);
+        });
+      }
+    }, 200),
+    []
+  );
 
   useEffect(() => {
     window.addEventListener("scroll", onScroll);
@@ -58,7 +63,7 @@ const EnterpriseMenu = ({ menu }: IEnterpriseMenuProps) => {
     return () => {
       window.removeEventListener("scroll", onScroll);
     };
-  }, []);
+  }, [onScroll]);
 
   return (
     <Stack direction="column" spacing={{ xs: 1, sm: 2, md: 4 }}>

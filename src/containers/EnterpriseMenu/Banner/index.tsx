@@ -1,5 +1,5 @@
 import { Box, Skeleton, Stack, BoxProps } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 interface IBannerProps extends BoxProps {
   src: string;
@@ -9,7 +9,7 @@ export const Banner = ({ src, ...boxProps }: IBannerProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
 
-  const onInit = () => {
+  const onInit = useCallback(() => {
     const img = new Image();
     img.src = src;
     if (img.complete) setIsLoading(false);
@@ -20,11 +20,11 @@ export const Banner = ({ src, ...boxProps }: IBannerProps) => {
       setIsError(true);
     };
     return;
-  };
+  }, [src]);
 
   useEffect(() => {
     onInit();
-  }, []);
+  }, [onInit]);
 
   return isLoading ? (
     <Box {...boxProps} height={[200, 300]}>

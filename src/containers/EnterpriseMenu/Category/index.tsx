@@ -26,11 +26,14 @@ const Category = ({
 }: ICategoryProps) => {
   const { isMobile } = useResponsive();
 
-  const onRefChange = useCallback((node: HTMLDivElement) => {
-    if (node) {
-      addCategoryRef(node);
-    }
-  }, []);
+  const onRefChange = useCallback(
+    (node: HTMLDivElement) => {
+      if (node) {
+        addCategoryRef(node);
+      }
+    },
+    [addCategoryRef]
+  );
 
   const products = useMemo<IProductProductCard[]>(() => {
     return (
