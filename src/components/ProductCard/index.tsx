@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import {
   CardProps,
   Card,
@@ -5,10 +6,13 @@ import {
   CardContent,
   Typography,
   CardActionArea,
+  Tooltip,
 } from "@mui/material";
 
 import { ProductImage } from "@/containers/EnterpriseMenu/Category/ProductImage";
 import { IProductProductCard } from "@/models/components/IProductProductCard";
+
+import LocalActivityIcon from "@mui/icons-material/LocalActivity";
 
 interface IProductCardProps extends Omit<CardProps, "onClick"> {
   product: IProductProductCard;
@@ -21,6 +25,11 @@ export const ProductCard = ({
   sx: cardSx = {},
   ...cardProps
 }: IProductCardProps) => {
+  const pointsInfo = useMemo(() => {
+    return `Pontos que dá ao ser vendido: ${product.givenPoints}
+    Pontos para ser adquirido: ${product.sellPoints}`;
+  }, [product]);
+
   return (
     <Card
       {...cardProps}
@@ -66,24 +75,37 @@ export const ProductCard = ({
               fontSize="large"
               fontWeight="bold"
               marginTop="auto"
+              display="flex"
+              flexDirection="row"
+              alignItems="center"
             >
               {product.promotionValue && product.promotionValue}{" "}
               <Box
                 component="span"
                 sx={
                   product.promotionValue
-                    ? (theme) => ({
+                    ? {
                         color: "grey.500",
                         fontWeight: "normal",
                         fontSize: "small",
                         textDecoration: "line-through",
                         textDecorationColor: "grey.500",
-                      })
+                        marginLeft: 1,
+                      }
                     : {}
                 }
               >
                 {product.value}
               </Box>
+              <Tooltip
+                title={
+                  <Box component="span" whiteSpace="pre-line">
+                    {pointsInfo}
+                  </Box>
+                }
+              >
+                <LocalActivityIcon sx={{ marginLeft: 2 }} />
+              </Tooltip>
             </Typography>
           </CardContent>
           <ProductImage
