@@ -59,6 +59,11 @@ export default function MyApp(props: MyAppProps) {
               body: {
                 overflowX: "hiddeh",
               },
+              "#__next": {
+                minHeight: "100vh",
+                display: "flex",
+                flexDirection: "column",
+              },
             }}
           />
           <Loading isLoading={isLoading} />
@@ -66,7 +71,7 @@ export default function MyApp(props: MyAppProps) {
             <AppContext.Provider value={appConfig}>
               <Header />
               <Component {...pageProps} />
-              <Checkout />
+              {/* <Checkout /> */}
             </AppContext.Provider>
           </CheckoutContext.Provider>
         </ThemeProvider>

@@ -1,5 +1,3 @@
-const CreateUser = () => {
-  return <h1>Criar usuário</h1>;
-};
+import CreateUser from "@/containers/CreateUser";
 
 export default CreateUser;
