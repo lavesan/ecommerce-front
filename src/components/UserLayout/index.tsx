@@ -11,6 +11,7 @@ export const UserLayout = ({ children }: React.PropsWithChildren) => {
       spacing={[1, 4]}
       flex={1}
       minWidth="100vw"
+      alignItems="center"
       sx={
         isMobile
           ? {
@@ -40,6 +41,7 @@ export const UserLayout = ({ children }: React.PropsWithChildren) => {
         md={6}
         display="flex"
         alignItems="center"
+        height="fit-content"
         sx={
           isMobile
             ? {

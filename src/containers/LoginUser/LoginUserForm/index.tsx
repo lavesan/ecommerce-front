@@ -97,7 +97,7 @@ export const LoginUserForm = () => {
       <Typography
         component="h1"
         textAlign={["center", "start"]}
-        fontSize={["1.25rem", "2.5rem"]}
+        fontSize={["1.5rem", "2.5rem"]}
         marginTop={[0, 4]}
       >
         Faça seu login
@@ -118,7 +118,7 @@ export const LoginUserForm = () => {
         label="Senha"
         type="password"
       />
-      <Button type="submit" variant="contained">
+      <Button type="submit" variant="contained" sx={{ textTransform: "none" }}>
         Submeter
       </Button>
       <Box display="flex" justifyContent="center">

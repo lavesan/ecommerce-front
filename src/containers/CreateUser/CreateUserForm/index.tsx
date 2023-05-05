@@ -95,7 +95,7 @@ export const CreateUserForm = () => {
       <Typography
         component="h1"
         textAlign={["center", "start"]}
-        fontSize={["1.25rem", "2.5rem"]}
+        fontSize={["1.5rem", "2.5rem"]}
         marginTop={[0, 4]}
       >
         Se cadastre
@@ -142,7 +142,7 @@ export const CreateUserForm = () => {
         label="Senha"
         type="password"
       />
-      <Button type="submit" variant="contained">
+      <Button type="submit" variant="contained" sx={{ textTransform: "none" }}>
         Criar
       </Button>
     </Box>
