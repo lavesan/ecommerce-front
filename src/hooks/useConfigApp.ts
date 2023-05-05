@@ -11,6 +11,10 @@ import {
   setStorageToken,
 } from "@/helpers/auth.helper";
 import { ClientService } from "@/services/client.service";
+import { ILoginUserParams } from "@/models/context/ILoginUserParams";
+import { IUserToken } from "@/models/context/IUserToken";
+import { IToastParams } from "@/models/context/IToastParams";
+import { IToastState } from "@/models/context/IToastState";
 
 export const useConfigApp = () => {
   const clientService = ClientService.getInstance();
@@ -18,8 +22,11 @@ export const useConfigApp = () => {
   const [enterprises, setEnterprises] = useState<IEnterprise[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState<null | IClient>(null);
-  const [token, setToken] = useState<null | string>(null);
+  const [token, setToken] = useState<null | IUserToken>(null);
   const [themeMode, setThemeMode] = useState<PaletteMode>("light");
+  const [toast, setToast] = useState<IToastState>({
+    isOpen: false,
+  } as IToastState);
 
   const setEnterpriseMenu = (enterprise: IEnterprise) => {
     setEnterprises((actual) =>
@@ -33,7 +40,34 @@ export const useConfigApp = () => {
     setThemeMode((actual) => (actual === "light" ? "dark" : "light"));
   };
 
+  const showToast = ({ message, status }: IToastParams) => {
+    setToast({
+      status,
+      message,
+      isOpen: true,
+    });
+  };
+
+  const onToastClose = () => {
+    setToast({
+      message: "",
+      status: "info",
+      isOpen: false,
+    });
+  };
+
+  const login = ({ client, credentials }: ILoginUserParams) => {
+    setToken(credentials);
+    setUser(client);
+    setStorageToken(credentials.accessToken);
+  };
+
   const logout = () => {
+    // @ts-ignore
+    if (window?.google?.accounts?.id?.revoke) {
+      // @ts-ignore
+      window.google.accounts.id.revoke(user?.email);
+    }
     googleLogout();
     setUser(null);
     setToken(null);
@@ -42,20 +76,24 @@ export const useConfigApp = () => {
 
   const modifyToken = (token: string) => {
     setStorageToken(token);
-    setToken(token);
+    setToken({ accessToken: token, refreshToken: "" });
   };
 
   const onInit = useCallback(async () => {
     const storageToken = getStorageToken();
 
     if (storageToken) {
-      setToken(storageToken);
+      setToken({ accessToken: storageToken, refreshToken: "" });
       const storageUser = jwt_decode<{ id: string }>(storageToken);
 
       if (storageUser) {
-        const client = await clientService.findMe(storageUser.id);
+        try {
+          const client = await clientService.findMe(storageUser.id);
 
-        setUser(client);
+          setUser(client);
+        } finally {
+          setIsLoading(false);
+        }
       }
     }
   }, [clientService]);
@@ -78,5 +116,9 @@ export const useConfigApp = () => {
     toogleThemeMode,
     token,
     setToken: modifyToken,
+    login,
+    toast,
+    showToast,
+    onToastClose,
   };
 };

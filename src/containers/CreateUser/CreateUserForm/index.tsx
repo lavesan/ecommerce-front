@@ -1,8 +1,6 @@
 import { Box, Typography, Button } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
-import jwt_decode from "jwt-decode";
 
 import { validationSchema } from "./validations";
 import AppMaskedInput from "@/components/AppMaskedInput";
@@ -10,23 +8,9 @@ import { cpfMask, phoneMask } from "@/helpers/mask.helper";
 import AppInput from "@/components/AppInput";
 import { ClientService } from "@/services/client.service";
 import { useAppContext } from "@/hooks/useAppContext";
-
-interface IDecodedGoogleToken {
-  iss: string;
-  nbf: number;
-  aud: string;
-  sub: string;
-  email: string;
-  email_verified: boolean;
-  azp: string;
-  name: string;
-  picture: string; // image url
-  given_name: string;
-  family_name: string;
-  iat: number;
-  exp: number;
-  jti: string;
-}
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { parseError } from "@/helpers/axiosError.helper";
 
 interface IForm {
   name: string;
@@ -39,7 +23,9 @@ interface IForm {
 export const CreateUserForm = () => {
   const clientService = ClientService.getInstance();
 
-  const { setToken, setUser } = useAppContext();
+  const router = useRouter();
+
+  const { login, showToast, setIsLoading } = useAppContext();
 
   const {
     register,
@@ -47,28 +33,55 @@ export const CreateUserForm = () => {
     formState: { errors },
     setValue,
   } = useForm<IForm>({
-    mode: "all",
+    mode: "onChange",
     resolver: yupResolver(validationSchema),
   });
 
-  const onSubmit = handleSubmit(async (values) => {
-    const { credentials, ...client } = await clientService.create(values);
-    setUser(client);
-    setToken(credentials.accessToken);
-  });
+  const onSubmit = handleSubmit(
+    async ({ cpf, phone, name, email, password }) => {
+      try {
+        setIsLoading(true);
+        const { credentials, ...client } = await clientService.create({
+          password,
+          email: email.trim(),
+          name: name.trim(),
+          cpf: cpf.trim().replace(/\D/g, ""),
+          phone: phone.trim().replace(/\D/g, ""),
+        });
+        login({ client, credentials });
 
-  const responseMessage = ({ credential }: CredentialResponse) => {
-    if (credential) {
-      const user = jwt_decode<IDecodedGoogleToken>(credential);
+        router.push("/");
+      } catch (err: any) {
+        const axiosErr = parseError(err);
 
-      setValue("email", user.email);
-      setValue("name", user.name);
+        showToast({
+          status: "error",
+          message: axiosErr?.message || "Seu email já está cadastrado",
+        });
+      } finally {
+        setIsLoading(false);
+      }
     }
-  };
+  );
 
-  const errorMessage = () => {
-    console.log("err");
-  };
+  useEffect(() => {
+    const { name, email } = router.query as { email: string; name: string };
+
+    if (name) {
+      setValue("name", name, {
+        shouldDirty: true,
+        shouldTouch: true,
+        shouldValidate: true,
+      });
+    }
+    if (email) {
+      setValue("email", email, {
+        shouldDirty: true,
+        shouldTouch: true,
+        shouldValidate: true,
+      });
+    }
+  }, [router, setValue]);
 
   return (
     <Box
@@ -85,7 +98,7 @@ export const CreateUserForm = () => {
         fontSize={["1.25rem", "2.5rem"]}
         marginTop={[0, 4]}
       >
-        Digite seus dados!
+        Se cadastre
       </Typography>
       <AppInput
         fullWidth
@@ -119,11 +132,19 @@ export const CreateUserForm = () => {
         {...register("phone")}
         label="Celular"
         variant="outlined"
+        type="tel"
+      />
+      <AppInput
+        fullWidth
+        error={!!errors.password}
+        helperText={errors.password?.message}
+        {...register("password")}
+        label="Senha"
+        type="password"
       />
       <Button type="submit" variant="contained">
         Criar
       </Button>
-      <GoogleLogin onSuccess={responseMessage} onError={errorMessage} />
     </Box>
   );
 };

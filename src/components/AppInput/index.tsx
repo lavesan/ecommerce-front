@@ -29,6 +29,12 @@ const AppMaskedInput: ForwardRefRenderFunction<
     event.preventDefault();
   };
 
+  const inputType = useMemo(() => {
+    if (type !== "password") return type;
+
+    return showPwd ? "text" : "password";
+  }, [showPwd, type]);
+
   const propsWithPwd = useMemo(() => {
     if (type !== "password") return {};
 
@@ -54,7 +60,8 @@ const AppMaskedInput: ForwardRefRenderFunction<
       <OutlinedInput
         id={input.name}
         ref={ref}
-        type={type}
+        type={inputType}
+        label={label}
         {...input}
         {...propsWithPwd}
       />

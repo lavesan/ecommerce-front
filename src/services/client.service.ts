@@ -1,6 +1,7 @@
 import { server } from "@/config/axios.config";
 import { IClientCreateResponse } from "@/models/IClientCreateResponse";
 import { IClientLoginRequest } from "@/models/IClientLoginRequest";
+import { IClientLoginResponse } from "@/models/IClientLoginResponse";
 import { ICreateClientRequest } from "@/models/ICreateClientRequest";
 import { IUpdateClientRequest } from "@/models/IUpdateClientRequest";
 import { IClient } from "@/models/entities/IClient";
@@ -8,8 +9,24 @@ import { IClient } from "@/models/entities/IClient";
 export class ClientService {
   private static INSTANCE: ClientService;
 
-  async login(body: IClientLoginRequest): Promise<IClient> {
-    const response = await server.post<IClient>(`/client/login`, body);
+  async login(body: IClientLoginRequest): Promise<IClientLoginResponse> {
+    const response = await server.post<IClientLoginResponse>(
+      `/client/login`,
+      body
+    );
+    return response.data;
+  }
+
+  async loginByGoogle(googleToken: string): Promise<IClientLoginResponse> {
+    const response = await server.post<IClientLoginResponse>(
+      `/client/google-oauth`,
+      null,
+      {
+        headers: {
+          Authorization: `Bearer ${googleToken}`,
+        },
+      }
+    );
     return response.data;
   }
 

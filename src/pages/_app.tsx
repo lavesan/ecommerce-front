@@ -18,6 +18,8 @@ import { AppContext } from "@/context/AppContext";
 import { Checkout } from "@/components/Checkout";
 import { Loading } from "@/components/Loading";
 import { Header } from "@/components/Header";
+import { AppToast } from "@/components/AppToast";
+import { AxiosInterceptorHOC } from "@/config/axios.config";
 
 // import "@fontsource/roboto/300.css";
 // import "@fontsource/roboto/400.css";
@@ -36,7 +38,7 @@ export default function MyApp(props: MyAppProps) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
 
   const checkoutConfig = useConfigCheckout();
-  const { isLoading, ...appConfig } = useConfigApp();
+  const { isLoading, toast, onToastClose, ...appConfig } = useConfigApp();
 
   const materialTheme = useMemo(
     () => theme(appConfig.themeMode),
@@ -70,13 +72,23 @@ export default function MyApp(props: MyAppProps) {
           <Loading isLoading={isLoading} />
           <CheckoutContext.Provider value={checkoutConfig}>
             <AppContext.Provider value={appConfig}>
-              <Header />
-              <GoogleOAuthProvider
-                clientId={process.env.NEXT_PUBLIC_GOOGLE_ID || ""}
-              >
-                <Component {...pageProps} />
-              </GoogleOAuthProvider>
-              {/* <Checkout /> */}
+              <AxiosInterceptorHOC>
+                <>
+                  <Header />
+                  <GoogleOAuthProvider
+                    clientId={process.env.NEXT_PUBLIC_GOOGLE_ID || ""}
+                  >
+                    <Component {...pageProps} />
+                  </GoogleOAuthProvider>
+                  <AppToast
+                    onClose={onToastClose}
+                    isOpen={toast.isOpen}
+                    message={toast.message}
+                    status={toast.status}
+                  />
+                  {/* <Checkout /> */}
+                </>
+              </AxiosInterceptorHOC>
             </AppContext.Provider>
           </CheckoutContext.Provider>
         </ThemeProvider>

@@ -1,9 +1,9 @@
 import { UserLayout } from "@/components/UserLayout";
-import CreateUser from "@/containers/CreateUser";
+import LoginUser from "@/containers/LoginUser";
 
 // eslint-disable-next-line import/no-anonymous-default-export, react/display-name
 export default () => (
   <UserLayout>
-    <CreateUser />
+    <LoginUser />
   </UserLayout>
 );

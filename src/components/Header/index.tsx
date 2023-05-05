@@ -91,7 +91,7 @@ export const Header = () => {
   };
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    if (!user) return router.push("/criar-usuario");
+    if (!user) return router.push("/login");
 
     setAnchorElUser(event.currentTarget);
   };
@@ -102,6 +102,11 @@ export const Header = () => {
 
   const handleCloseUserMenu = (route: string) => {
     router.push(route);
+    setAnchorElUser(null);
+  };
+
+  const handleLogout = () => {
+    logout();
     setAnchorElUser(null);
   };
 
@@ -196,7 +201,7 @@ export const Header = () => {
               checked={themeMode === "dark"}
               onChange={toogleThemeMode}
             />
-            <Tooltip title={user ? "Ver" : "Criar conta"}>
+            <Tooltip title={user ? "Ver" : "Login"}>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <AccountCircleIcon fontSize="large" />
               </IconButton>
@@ -220,8 +225,9 @@ export const Header = () => {
               {settings.map(({ id, label, route }) => (
                 <MenuItem
                   key={id}
+                  className="g_id_signout"
                   onClick={() =>
-                    route ? handleCloseUserMenu(route) : logout()
+                    route ? handleCloseUserMenu(route) : handleLogout()
                   }
                 >
                   <Typography textAlign="center">{label}</Typography>
