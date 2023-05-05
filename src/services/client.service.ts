@@ -1,4 +1,5 @@
 import { server } from "@/config/axios.config";
+import { IClientCreateResponse } from "@/models/IClientCreateResponse";
 import { IClientLoginRequest } from "@/models/IClientLoginRequest";
 import { ICreateClientRequest } from "@/models/ICreateClientRequest";
 import { IUpdateClientRequest } from "@/models/IUpdateClientRequest";
@@ -12,13 +13,13 @@ export class ClientService {
     return response.data;
   }
 
-  async findById(id: string): Promise<IClient> {
-    const response = await server.get<IClient>(`/client/${id}`);
+  async findMe(id: string): Promise<IClient> {
+    const response = await server.get<IClient>(`/client/me`);
     return response.data;
   }
 
-  async create(body: ICreateClientRequest): Promise<IClient> {
-    const res = await server.post<IClient>("/client", body);
+  async create(body: ICreateClientRequest): Promise<IClientCreateResponse> {
+    const res = await server.post<IClientCreateResponse>("/client", body);
     return res.data;
   }
 

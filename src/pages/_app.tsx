@@ -6,6 +6,7 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { GlobalStyles } from "@mui/material";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 import { CacheProvider, EmotionCache } from "@emotion/react";
 import theme from "../config/theme";
@@ -70,7 +71,11 @@ export default function MyApp(props: MyAppProps) {
           <CheckoutContext.Provider value={checkoutConfig}>
             <AppContext.Provider value={appConfig}>
               <Header />
-              <Component {...pageProps} />
+              <GoogleOAuthProvider
+                clientId={process.env.NEXT_PUBLIC_GOOGLE_ID || ""}
+              >
+                <Component {...pageProps} />
+              </GoogleOAuthProvider>
               {/* <Checkout /> */}
             </AppContext.Provider>
           </CheckoutContext.Provider>

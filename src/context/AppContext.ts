@@ -5,6 +5,8 @@ import React from "react";
 export const AppContext = React.createContext({
   enterprises: [] as IEnterprise[],
   user: null as IClient | null,
+  token: null as string | null,
+  setToken: (token: string) => {},
   logout: () => {},
   setUser: (user: IClient | null) => {},
   setIsLoading: (isLoading: boolean) => {},

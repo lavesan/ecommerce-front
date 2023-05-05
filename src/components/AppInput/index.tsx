@@ -4,14 +4,21 @@ import {
   OutlinedInput,
   OutlinedInputProps,
   IconButton,
+  FormControl,
+  InputLabel,
+  FormHelperText,
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
+interface IAppMaskedInputProps {
+  helperText?: string;
+}
+
 const AppMaskedInput: ForwardRefRenderFunction<
   HTMLInputElement,
-  OutlinedInputProps
-> = ({ type, ...input }, ref) => {
+  IAppMaskedInputProps & OutlinedInputProps
+> = ({ type, label, helperText, ...input }, ref) => {
   const [showPwd, setShowPwd] = useState(false);
 
   const toogleShowPwd = () => setShowPwd((show) => !show);
@@ -39,9 +46,21 @@ const AppMaskedInput: ForwardRefRenderFunction<
         </InputAdornment>
       ),
     };
-  }, [type]);
+  }, [type, showPwd]);
 
-  return <OutlinedInput ref={ref} type={type} {...input} {...propsWithPwd} />;
+  return (
+    <FormControl variant="outlined">
+      <InputLabel htmlFor={input.name}>{label}</InputLabel>
+      <OutlinedInput
+        id={input.name}
+        ref={ref}
+        type={type}
+        {...input}
+        {...propsWithPwd}
+      />
+      {!!input.error && <FormHelperText error>{helperText}</FormHelperText>}
+    </FormControl>
+  );
 };
 
 export default forwardRef(AppMaskedInput);
