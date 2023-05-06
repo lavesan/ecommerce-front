@@ -25,7 +25,7 @@ export const getStaticProps: GetStaticProps<IHomeProps> = async () => {
       enterprises,
       promotions,
     },
-    revalidate: 60 * 60 * 0.5, // Props para executar novamente este código. 24 horas
+    revalidate: 60 * 60 * 0.5, // Props para executar novamente este código. 30 minutos
   };
 };
 

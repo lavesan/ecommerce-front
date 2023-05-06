@@ -6,12 +6,29 @@ import { IPromotion } from "@/models/entities/IPromotion";
 import { IPromotionProduct } from "@/models/entities/IPromotionProduct";
 import { IEnterpriseMenuProps } from "@/models/pages/IEnterpriseMenuProps";
 import { EnterpriseService } from "@/services/enterprise.service";
-import { GetServerSideProps } from "next";
+import { GetStaticProps, GetStaticPaths } from "next";
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const enterpriseService = EnterpriseService.getInstance();
+
+  const enterprises = await enterpriseService.findAll();
+
+  const paths = enterprises.map(({ id }) => ({
+    params: {
+      enterpriseId: id,
+    },
+  }));
+
+  return {
+    paths,
+    fallback: true,
+  };
+};
 
 // SSG
-export const getServerSideProps: GetServerSideProps<
-  IEnterpriseMenuProps
-> = async ({ params }) => {
+export const getStaticProps: GetStaticProps<IEnterpriseMenuProps> = async ({
+  params,
+}) => {
   const enterpriseService = EnterpriseService.getInstance();
 
   // @ts-ignore
@@ -59,7 +76,7 @@ export const getServerSideProps: GetServerSideProps<
     props: {
       menu: mappedMenu,
     },
-    // revalidate: 60 * 60 * 24, // Props para executar novamente este código. 24 horas
+    revalidate: 60 * 60 * 0.5, // Props para executar novamente este código. 30 minutos
   };
 };
 
