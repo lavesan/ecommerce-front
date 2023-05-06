@@ -65,6 +65,10 @@ const EnterpriseMenu = ({ menu }: IEnterpriseMenuProps) => {
     };
   }, [onScroll]);
 
+  if (!menu) {
+    return <>Menu não encontrado</>;
+  }
+
   return (
     <Stack direction="column" spacing={{ xs: 1, sm: 2, md: 4 }}>
       <Box paddingX={4} marginBottom={[4, 0]}>

@@ -1,3 +1,5 @@
+import { GetStaticProps, GetStaticPaths } from "next";
+
 import { AppLayout } from "@/components/AppLayout";
 import EnterpriseMenu from "@/containers/EnterpriseMenu";
 import { getWeekDay } from "@/helpers/date.helper";
@@ -6,7 +8,6 @@ import { IPromotion } from "@/models/entities/IPromotion";
 import { IPromotionProduct } from "@/models/entities/IPromotionProduct";
 import { IEnterpriseMenuProps } from "@/models/pages/IEnterpriseMenuProps";
 import { EnterpriseService } from "@/services/enterprise.service";
-import { GetStaticProps, GetStaticPaths } from "next";
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const enterpriseService = EnterpriseService.getInstance();
