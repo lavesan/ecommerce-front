@@ -9,14 +9,15 @@ import {
   Tooltip,
 } from "@mui/material";
 import AdbIcon from "@mui/icons-material/Adb";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import PersonIcon from "@mui/icons-material/Person";
+import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 
 import { useAppContext } from "@/hooks/useAppContext";
 import { ManageAddress } from "../ManageAddress";
 import { useRouter } from "next/router";
 import { ThemeModeSwitch } from "./ThemeModeSwitch";
 import { useResponsive } from "@/hooks/useResponsive";
+import { useCheckoutContext } from "@/hooks/useCheckoutContext";
 
 const settings = [
   { id: "my-data-menu", label: "Meus dados", route: "/meus-dados" },
@@ -25,6 +26,7 @@ const settings = [
 ];
 
 export const Header = () => {
+  const { openCheckout } = useCheckoutContext();
   const { user, token, logout, toogleThemeMode, themeMode } = useAppContext();
   const { isMobile } = useResponsive();
 
@@ -128,6 +130,9 @@ export const Header = () => {
                   </MenuItem>
                 ))}
               </Menu>
+              <IconButton onClick={openCheckout}>
+                <ShoppingBagIcon />
+              </IconButton>
             </>
           )}
         </Box>

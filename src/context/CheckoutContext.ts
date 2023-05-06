@@ -10,4 +10,7 @@ export const CheckoutContext = React.createContext({
   removeProduct: (id: string) => {},
   addProduct: (product: ICheckoutProduct) => {},
   clearCheckout: () => {},
+  open: false,
+  openCheckout: () => {},
+  closeCheckout: () => {},
 });

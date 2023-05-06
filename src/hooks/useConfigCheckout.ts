@@ -16,6 +16,7 @@ export const useConfigCheckout = () => {
   const [checkoutProducts, setCheckoutProducts] = useState<ICheckoutProduct[]>(
     []
   );
+  const [open, setOpen] = useState(false);
 
   const clearCheckout = () => {
     setCheckoutEnterprise(null);
@@ -57,6 +58,14 @@ export const useConfigCheckout = () => {
     });
   };
 
+  const openCheckout = () => {
+    setOpen(true);
+  };
+
+  const closeCheckout = () => {
+    setOpen(false);
+  };
+
   useEffect(() => {
     const storedCheckout = getSavedCheckout();
     if (storedCheckout) {
@@ -72,5 +81,8 @@ export const useConfigCheckout = () => {
     addProduct: addCheckoutProduct,
     removeProduct: removeCheckoutProduct,
     setEnterprise: setCheckoutEnterpriseFunc,
+    open,
+    openCheckout,
+    closeCheckout,
   };
 };
