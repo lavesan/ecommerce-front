@@ -1,9 +1,11 @@
 import React from "react";
 import { Box, Grid } from "@mui/material";
 import { useResponsive } from "@/hooks/useResponsive";
+import { useAppContext } from "@/hooks/useAppContext";
 
 export const UserLayout = ({ children }: React.PropsWithChildren) => {
   const { isMobile } = useResponsive();
+  const { isDarkMode } = useAppContext();
 
   return (
     <Grid
@@ -24,7 +26,7 @@ export const UserLayout = ({ children }: React.PropsWithChildren) => {
           : {}
       }
     >
-      <Grid item xs={6} display={["none", "flex"]}>
+      <Grid item xs={6} display={["none", "flex"]} alignSelf="stretch">
         <Box
           sx={{
             width: "100%",
@@ -45,7 +47,7 @@ export const UserLayout = ({ children }: React.PropsWithChildren) => {
         sx={
           isMobile
             ? {
-                backgroundColor: "grey.100",
+                backgroundColor: isDarkMode ? "grey.900" : "white",
                 borderRadius: 3,
                 padding: 2,
               }
