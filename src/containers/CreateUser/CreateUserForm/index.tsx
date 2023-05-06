@@ -40,7 +40,6 @@ export const CreateUserForm = () => {
   const onSubmit = handleSubmit(
     async ({ cpf, phone, name, email, password }) => {
       try {
-        setIsLoading(true);
         const { credentials, ...client } = await clientService.create({
           password,
           email: email.trim(),

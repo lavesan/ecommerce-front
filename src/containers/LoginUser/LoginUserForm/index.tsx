@@ -43,13 +43,14 @@ export const LoginUserForm = () => {
         status: "error",
         message: "Email ou senha inválidos",
       });
+    } finally {
+      setIsLoading(false);
     }
   });
 
   const googleSuccess = async ({ credential, ...rest }: CredentialResponse) => {
     if (credential) {
       try {
-        setIsLoading(true);
         const { credentials, ...client } = await clientService.loginByGoogle(
           credential
         );

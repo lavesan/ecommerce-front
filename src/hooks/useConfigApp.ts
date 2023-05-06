@@ -15,6 +15,7 @@ import { ILoginUserParams } from "@/models/context/ILoginUserParams";
 import { IUserToken } from "@/models/context/IUserToken";
 import { IToastParams } from "@/models/context/IToastParams";
 import { IToastState } from "@/models/context/IToastState";
+import { parseError } from "@/helpers/axiosError.helper";
 
 export const useConfigApp = () => {
   const clientService = ClientService.getInstance();
@@ -91,6 +92,8 @@ export const useConfigApp = () => {
           const client = await clientService.findMe(storageUser.id);
 
           setUser(client);
+        } catch (err: any) {
+          console.log("Deu pau no find me");
         } finally {
           setIsLoading(false);
         }
