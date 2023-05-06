@@ -20,6 +20,7 @@ import { Loading } from "@/components/Loading";
 import { Header } from "@/components/Header";
 import { AppToast } from "@/components/AppToast";
 import { AxiosInterceptorHOC } from "@/config/axios.config";
+import { Footer } from "@/components/Footer";
 
 // import "@fontsource/roboto/300.css";
 // import "@fontsource/roboto/400.css";
@@ -74,11 +75,12 @@ export default function MyApp(props: MyAppProps) {
             <AppContext.Provider value={appConfig}>
               <AxiosInterceptorHOC>
                 <>
-                  <Header />
                   <GoogleOAuthProvider
                     clientId={process.env.NEXT_PUBLIC_GOOGLE_ID || ""}
                   >
+                    <Header />
                     <Component {...pageProps} />
+                    <Footer />
                   </GoogleOAuthProvider>
                   <AppToast
                     onClose={onToastClose}

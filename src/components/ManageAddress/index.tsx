@@ -1,14 +1,17 @@
+import { useMemo } from "react";
 import { IAddress } from "@/models/entities/IAddress";
-import { Chip } from "@mui/material";
+import { Chip, ChipProps } from "@mui/material";
 import AddLocationAltIcon from "@mui/icons-material/AddLocationAlt";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import { useMemo } from "react";
 
-interface IManageAddressProps {
+interface IManageAddressProps extends ChipProps {
   address?: IAddress;
 }
 
-export const ManageAddress = ({ address }: IManageAddressProps) => {
+export const ManageAddress = ({
+  address,
+  ...chipProps
+}: IManageAddressProps) => {
   const addressLabel = useMemo(() => {
     return address
       ? `${address.street} ${address.number}`
@@ -19,6 +22,7 @@ export const ManageAddress = ({ address }: IManageAddressProps) => {
 
   return (
     <Chip
+      {...chipProps}
       icon={address ? <LocationOnIcon /> : <AddLocationAltIcon />}
       label={addressLabel}
       onClick={onClick}
