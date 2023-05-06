@@ -1,4 +1,4 @@
-import { GetStaticProps } from "next";
+import { GetServerSideProps } from "next";
 
 import { IHomeProps } from "@/models/pages/IHomeProps";
 import { EnterpriseService } from "@/services/enterprise.service";
@@ -11,7 +11,7 @@ import { getWeekDay } from "@/helpers/date.helper";
 // const inter = Inter({ subsets: ['latin'] })
 
 // SSG
-export const getStaticProps: GetStaticProps<IHomeProps> = async () => {
+export const getServerSideProps: GetServerSideProps<IHomeProps> = async () => {
   const enterpriseService = EnterpriseService.getInstance();
   const promotionService = PromotionService.getInstance();
 
