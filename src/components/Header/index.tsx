@@ -130,7 +130,7 @@ export const Header = () => {
                   </MenuItem>
                 ))}
               </Menu>
-              <IconButton onClick={openCheckout}>
+              <IconButton title="Carrinho" onClick={openCheckout}>
                 <ShoppingBagIcon />
               </IconButton>
             </>

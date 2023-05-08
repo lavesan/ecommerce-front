@@ -31,7 +31,7 @@ const Home = ({ enterprises, promotions }: IHomeProps) => {
             </Box>
           </>
         )}
-        <Typography variant="h2" marginBottom={4} paddingX={4} marginTop={4}>
+        <Typography variant="h2" marginBottom={4} paddingX={4}>
           Lojas
         </Typography>
         <Stack

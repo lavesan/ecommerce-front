@@ -13,4 +13,7 @@ export const CheckoutContext = React.createContext({
   open: false,
   openCheckout: () => {},
   closeCheckout: () => {},
+  prodTotal: 0,
+  freightTotal: 0,
+  total: 0,
 });

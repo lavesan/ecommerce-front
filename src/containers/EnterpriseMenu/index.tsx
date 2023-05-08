@@ -2,7 +2,11 @@ import { useRef, useEffect, useState, useCallback } from "react";
 import { Stack, Typography, Box } from "@mui/material";
 
 import { getImgUrl } from "@/helpers/image.helper";
-import { IEnterpriseMenuProps } from "@/models/pages/IEnterpriseMenuProps";
+import {
+  IEnterpriseMenuCategory,
+  IEnterpriseMenuProduct,
+  IEnterpriseMenuProps,
+} from "@/models/pages/IEnterpriseMenuProps";
 import { Banner } from "./Banner";
 import { Logo } from "./Logo";
 import { IUseCategoriesTabsRef } from "./CategoriesTabs";
@@ -12,16 +16,15 @@ import { debounce } from "@/helpers/debounce.helper";
 import { getOffset } from "@/helpers/document.helper";
 import { elemCategoryId } from "@/helpers/category.helper";
 import { AddProduct } from "@/components/AddProduct";
-import { IProductProductCard } from "@/models/components/IProductProductCard";
 
 const EnterpriseMenu = ({ menu }: IEnterpriseMenuProps) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [selectedProd, setSelectedProd] = useState<IProductProductCard>();
+  const [selectedProd, setSelectedProd] = useState<IEnterpriseMenuProduct>();
   const categoriesTabsRef = useRef<IUseCategoriesTabsRef>(null);
 
   let categoryRefs: HTMLDivElement[] = [];
 
-  const openModal = (product: IProductProductCard) => {
+  const openModal = (product: IEnterpriseMenuProduct) => {
     setSelectedProd(product);
     setModalIsOpen(true);
   };
@@ -98,7 +101,7 @@ const EnterpriseMenu = ({ menu }: IEnterpriseMenuProps) => {
               left={0}
             />
             <Category
-              category={category}
+              category={category as IEnterpriseMenuCategory}
               marginTop={2}
               index={index}
               promotions={menu.promotions || []}

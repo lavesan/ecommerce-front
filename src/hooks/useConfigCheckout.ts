@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 import { ICheckoutProduct } from "@/models/checkout/ICheckoutProduct";
 import { IEnterprise } from "@/models/entities/IEnterprise";
@@ -8,6 +8,7 @@ import {
   removeCheckoutProductsStorage,
   saveCheckoutEnterpriseStorage,
   saveCheckoutProductsStorage,
+  sumValues,
 } from "@/helpers/checkout.helper";
 
 export const useConfigCheckout = () => {
@@ -66,6 +67,21 @@ export const useConfigCheckout = () => {
     setOpen(false);
   };
 
+  const freightTotal = useMemo(() => {
+    return 0;
+  }, []);
+
+  const prodTotal = useMemo(() => {
+    const productValues = checkoutProducts.map(
+      (prod) => prod.value * prod.quantity
+    );
+    return sumValues(productValues);
+  }, [checkoutProducts]);
+
+  const total = useMemo(() => {
+    return freightTotal + prodTotal;
+  }, [freightTotal, prodTotal]);
+
   useEffect(() => {
     const storedCheckout = getSavedCheckout();
     if (storedCheckout) {
@@ -84,5 +100,8 @@ export const useConfigCheckout = () => {
     open,
     openCheckout,
     closeCheckout,
+    total,
+    prodTotal,
+    freightTotal,
   };
 };

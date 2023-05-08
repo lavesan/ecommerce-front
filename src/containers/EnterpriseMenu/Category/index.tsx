@@ -1,19 +1,20 @@
-import { useMemo, useCallback } from "react";
+import { useCallback } from "react";
 import { Stack, Typography, Box, BoxProps } from "@mui/material";
 
-import { maskMoney } from "@/helpers/money.helper";
 import { useResponsive } from "@/hooks/useResponsive";
 import { IPromotion } from "@/models/entities/IPromotion";
-import { IEnterpriseMenuCategory } from "@/models/pages/IEnterpriseMenuProps";
+import {
+  IEnterpriseMenuCategory,
+  IEnterpriseMenuProduct,
+} from "@/models/pages/IEnterpriseMenuProps";
 import { ProductCard } from "@/components/ProductCard";
-import { IProductProductCard } from "@/models/components/IProductProductCard";
 
 interface ICategoryProps extends BoxProps {
   index: number;
   category: IEnterpriseMenuCategory;
   promotions: IPromotion[];
   addCategoryRef: (ref: HTMLDivElement) => void;
-  setSelectedProd: (product: IProductProductCard) => void;
+  setSelectedProd: (product: IEnterpriseMenuProduct) => void;
 }
 
 const Category = ({
@@ -35,19 +36,6 @@ const Category = ({
     [addCategoryRef]
   );
 
-  const products = useMemo<IProductProductCard[]>(() => {
-    return (
-      category?.products?.map(
-        ({ value, promotionValue, promotionId, ...product }) => ({
-          ...product,
-          promotionId: promotionId || undefined,
-          value: maskMoney(value),
-          promotionValue: promotionValue ? maskMoney(promotionValue) : "",
-        })
-      ) || []
-    );
-  }, [category.products]);
-
   return (
     <Box {...boxProps} ref={onRefChange}>
       <Typography
@@ -59,7 +47,7 @@ const Category = ({
         {category.name}
       </Typography>
       <Stack spacing={4} direction="row" useFlexGap flexWrap="wrap">
-        {products.map((product) => (
+        {category?.products?.map((product) => (
           <ProductCard
             key={`product_${product.id}`}
             product={product}

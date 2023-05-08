@@ -13,13 +13,13 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import CloseIcon from "@mui/icons-material/Close";
 
 import { ProductImage } from "@/containers/EnterpriseMenu/Category/ProductImage";
-import { IProductProductCard } from "@/models/components/IProductProductCard";
 import { Additional } from "./Additional";
 import { useResponsive } from "@/hooks/useResponsive";
+import { IEnterpriseMenuProduct } from "@/models/pages/IEnterpriseMenuProps";
 
 interface IAddProductProps {
   isOpen: boolean;
-  product?: IProductProductCard;
+  product?: IEnterpriseMenuProduct;
   onClose: VoidFunction;
 }
 
@@ -126,30 +126,28 @@ export const AddProduct = ({ isOpen, product, onClose }: IAddProductProps) => {
                   {product?.boldDescription}
                 </Typography>
                 <Typography mt={2}>
-                  {product?.promotionValue && (
+                  {product?.promotionId && (
                     <Box
                       component="span"
                       color="primary.main"
                       fontWeight="bold"
                     >
-                      {product?.promotionValue}
+                      {product?.promotionValueFormat}
                     </Box>
                   )}{" "}
                   <Box
                     component="span"
-                    color={
-                      product?.promotionValue ? "grey.500" : "primary.main"
-                    }
-                    fontWeight={product?.promotionValue ? "normal" : "bold"}
-                    fontSize={product?.promotionValue ? "small" : "large"}
+                    color={product?.promotionId ? "grey.500" : "primary.main"}
+                    fontWeight={product?.promotionId ? "normal" : "bold"}
+                    fontSize={product?.promotionId ? "small" : "large"}
                     sx={{
-                      textDecoration: product?.promotionValue
+                      textDecoration: product?.promotionId
                         ? "line-through"
                         : "none",
                       textDecorationColor: "grey.500",
                     }}
                   >
-                    {product?.value}
+                    {product?.valueFormat}
                   </Box>
                 </Typography>
               </Box>

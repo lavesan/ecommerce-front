@@ -10,13 +10,13 @@ import {
 } from "@mui/material";
 
 import { ProductImage } from "@/containers/EnterpriseMenu/Category/ProductImage";
-import { IProductProductCard } from "@/models/components/IProductProductCard";
 
 import LocalActivityIcon from "@mui/icons-material/LocalActivity";
+import { IEnterpriseMenuProduct } from "@/models/pages/IEnterpriseMenuProps";
 
 interface IProductCardProps extends Omit<CardProps, "onClick"> {
-  product: IProductProductCard;
-  onClick: (product: IProductProductCard) => void;
+  product: IEnterpriseMenuProduct;
+  onClick: (product: IEnterpriseMenuProduct) => void;
 }
 
 export const ProductCard = ({
@@ -79,7 +79,7 @@ export const ProductCard = ({
               flexDirection="row"
               alignItems="center"
             >
-              {product.promotionValue && product.promotionValue}{" "}
+              {product.promotionId && product.promotionValueFormat}{" "}
               <Box
                 component="span"
                 sx={
@@ -95,7 +95,7 @@ export const ProductCard = ({
                     : {}
                 }
               >
-                {product.value}
+                {product.valueFormat}
               </Box>
               <Tooltip
                 title={

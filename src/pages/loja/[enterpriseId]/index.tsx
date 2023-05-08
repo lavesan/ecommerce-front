@@ -8,6 +8,7 @@ import { IPromotion } from "@/models/entities/IPromotion";
 import { IPromotionProduct } from "@/models/entities/IPromotionProduct";
 import { IEnterpriseMenuProps } from "@/models/pages/IEnterpriseMenuProps";
 import { EnterpriseService } from "@/services/enterprise.service";
+import { maskMoney } from "@/helpers/money.helper";
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const enterpriseService = EnterpriseService.getInstance();
@@ -68,6 +69,8 @@ export const getStaticProps: GetStaticProps<IEnterpriseMenuProps> = async ({
               ...product,
               promotionId: promotion?.id || null,
               promotionValue: promoProduct?.value || null,
+              promotionValueFormat: maskMoney(promoProduct?.value) || null,
+              valueFormat: maskMoney(product.value),
             };
           }) || [],
       })) || [],

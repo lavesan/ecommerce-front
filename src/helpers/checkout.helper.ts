@@ -32,3 +32,7 @@ export const removeCheckoutEnterpriseStorage = () => {
 export const removeCheckoutProductsStorage = () => {
   localStorage.removeItem(CHECKOUT_PRODUCTS_KEY);
 };
+
+export const sumValues = (arr: number[]): number => {
+  return arr.length ? arr.reduce((elem1, elem2) => elem1 + elem2) : 0;
+};
