@@ -114,6 +114,7 @@ const EnterpriseMenu = ({ menu }: IEnterpriseMenuProps) => {
       <AddProduct
         isOpen={modalIsOpen}
         product={selectedProd}
+        enterprise={menu}
         onClose={() => setModalIsOpen((actual) => !actual)}
       />
     </Stack>

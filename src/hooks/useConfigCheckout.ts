@@ -19,6 +19,12 @@ export const useConfigCheckout = () => {
   );
   const [open, setOpen] = useState(false);
 
+  const hasProducts = useMemo(() => !!checkoutEnterprise, [checkoutEnterprise]);
+
+  const productsCount = useMemo(() => {
+    return checkoutProducts.length;
+  }, [checkoutProducts]);
+
   const clearCheckout = () => {
     setCheckoutEnterprise(null);
     setCheckoutProducts([]);
@@ -31,12 +37,23 @@ export const useConfigCheckout = () => {
     setCheckoutEnterprise(enterprise);
   };
 
-  const addCheckoutProduct = (product: ICheckoutProduct) => {
-    setCheckoutProducts((actual) => {
-      const hasProduct = actual.some(({ id }) => product.id === id);
-      if (!hasProduct) actual.push(product);
+  const addCheckoutProduct = (
+    enterprise: IEnterprise,
+    product: ICheckoutProduct
+  ) => {
+    if (checkoutEnterprise?.id !== enterprise.id) {
+      saveCheckoutEnterpriseStorage(enterprise);
+      setCheckoutEnterprise(enterprise);
+      setCheckoutProducts([product]);
+    } else {
+      let newProducts = JSON.parse(
+        JSON.stringify(checkoutProducts)
+      ) as ICheckoutProduct[];
+
+      const hasProduct = newProducts.some(({ id }) => product.id === id);
+      if (!hasProduct) newProducts.push(product);
       else
-        actual = actual.map((storedProduct) =>
+        newProducts = newProducts.map((storedProduct) =>
           storedProduct.id === product.id
             ? {
                 ...storedProduct,
@@ -45,10 +62,9 @@ export const useConfigCheckout = () => {
             : storedProduct
         );
 
-      saveCheckoutProductsStorage(actual);
-
-      return actual;
-    });
+      saveCheckoutProductsStorage(newProducts);
+      setCheckoutProducts(newProducts);
+    }
   };
 
   const removeCheckoutProduct = (id: string) => {
@@ -57,6 +73,12 @@ export const useConfigCheckout = () => {
       saveCheckoutProductsStorage(filtered);
       return filtered;
     });
+  };
+
+  const updateCheckoutProduct = (product: ICheckoutProduct) => {
+    setCheckoutProducts((actual) =>
+      actual.map((prod) => (prod.id === product.id ? product : prod))
+    );
   };
 
   const openCheckout = () => {
@@ -84,6 +106,8 @@ export const useConfigCheckout = () => {
 
   useEffect(() => {
     const storedCheckout = getSavedCheckout();
+
+    console.log("storedCheckout: ", storedCheckout);
     if (storedCheckout) {
       setCheckoutEnterprise(storedCheckout.enterprise);
       setCheckoutProducts(storedCheckout.products);
@@ -96,6 +120,7 @@ export const useConfigCheckout = () => {
     clearCheckout,
     addProduct: addCheckoutProduct,
     removeProduct: removeCheckoutProduct,
+    updateProduct: updateCheckoutProduct,
     setEnterprise: setCheckoutEnterpriseFunc,
     open,
     openCheckout,
@@ -103,5 +128,7 @@ export const useConfigCheckout = () => {
     total,
     prodTotal,
     freightTotal,
+    hasProducts,
+    productsCount,
   };
 };

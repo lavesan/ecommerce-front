@@ -7,6 +7,7 @@ import {
   IconButton,
   Menu,
   Tooltip,
+  Badge,
 } from "@mui/material";
 import AdbIcon from "@mui/icons-material/Adb";
 import PersonIcon from "@mui/icons-material/Person";
@@ -26,7 +27,7 @@ const settings = [
 ];
 
 export const Header = () => {
-  const { openCheckout } = useCheckoutContext();
+  const { openCheckout, hasProducts, productsCount } = useCheckoutContext();
   const { user, token, logout, toogleThemeMode, themeMode } = useAppContext();
   const { isMobile } = useResponsive();
 
@@ -131,7 +132,15 @@ export const Header = () => {
                 ))}
               </Menu>
               <IconButton title="Carrinho" onClick={openCheckout}>
-                <ShoppingBagIcon />
+                <Badge
+                  invisible={!hasProducts}
+                  badgeContent={productsCount}
+                  color="primary"
+                >
+                  <ShoppingBagIcon
+                    sx={{ color: hasProducts ? "primary.main" : "default" }}
+                  />
+                </Badge>
               </IconButton>
             </>
           )}

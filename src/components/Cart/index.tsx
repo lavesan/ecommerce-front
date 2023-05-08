@@ -13,9 +13,10 @@ import { useResponsive } from "@/hooks/useResponsive";
 import { useCheckoutContext } from "@/hooks/useCheckoutContext";
 import CloseIcon from "@mui/icons-material/Close";
 import { maskMoney } from "@/helpers/money.helper";
-import { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { AddProduct } from "../AddProduct";
 import { ICheckoutProduct } from "@/models/checkout/ICheckoutProduct";
+import { IEnterprise } from "@/models/entities/IEnterprise";
 
 interface CartProps {
   isOpen: boolean;
@@ -30,6 +31,7 @@ export const Cart = ({ isOpen, onClose, onOpen }: CartProps) => {
     total,
     prodTotal,
     freightTotal,
+    removeProduct,
   } = useCheckoutContext();
 
   const { isMobile } = useResponsive();
@@ -72,126 +74,178 @@ export const Cart = ({ isOpen, onClose, onOpen }: CartProps) => {
           >
             <CloseIcon />
           </IconButton>
-          <Box display="flex" flexDirection="column" width="100%" height="100%">
+          {enterprise ? (
             <Box
               display="flex"
-              flexDirection="row"
-              flexWrap="nowrap"
-              gap={2}
-              alignItems="center"
-              justifyContent="space-between"
+              flexDirection="column"
+              width="100%"
+              height="100%"
             >
-              <Typography component="h2" fontSize="small">
-                Pedido em
-                <br />
-                <Box component="span" fontWeight="bold" fontSize="large">
-                  {enterprise?.name}
-                </Box>
-              </Typography>
-              <Button
-                variant="outlined"
-                component={Link}
-                href={`/loja/${enterprise?.id}`}
-                sx={{ textTransform: "none" }}
-              >
-                Ver menu
-              </Button>
-            </Box>
-            <Divider sx={{ my: 2 }} />
-            {products.map((product) => (
               <Box
-                key={`checkout_${product.id}`}
                 display="flex"
                 flexDirection="row"
+                flexWrap="nowrap"
+                gap={2}
+                alignItems="center"
                 justifyContent="space-between"
-                mb={2}
               >
-                <Box>
-                  <Typography component="p">
-                    {product.quantity}x {product.name}
-                  </Typography>
-                  <Typography component="p">
-                    {product.productAdditionalCategory
-                      ?.map((addCat) =>
-                        addCat.productAdditionals?.map(
-                          (additional) => additional.name
-                        )
-                      )
-                      .join(", ")}
-                  </Typography>
+                <Typography component="h2" fontSize="small">
+                  Pedido em
+                  <br />
+                  <Box component="span" fontWeight="bold" fontSize="large">
+                    {enterprise?.name}
+                  </Box>
+                </Typography>
+                <Button
+                  variant="outlined"
+                  component={Link}
+                  href={`/loja/${enterprise?.id}`}
+                  sx={{ textTransform: "none" }}
+                  onClick={onClose}
+                >
+                  Ver menu
+                </Button>
+              </Box>
+              <Divider sx={{ my: 2 }} />
+              {products.map((product, index) => (
+                <React.Fragment key={`checkout_${product.id}`}>
                   <Box
                     display="flex"
                     flexDirection="row"
-                    justifyContent="flex-start"
+                    justifyContent="space-between"
+                    mb={2}
                   >
-                    <Button type="button" onClick={() => openModal(product)}>
-                      Editar
-                    </Button>
-                    <Button type="button">Remover</Button>
+                    <Box>
+                      <Typography component="p">
+                        {product.quantity}x {product.name}
+                      </Typography>
+                      <Typography component="p">
+                        {product.productAdditionalCategory
+                          ?.map((addCat) =>
+                            addCat.productAdditionals?.map(
+                              (additional) => additional.name
+                            )
+                          )
+                          .join(", ")}
+                      </Typography>
+                      <Box
+                        display="flex"
+                        flexDirection="row"
+                        justifyContent="flex-start"
+                      >
+                        <Button
+                          type="button"
+                          onClick={() => openModal(product)}
+                        >
+                          Editar
+                        </Button>
+                        <Button
+                          type="button"
+                          onClick={() => removeProduct(product.id)}
+                        >
+                          Remover
+                        </Button>
+                      </Box>
+                    </Box>
+                    <Typography component="p" sx={{ color: "primary.main" }}>
+                      {product.promotionId
+                        ? product.promotionValueFormat
+                        : product.valueFormat}
+                    </Typography>
                   </Box>
+                  {index < products.length - 1 ? (
+                    <Divider sx={{ mb: 2 }} />
+                  ) : (
+                    <></>
+                  )}
+                </React.Fragment>
+              ))}
+              <Box
+                marginTop="auto"
+                position="sticky"
+                bottom={0}
+                right={0}
+                pb={2}
+                sx={{ backgroundColor: "white" }}
+              >
+                <Divider sx={{ mb: 2 }} />
+                <Box
+                  display="flex"
+                  flexDirection="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  mb={1}
+                >
+                  <Typography>Subtotal</Typography>
+                  <Typography>{maskMoney(prodTotal)}</Typography>
                 </Box>
-                <Typography component="p" sx={{ color: "primary.main" }}>
-                  {product.promotionId
-                    ? product.promotionValueFormat
-                    : product.valueFormat}
-                </Typography>
+                <Box
+                  display="flex"
+                  flexDirection="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  mb={2}
+                >
+                  <Typography>Frete</Typography>
+                  <Typography>{maskMoney(freightTotal)}</Typography>
+                </Box>
+                <Box
+                  display="flex"
+                  flexDirection="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  mb={3}
+                >
+                  <Typography fontWeight="bold">Total</Typography>
+                  <Typography fontWeight="bold">{maskMoney(total)}</Typography>
+                </Box>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  type="button"
+                  size="large"
+                  sx={{ textTransform: "none" }}
+                >
+                  Ir para o pagamento
+                </Button>
               </Box>
-            ))}
-            <Box
-              marginTop="auto"
-              position="sticky"
-              bottom={0}
-              right={0}
-              pb={2}
-              sx={{ backgroundColor: "white" }}
-            >
-              <Divider sx={{ mb: 2 }} />
-              <Box
-                display="flex"
-                flexDirection="row"
-                justifyContent="space-between"
-                alignItems="center"
-                mb={1}
-              >
-                <Typography>Subtotal</Typography>
-                <Typography>{maskMoney(prodTotal)}</Typography>
-              </Box>
-              <Box
-                display="flex"
-                flexDirection="row"
-                justifyContent="space-between"
-                alignItems="center"
-                mb={2}
-              >
-                <Typography>Frete</Typography>
-                <Typography>{maskMoney(freightTotal)}</Typography>
-              </Box>
-              <Box
-                display="flex"
-                flexDirection="row"
-                justifyContent="space-between"
-                alignItems="center"
-                mb={3}
-              >
-                <Typography fontWeight="bold">Total</Typography>
-                <Typography fontWeight="bold">{maskMoney(total)}</Typography>
-              </Box>
-              <Button
-                fullWidth
-                variant="contained"
-                type="button"
-                size="large"
-                sx={{ textTransform: "none" }}
-              >
-                Ir para o pagamento
-              </Button>
             </Box>
-          </Box>
+          ) : (
+            <>
+              <Box
+                display="flex"
+                flexDirection="column"
+                justifyContent="center"
+                alignItems="center"
+                width="100%"
+                height="100%"
+              >
+                <Box
+                  component="img"
+                  alt="Página não enctrada"
+                  src="/static/empty-cart.png"
+                  width={300}
+                  height={300}
+                />
+                <Typography component="p" fontWeight="bold">
+                  Seu carrinho está vazio, adicione itens
+                </Typography>
+                <Box
+                  display="none"
+                  component="a"
+                  href="https://br.freepik.com/vetores-gratis/conjunto-de-itens-de-compras-chamativos_19965532.htm#query=cart%20cartoon&position=0&from_view=search&track=ais"
+                >
+                  Imagem de pikisuperstar no Freepik
+                </Box>
+              </Box>
+            </>
+          )}
         </Box>
       </SwipeableDrawer>
       <AddProduct
         isOpen={!!selectedProd}
         product={selectedProd || ({} as ICheckoutProduct)}
+        enterprise={enterprise || ({} as IEnterprise)}
         onClose={() => setSelectedProd(null)}
       />
     </>

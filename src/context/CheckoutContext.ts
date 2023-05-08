@@ -8,7 +8,8 @@ export const CheckoutContext = React.createContext({
   setEnterprise: (enterprise: IEnterprise) => {},
   products: [] as ICheckoutProduct[],
   removeProduct: (id: string) => {},
-  addProduct: (product: ICheckoutProduct) => {},
+  updateProduct: (product: ICheckoutProduct) => {},
+  addProduct: (enterprise: IEnterprise, product: ICheckoutProduct) => {},
   clearCheckout: () => {},
   open: false,
   openCheckout: () => {},
@@ -16,4 +17,6 @@ export const CheckoutContext = React.createContext({
   prodTotal: 0,
   freightTotal: 0,
   total: 0,
+  hasProducts: false,
+  productsCount: 0,
 });
