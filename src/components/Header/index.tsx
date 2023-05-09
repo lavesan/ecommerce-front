@@ -82,7 +82,6 @@ export const Header = () => {
           sx={{
             marginRight: isMobile ? 0 : "auto",
           }}
-          address={defaultAddress}
         />
 
         <Box>

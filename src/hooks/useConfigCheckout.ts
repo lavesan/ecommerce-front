@@ -10,14 +10,19 @@ import {
   saveCheckoutProductsStorage,
   sumValues,
 } from "@/helpers/checkout.helper";
+import { IAddress } from "@/models/entities/IAddress";
+import { useAppContext } from "./useAppContext";
 
 export const useConfigCheckout = () => {
+  const { user } = useAppContext();
+
   const [checkoutEnterprise, setCheckoutEnterprise] =
     useState<IEnterprise | null>(null);
   const [checkoutProducts, setCheckoutProducts] = useState<ICheckoutProduct[]>(
     []
   );
   const [open, setOpen] = useState(false);
+  const [address, setAddress] = useState<IAddress | null>(null);
 
   const hasProducts = useMemo(() => !!checkoutEnterprise, [checkoutEnterprise]);
 
@@ -116,10 +121,21 @@ export const useConfigCheckout = () => {
     const storedCheckout = getSavedCheckout();
 
     if (storedCheckout) {
-      setCheckoutEnterprise(storedCheckout.enterprise);
+      if (storedCheckout.products.length)
+        setCheckoutEnterprise(storedCheckout.enterprise);
+      else clearEnterprise();
       setCheckoutProducts(storedCheckout.products);
     }
   }, []);
+
+  useEffect(() => {
+    if (user?.addresses?.length) {
+      const selectedAddr =
+        user.addresses?.find(({ isDefault }) => isDefault) || user.addresses[0];
+
+      if (selectedAddr) setAddress(selectedAddr);
+    }
+  }, [user]);
 
   return {
     enterprise: checkoutEnterprise,
@@ -137,5 +153,7 @@ export const useConfigCheckout = () => {
     freightTotal,
     hasProducts,
     productsCount,
+    address,
+    setAddress,
   };
 };

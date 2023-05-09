@@ -15,7 +15,7 @@ import { ILoginUserParams } from "@/models/context/ILoginUserParams";
 import { IUserToken } from "@/models/context/IUserToken";
 import { IToastParams } from "@/models/context/IToastParams";
 import { IToastState } from "@/models/context/IToastState";
-import { parseError } from "@/helpers/axiosError.helper";
+import { IAddress } from "@/models/entities/IAddress";
 
 export const useConfigApp = () => {
   const clientService = ClientService.getInstance();
@@ -24,6 +24,7 @@ export const useConfigApp = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState<null | IClient>(null);
   const [token, setToken] = useState<null | IUserToken>(null);
+  const [addresses, setAddresses] = useState<IAddress[]>([]);
   const [themeMode, setThemeMode] = useState<PaletteMode>("light");
   const [toast, setToast] = useState<IToastState>({
     isOpen: false,
@@ -80,24 +81,26 @@ export const useConfigApp = () => {
     setToken({ accessToken: token, refreshToken: "" });
   };
 
+  const getMe = async () => {
+    try {
+      const client = await clientService.findMe();
+
+      setUser(client);
+      setAddresses(client.addresses || []);
+    } catch (err: any) {
+      console.log("Deu pau no find me");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const onInit = useCallback(async () => {
     const storageToken = getStorageToken();
 
     if (storageToken) {
       setToken({ accessToken: storageToken, refreshToken: "" });
-      const storageUser = jwt_decode<{ id: string }>(storageToken);
 
-      if (storageUser) {
-        try {
-          const client = await clientService.findMe(storageUser.id);
-
-          setUser(client);
-        } catch (err: any) {
-          console.log("Deu pau no find me");
-        } finally {
-          setIsLoading(false);
-        }
-      }
+      getMe();
     }
   }, [clientService]);
 
@@ -123,5 +126,8 @@ export const useConfigApp = () => {
     toast,
     showToast,
     onToastClose,
+    addresses,
+    setAddresses,
+    getMe,
   };
 };

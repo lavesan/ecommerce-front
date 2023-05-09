@@ -8,6 +8,7 @@ import { IEnterprise } from "@/models/entities/IEnterprise";
 export const getSavedCheckout = () => {
   const storedEnterprise = localStorage.getItem(CHECKOUT_ENTERPRISE_KEY);
   const storedProducts = localStorage.getItem(CHECKOUT_PRODUCTS_KEY);
+
   if (storedEnterprise && storedProducts) {
     return {
       enterprise: JSON.parse(storedEnterprise) as IEnterprise,

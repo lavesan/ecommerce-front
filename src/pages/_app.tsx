@@ -79,8 +79,8 @@ export default function MyApp(props: MyAppProps) {
               }}
             />
             <Loading isLoading={isLoading} />
-            <CheckoutContext.Provider value={checkoutConfig}>
-              <AppContext.Provider value={appConfig}>
+            <AppContext.Provider value={appConfig}>
+              <CheckoutContext.Provider value={checkoutConfig}>
                 <AxiosInterceptorHOC>
                   <>
                     <GoogleOAuthProvider
@@ -103,8 +103,8 @@ export default function MyApp(props: MyAppProps) {
                     />
                   </>
                 </AxiosInterceptorHOC>
-              </AppContext.Provider>
-            </CheckoutContext.Provider>
+              </CheckoutContext.Provider>
+            </AppContext.Provider>
           </ThemeProvider>
         </CacheProvider>
       </Hydrate>

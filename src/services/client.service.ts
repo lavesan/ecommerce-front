@@ -30,7 +30,7 @@ export class ClientService {
     return response.data;
   }
 
-  async findMe(id: string): Promise<IClient> {
+  async findMe(): Promise<IClient> {
     const response = await server.get<IClient>(`/client/me`);
     return response.data;
   }

@@ -133,6 +133,7 @@ export const Cart = ({ onClose, isOnCheckoutPage }: CartProps) => {
                       <Button
                         type="button"
                         onClick={() => removeProduct(product.id)}
+                        color="error"
                       >
                         Remover
                       </Button>

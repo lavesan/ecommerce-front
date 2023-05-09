@@ -4,7 +4,6 @@ import Link from "next/link";
 import { Box, Typography, Button, Link as MUILink } from "@mui/material";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
-import { FcGoogle } from "react-icons/fc";
 
 import { ClientService } from "@/services/client.service";
 import { useAppContext } from "@/hooks/useAppContext";
