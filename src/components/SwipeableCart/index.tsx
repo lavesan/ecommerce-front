@@ -22,6 +22,7 @@ export const SwipeableCart = ({
 
   useEffect(() => {
     if (!hasProducts) onClose();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasProducts]);
 
