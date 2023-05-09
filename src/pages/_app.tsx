@@ -24,7 +24,7 @@ import { Header } from "@/components/Header";
 import { AppToast } from "@/components/AppToast";
 import { AxiosInterceptorHOC } from "@/config/axios.config";
 import { Footer } from "@/components/Footer";
-import { Cart } from "@/components/Cart";
+import { SwipeableCart } from "@/components/SwipeableCart";
 
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
@@ -96,7 +96,7 @@ export default function MyApp(props: MyAppProps) {
                       message={toast.message}
                       status={toast.status}
                     />
-                    <Cart
+                    <SwipeableCart
                       isOpen={checkoutConfig.open}
                       onClose={checkoutConfig.closeCheckout}
                       onOpen={checkoutConfig.openCheckout}

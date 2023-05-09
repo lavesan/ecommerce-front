@@ -25,11 +25,15 @@ export const useConfigCheckout = () => {
     return checkoutProducts.length;
   }, [checkoutProducts]);
 
-  const clearCheckout = () => {
+  const clearEnterprise = () => {
     setCheckoutEnterprise(null);
-    setCheckoutProducts([]);
     removeCheckoutEnterpriseStorage();
+  };
+
+  const clearCheckout = () => {
+    setCheckoutProducts([]);
     removeCheckoutProductsStorage();
+    clearEnterprise();
   };
 
   const setCheckoutEnterpriseFunc = (enterprise: IEnterprise) => {
@@ -45,32 +49,36 @@ export const useConfigCheckout = () => {
       saveCheckoutEnterpriseStorage(enterprise);
       setCheckoutEnterprise(enterprise);
       setCheckoutProducts([product]);
-    } else {
-      let newProducts = JSON.parse(
-        JSON.stringify(checkoutProducts)
-      ) as ICheckoutProduct[];
-
-      const hasProduct = newProducts.some(({ id }) => product.id === id);
-      if (!hasProduct) newProducts.push(product);
-      else
-        newProducts = newProducts.map((storedProduct) =>
-          storedProduct.id === product.id
-            ? {
-                ...storedProduct,
-                quantity: storedProduct.quantity + 1,
-              }
-            : storedProduct
-        );
-
-      saveCheckoutProductsStorage(newProducts);
-      setCheckoutProducts(newProducts);
+      openCheckout();
+      return;
     }
+
+    let newProducts = JSON.parse(
+      JSON.stringify(checkoutProducts)
+    ) as ICheckoutProduct[];
+
+    const hasProduct = newProducts.some(({ id }) => product.id === id);
+    if (!hasProduct) newProducts.push(product);
+    else
+      newProducts = newProducts.map((storedProduct) =>
+        storedProduct.id === product.id
+          ? {
+              ...storedProduct,
+              quantity: storedProduct.quantity + 1,
+            }
+          : storedProduct
+      );
+
+    saveCheckoutProductsStorage(newProducts);
+    setCheckoutProducts(newProducts);
   };
 
   const removeCheckoutProduct = (id: string) => {
     setCheckoutProducts((actual) => {
       const filtered = actual.filter(({ id: storedId }) => storedId !== id);
       saveCheckoutProductsStorage(filtered);
+
+      if (!filtered.length) clearEnterprise();
       return filtered;
     });
   };
