@@ -1,6 +1,9 @@
 import { useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import {
+  Grid,
+  Slide,
+  Badge,
   BottomNavigation,
   BottomNavigationAction,
   Paper,
@@ -10,17 +13,23 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Typography,
 } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import PersonIcon from "@mui/icons-material/Person";
 import LogoutIcon from "@mui/icons-material/Logout";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
+import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 
 import { useAppContext } from "@/hooks/useAppContext";
 import { useResponsive } from "@/hooks/useResponsive";
+import { useCheckoutContext } from "@/hooks/useCheckoutContext";
+import { maskMoney } from "@/helpers/money.helper";
 
 export const Footer = () => {
+  const { openCheckout, hasProducts, total, productsCount } =
+    useCheckoutContext();
   const { token, logout } = useAppContext();
   const { isMobile } = useResponsive();
 
@@ -92,6 +101,42 @@ export const Footer = () => {
         }}
         elevation={3}
       >
+        <Slide direction="up" in={hasProducts} mountOnEnter unmountOnExit>
+          <Grid
+            container
+            component="button"
+            onClick={openCheckout}
+            type="button"
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              wrap: "nowrap",
+              justifyContent: "space-between",
+              alignItems: "center",
+              boxShadow: "none",
+              py: 2,
+              backgroundColor: "primary.main",
+              color: "white",
+              border: "none",
+            }}
+          >
+            <Grid item xs={4}>
+              <Badge
+                invisible={!hasProducts}
+                badgeContent={productsCount}
+                color="primary"
+              >
+                <ShoppingBagIcon />
+              </Badge>
+            </Grid>
+            <Grid item xs={4}>
+              <Typography>Ver carrinho</Typography>
+            </Grid>
+            <Grid item xs={4}>
+              <Typography>{maskMoney(total)}</Typography>
+            </Grid>
+          </Grid>
+        </Slide>
         <BottomNavigation showLabels value={selectedRoute}>
           <BottomNavigationAction
             onClick={goToRoute("/")}

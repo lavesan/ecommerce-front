@@ -83,14 +83,11 @@ export const AddProduct = ({
       return;
     }
 
-    console.log("veio pra cá");
-
     addProduct(enterprise, productToAdd);
     onClose();
   };
 
   const confirmEnterpriseChange = (product: ICheckoutProduct) => {
-    console.log("confirmando: ", product);
     addProduct(enterprise, product);
     setDialogOpt({ open: false, product: null });
     onClose();

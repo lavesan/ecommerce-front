@@ -107,7 +107,6 @@ export const useConfigCheckout = () => {
   useEffect(() => {
     const storedCheckout = getSavedCheckout();
 
-    console.log("storedCheckout: ", storedCheckout);
     if (storedCheckout) {
       setCheckoutEnterprise(storedCheckout.enterprise);
       setCheckoutProducts(storedCheckout.products);
