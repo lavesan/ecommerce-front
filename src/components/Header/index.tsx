@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import {
   AppBar,
   MenuItem,
@@ -12,10 +12,11 @@ import {
 import AdbIcon from "@mui/icons-material/Adb";
 import PersonIcon from "@mui/icons-material/Person";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
 import { useAppContext } from "@/hooks/useAppContext";
 import { ManageAddress } from "../ManageAddress";
-import { useRouter } from "next/router";
 import { ThemeModeSwitch } from "./ThemeModeSwitch";
 import { useResponsive } from "@/hooks/useResponsive";
 import { useCheckoutContext } from "@/hooks/useCheckoutContext";
@@ -34,11 +35,6 @@ export const Header = () => {
   const router = useRouter();
 
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
-
-  const defaultAddress = useMemo(
-    () => user?.addresses?.find(({ isDefault }) => isDefault),
-    [user]
-  );
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     if (!user) return router.push("/login");
@@ -74,7 +70,7 @@ export const Header = () => {
         py={1}
       >
         {/* Logo */}
-        <IconButton onClick={() => router.push("/")}>
+        <IconButton component={Link} href="/">
           <AdbIcon />
         </IconButton>
 

@@ -81,7 +81,7 @@ export const useConfigApp = () => {
     setToken({ accessToken: token, refreshToken: "" });
   };
 
-  const getMe = async () => {
+  const getMe = useCallback(async () => {
     try {
       const client = await clientService.findMe();
 
@@ -92,7 +92,7 @@ export const useConfigApp = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [clientService]);
 
   const onInit = useCallback(async () => {
     const storageToken = getStorageToken();
@@ -102,7 +102,7 @@ export const useConfigApp = () => {
 
       getMe();
     }
-  }, [clientService]);
+  }, [getMe]);
 
   useEffect(() => {
     onInit();

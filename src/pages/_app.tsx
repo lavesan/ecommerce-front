@@ -20,7 +20,6 @@ import { useConfigCheckout } from "@/hooks/useConfigCheckout";
 import { useConfigApp } from "@/hooks/useConfigApp";
 import { AppContext } from "@/context/AppContext";
 import { Loading } from "@/components/Loading";
-import { Header } from "@/components/Header";
 import { AppToast } from "@/components/AppToast";
 import { AxiosInterceptorHOC } from "@/config/axios.config";
 import { Footer } from "@/components/Footer";
@@ -42,8 +41,8 @@ export default function MyApp(props: MyAppProps) {
   const [queryClient] = React.useState(() => new QueryClient());
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
 
-  const checkoutConfig = useConfigCheckout();
   const { isLoading, toast, onToastClose, ...appConfig } = useConfigApp();
+  const checkoutConfig = useConfigCheckout(appConfig);
 
   const materialTheme = useMemo(
     () => theme(appConfig.themeMode),
@@ -86,7 +85,7 @@ export default function MyApp(props: MyAppProps) {
                     <GoogleOAuthProvider
                       clientId={process.env.NEXT_PUBLIC_GOOGLE_ID || ""}
                     >
-                      <Header />
+                      {/* <Header /> */}
                       <Component {...pageProps} />
                       <Footer />
                     </GoogleOAuthProvider>

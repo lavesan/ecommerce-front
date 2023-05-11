@@ -13,7 +13,7 @@ export const AppContext = React.createContext({
   token: null as IUserToken | null,
   addresses: [] as IAddress[],
   setAddresses: (addresses: IAddress[]) => {},
-  getMe: () => {},
+  getMe: async () => {},
   login: (data: ILoginUserParams) => {},
   logout: () => {},
   setToken: (token: string) => {},

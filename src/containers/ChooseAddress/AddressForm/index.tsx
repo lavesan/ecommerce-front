@@ -1,16 +1,19 @@
+import { useEffect, useMemo } from "react";
 import { Box, Button, Grid } from "@mui/material";
-import { useForm, useWatch } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import { useAppContext } from "@/hooks/useAppContext";
 import { IAddress } from "@/models/entities/IAddress";
 import { AddressService } from "@/services/address.service";
-import { useCallback, useEffect } from "react";
-import AppMaskedInput from "@/components/AppMaskedInput";
-import { cepMask } from "@/helpers/mask.helper";
+
 import AppInput from "@/components/AppInput";
-import AppSelect from "@/components/AppSelect";
+import { AppMaskedInput } from "@/components/AppMaskedInput";
+import { AppSelect } from "@/components/AppSelect";
+
 import { districtOptions } from "@/helpers/select.helper";
+import { cepMask } from "@/helpers/mask.helper";
+
 import { validationSchema } from "./validation";
 
 interface IForm {
@@ -24,33 +27,43 @@ interface IForm {
 
 interface IAddressFormProps {
   address?: IAddress;
+  onSuccess: (response?: IAddress) => void;
 }
 
-const AddressForm = ({ address }: IAddressFormProps) => {
+const AddressForm = ({ address, onSuccess }: IAddressFormProps) => {
   const addressService = AddressService.getInstance();
 
   const { user, getMe, setIsLoading, addresses, showToast } = useAppContext();
+
+  const addressForm = useMemo<IForm>(
+    () => ({
+      cep: address?.cep || "",
+      street: address?.street || "",
+      district: address?.district || "",
+      number: address?.number || "",
+      shortName: address?.shortName || "",
+      complement: address?.complement || "",
+    }),
+    [address]
+  );
 
   const {
     control,
     handleSubmit,
     register,
     setValue,
+    reset,
     formState: { errors },
   } = useForm<IForm>({
     mode: "onChange",
     resolver: yupResolver(validationSchema),
-  });
-
-  const cep = useWatch({
-    control,
-    name: "cep",
+    defaultValues: addressForm,
   });
 
   const onSubmit = handleSubmit(
     async ({ cep, complement, district, number, shortName, street }) => {
       try {
-        await addressService.create({
+        const body = {
           district,
           isDefault: true,
           clientId: user?.id || "",
@@ -63,9 +76,15 @@ const AddressForm = ({ address }: IAddressFormProps) => {
             ? shortName.trim()
             : `Endereço ${addresses.length + 1}`,
           street: street.trim(),
-        });
+        };
+
+        let response: IAddress | undefined;
+
+        if (address) await addressService.update(address.id, body);
+        else response = await addressService.create(body);
 
         await getMe();
+        onSuccess(response);
       } catch {
         showToast({
           status: "error",
@@ -78,10 +97,10 @@ const AddressForm = ({ address }: IAddressFormProps) => {
     }
   );
 
-  const onCepChange = useCallback(async () => {
-    if (!cep) return;
+  const onCepChange = async (value: string) => {
+    const formatedCep = value.replace(/\D/g, "");
 
-    const formatedCep = cep.replace(/\D/g, "");
+    if (!formatedCep) return;
 
     if (formatedCep.length === 8) {
       const res = await addressService
@@ -99,37 +118,38 @@ const AddressForm = ({ address }: IAddressFormProps) => {
       setValue("district", res.bairro, config);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cep]);
+  };
 
   useEffect(() => {
-    onCepChange();
-  }, [onCepChange]);
+    reset();
+  }, [address, reset]);
 
   return (
     <Box component="form" onSubmit={onSubmit} p={4}>
       <Grid container spacing={2}>
-        <Grid item xs={6}>
-          <AppMaskedInput
+        <Grid item xs={12} md={6}>
+          <AppMaskedInput<IForm>
             fullWidth
             mask={cepMask}
-            error={!!errors.cep}
-            helperText={errors.cep?.message}
-            {...register("cep")}
+            errorMsg={errors.district?.message}
+            control={control}
+            onCustomChange={onCepChange}
+            name="cep"
             label="CEP"
             variant="outlined"
           />
         </Grid>
-        <Grid item xs={6}>
-          <AppSelect
+        <Grid item xs={12} md={6}>
+          <AppSelect<IForm>
             formControl={{ fullWidth: true }}
             data={districtOptions}
-            error={!!errors.district}
-            helperText={errors.district?.message}
-            {...register("district")}
+            errorMsg={errors.district?.message}
+            control={control}
+            name="district"
             label="Bairro"
           />
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={12} md={6}>
           <AppInput
             formControl={{ fullWidth: true }}
             error={!!errors.street}
@@ -138,7 +158,7 @@ const AddressForm = ({ address }: IAddressFormProps) => {
             label="Rua"
           />
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={12} md={6}>
           <AppInput
             formControl={{ fullWidth: true }}
             error={!!errors.number}
@@ -174,7 +194,7 @@ const AddressForm = ({ address }: IAddressFormProps) => {
         variant="contained"
         sx={{ mt: 2, textTransform: "none" }}
       >
-        Salvar
+        {address ? "Atualizar" : "Criar"}
       </Button>
     </Box>
   );

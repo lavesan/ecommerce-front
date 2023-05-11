@@ -1,21 +1,44 @@
 import { TextField, TextFieldProps } from "@mui/material";
-import { forwardRef, ForwardRefRenderFunction } from "react";
 import InputMask from "react-input-mask";
+import { Controller, FieldValues, Control, Path } from "react-hook-form";
 
-interface IAppMaskedInputProps {
+interface IAppMaskedInputProps<IForm extends FieldValues> {
   mask: string;
+  control: Control<IForm>;
+  name: Path<IForm>;
+  errorMsg?: string;
+  onCustomChange?: (value: string) => void;
 }
 
-const AppMaskedInput: ForwardRefRenderFunction<
-  HTMLInputElement,
-  IAppMaskedInputProps & TextFieldProps
-> = ({ mask, ...input }, ref) => {
+export function AppMaskedInput<IForm extends FieldValues>({
+  mask,
+  name,
+  control,
+  onCustomChange,
+  errorMsg,
+  ...input
+}: IAppMaskedInputProps<IForm> & TextFieldProps) {
   return (
-    <InputMask mask={mask} {...input}>
-      {/* @ts-ignore */}
-      {(inputProps) => <TextField ref={ref} {...inputProps} />}
-    </InputMask>
+    <Controller
+      name={name}
+      control={control}
+      render={({ field: { onChange, value } }) => (
+        <InputMask
+          mask={mask}
+          {...input}
+          name={name}
+          helperText={errorMsg}
+          error={!!errorMsg}
+          value={value}
+          onChange={(element) => {
+            if (onCustomChange) onCustomChange(element.target.value);
+            onChange(element);
+          }}
+        >
+          {/* @ts-ignore */}
+          {(inputProps) => <TextField {...inputProps} />}
+        </InputMask>
+      )}
+    />
   );
-};
-
-export default forwardRef(AppMaskedInput);
+}

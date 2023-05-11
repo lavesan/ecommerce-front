@@ -1,7 +1,16 @@
 import { useMemo, useState } from "react";
-import { Chip, ChipProps, Modal, Backdrop, Fade, Box } from "@mui/material";
+import {
+  Chip,
+  ChipProps,
+  Modal,
+  Backdrop,
+  Fade,
+  Box,
+  IconButton,
+} from "@mui/material";
 import AddLocationAltIcon from "@mui/icons-material/AddLocationAlt";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
+import CloseIcon from "@mui/icons-material/Close";
 
 import { useRouter } from "next/router";
 import { useResponsive } from "@/hooks/useResponsive";
@@ -83,7 +92,16 @@ export const ManageAddress = (chipProps: IManageAddressProps) => {
               },
             }}
           >
-            <ChooseAddress onChoose={toogleOpen} />
+            <Box>
+              <IconButton
+                onClick={toogleOpen}
+                type="button"
+                sx={{ width: "fit-content" }}
+              >
+                <CloseIcon />
+              </IconButton>
+              <ChooseAddress onChoose={toogleOpen} />
+            </Box>
           </Box>
         </Fade>
       </Modal>

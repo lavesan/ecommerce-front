@@ -11,10 +11,12 @@ import {
   sumValues,
 } from "@/helpers/checkout.helper";
 import { IAddress } from "@/models/entities/IAddress";
-import { useAppContext } from "./useAppContext";
+import { useConfigApp } from "./useConfigApp";
 
-export const useConfigCheckout = () => {
-  const { user } = useAppContext();
+export const useConfigCheckout = (
+  appConfig: Partial<ReturnType<typeof useConfigApp>>
+) => {
+  // const { addresses, user } = useAppContext();
 
   const [checkoutEnterprise, setCheckoutEnterprise] =
     useState<IEnterprise | null>(null);
@@ -129,13 +131,15 @@ export const useConfigCheckout = () => {
   }, []);
 
   useEffect(() => {
-    if (user?.addresses?.length) {
+    const addresses = appConfig.addresses;
+
+    if (addresses?.length) {
       const selectedAddr =
-        user.addresses?.find(({ isDefault }) => isDefault) || user.addresses[0];
+        addresses?.find(({ isDefault }) => isDefault) || addresses[0];
 
       if (selectedAddr) setAddress(selectedAddr);
     }
-  }, [user]);
+  }, [appConfig.addresses]);
 
   return {
     enterprise: checkoutEnterprise,

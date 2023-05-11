@@ -1,46 +1,56 @@
-import { forwardRef, ForwardRefRenderFunction, useMemo, useState } from "react";
 import {
-  InputAdornment,
-  OutlinedInput,
   FormControlProps,
-  IconButton,
   FormControl,
   InputLabel,
   FormHelperText,
   Select,
   MenuItem,
 } from "@mui/material";
+import { Controller, Control, FieldValues, Path } from "react-hook-form";
+
 import { ISelectData } from "@/models/components/ISelectData";
 
-interface IAppSelectProps {
-  helperText?: string;
+interface IAppSelectProps<IForm extends FieldValues> {
   label: string;
   data: ISelectData[];
   formControl?: FormControlProps;
+  control: Control<IForm>;
+  name: Path<IForm>;
+  errorMsg?: string;
 }
 
-const AppSelect: ForwardRefRenderFunction<
-  HTMLSelectElement,
-  IAppSelectProps & { [key: string]: any }
-> = ({ label, helperText, data, formControl = {}, ...select }, ref) => {
+export function AppSelect<IForm extends FieldValues>({
+  label,
+  data,
+  errorMsg,
+  name,
+  control,
+  formControl = {},
+}: IAppSelectProps<IForm>) {
   return (
-    <FormControl {...formControl} fullWidth variant="outlined">
-      <InputLabel id={`select_${label}`}>{label}</InputLabel>
-      <Select
-        ref={ref}
-        {...select}
-        labelId={`select_${label}`}
-        id="demo-simple-select"
-        label="Age"
-      >
-        {data.map(({ label, value }) => (
-          <MenuItem key={`${label}_${value}`} value={value}>
-            {label}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+    <Controller
+      name={name}
+      control={control}
+      render={({ field: { onChange, value } }) => (
+        <FormControl {...formControl} fullWidth variant="outlined">
+          <InputLabel id={`select_${label}`}>{label}</InputLabel>
+          <Select
+            labelId={`select_${label}`}
+            id="demo-simple-select"
+            label="Age"
+            value={value}
+            name={name}
+            onChange={onChange}
+          >
+            {data.map(({ label, value }) => (
+              <MenuItem key={`${label}_${value}`} value={value}>
+                {label}
+              </MenuItem>
+            ))}
+          </Select>
+          {!!errorMsg && <FormHelperText error>{errorMsg}</FormHelperText>}
+        </FormControl>
+      )}
+    />
   );
-};
-
-export default forwardRef(AppSelect);
+}
