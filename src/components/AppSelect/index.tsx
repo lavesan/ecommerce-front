@@ -2,13 +2,15 @@ import {
   FormControlProps,
   FormControl,
   InputLabel,
-  FormHelperText,
+  Typography,
   Select,
   MenuItem,
+  Collapse,
 } from "@mui/material";
 import { Controller, Control, FieldValues, Path } from "react-hook-form";
 
 import { ISelectData } from "@/models/components/ISelectData";
+import { useEffect, useState } from "react";
 
 interface IAppSelectProps<IForm extends FieldValues> {
   label: string;
@@ -27,6 +29,16 @@ export function AppSelect<IForm extends FieldValues>({
   control,
   formControl = {},
 }: IAppSelectProps<IForm>) {
+  const [innerErrorMsg, setInnerErroMsg] = useState("");
+
+  useEffect(() => {
+    if (errorMsg) return setInnerErroMsg(errorMsg);
+
+    setTimeout(() => {
+      setInnerErroMsg("");
+    }, 200);
+  }, [errorMsg]);
+
   return (
     <Controller
       name={name}
@@ -48,7 +60,12 @@ export function AppSelect<IForm extends FieldValues>({
               </MenuItem>
             ))}
           </Select>
-          {!!errorMsg && <FormHelperText error>{errorMsg}</FormHelperText>}
+
+          <Collapse in={!!errorMsg}>
+            <Typography sx={{ color: "error.main" }}>
+              {errorMsg || innerErrorMsg}
+            </Typography>
+          </Collapse>
         </FormControl>
       )}
     />

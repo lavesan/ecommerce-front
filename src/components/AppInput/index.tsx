@@ -1,4 +1,10 @@
-import { forwardRef, ForwardRefRenderFunction, useMemo, useState } from "react";
+import {
+  forwardRef,
+  ForwardRefRenderFunction,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import {
   InputAdornment,
   OutlinedInput,
@@ -7,21 +13,31 @@ import {
   FormControl,
   FormControlProps,
   InputLabel,
-  FormHelperText,
+  Collapse,
+  Typography,
 } from "@mui/material";
+import { Controller, Control, Path, FieldValues } from "react-hook-form";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
-interface IAppMaskedInputProps {
-  helperText?: string;
+interface IAppInputProps<IForm extends FieldValues> {
+  errorMsg?: string;
+  control: Control<IForm>;
+  name: Path<IForm>;
   formControl?: FormControlProps;
 }
 
-const AppMaskedInput: ForwardRefRenderFunction<
-  HTMLInputElement,
-  IAppMaskedInputProps & OutlinedInputProps
-> = ({ type, label, helperText, formControl = {}, ...input }, ref) => {
+export function AppInput<IForm extends FieldValues>({
+  type,
+  label,
+  control,
+  name,
+  errorMsg,
+  formControl = {},
+  ...input
+}: IAppInputProps<IForm> & OutlinedInputProps) {
   const [showPwd, setShowPwd] = useState(false);
+  const [innerErrorMsg, setInnerErroMsg] = useState("");
 
   const toogleShowPwd = () => setShowPwd((show) => !show);
 
@@ -56,20 +72,37 @@ const AppMaskedInput: ForwardRefRenderFunction<
     };
   }, [type, showPwd]);
 
+  useEffect(() => {
+    if (errorMsg) return setInnerErroMsg(errorMsg);
+
+    setTimeout(() => {
+      setInnerErroMsg("");
+    }, 200);
+  }, [errorMsg]);
+
   return (
     <FormControl {...formControl} variant="outlined">
-      <InputLabel htmlFor={input.name}>{label}</InputLabel>
-      <OutlinedInput
-        id={input.name}
-        ref={ref}
-        type={inputType}
-        label={label}
-        {...input}
-        {...propsWithPwd}
+      <InputLabel htmlFor={name}>{label}</InputLabel>
+      <Controller
+        name={name}
+        control={control}
+        render={({ field: { onChange, value } }) => (
+          <OutlinedInput
+            id={name}
+            type={inputType}
+            label={label}
+            {...input}
+            {...propsWithPwd}
+            onChange={onChange}
+            value={value}
+          />
+        )}
       />
-      {!!input.error && <FormHelperText error>{helperText}</FormHelperText>}
+      <Collapse in={!!errorMsg}>
+        <Typography sx={{ color: "error.main" }}>
+          {errorMsg || innerErrorMsg}
+        </Typography>
+      </Collapse>
     </FormControl>
   );
-};
-
-export default forwardRef(AppMaskedInput);
+}

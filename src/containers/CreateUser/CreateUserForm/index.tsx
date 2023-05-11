@@ -3,9 +3,9 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import { validationSchema } from "./validations";
-import AppMaskedInput from "@/components/AppMaskedInput";
 import { cpfMask, phoneMask } from "@/helpers/mask.helper";
-import AppInput from "@/components/AppInput";
+import { AppInput } from "@/components/AppInput";
+import { AppMaskedInput } from "@/components/AppMaskedInput";
 import { ClientService } from "@/services/client.service";
 import { useAppContext } from "@/hooks/useAppContext";
 import { useRouter } from "next/router";
@@ -28,7 +28,7 @@ export const CreateUserForm = () => {
   const { login, showToast, setIsLoading } = useAppContext();
 
   const {
-    register,
+    control,
     handleSubmit,
     formState: { errors },
     setValue,
@@ -99,45 +99,45 @@ export const CreateUserForm = () => {
       >
         Se cadastre
       </Typography>
-      <AppInput
+      <AppInput<IForm>
         fullWidth
-        error={!!errors.name}
-        helperText={errors.name?.message}
-        {...register("name")}
+        control={control}
+        errorMsg={errors.name?.message}
+        name="name"
         label="Nome"
       />
-      <AppInput
+      <AppInput<IForm>
         fullWidth
-        error={!!errors.email}
-        helperText={errors.email?.message}
-        {...register("email")}
+        control={control}
+        errorMsg={errors.email?.message}
+        name="email"
         label="Email"
         type="email"
       />
-      <AppMaskedInput
+      <AppMaskedInput<IForm>
         fullWidth
+        control={control}
         mask={cpfMask}
-        error={!!errors.cpf}
-        helperText={errors.cpf?.message}
-        {...register("cpf")}
+        errorMsg={errors.cpf?.message}
+        name="cpf"
         label="CPF"
         variant="outlined"
       />
-      <AppMaskedInput
+      <AppMaskedInput<IForm>
         fullWidth
+        control={control}
         mask={phoneMask}
-        error={!!errors.phone}
-        helperText={errors.phone?.message}
-        {...register("phone")}
+        errorMsg={errors.phone?.message}
+        name="phone"
         label="Celular"
         variant="outlined"
         type="tel"
       />
-      <AppInput
+      <AppInput<IForm>
         fullWidth
-        error={!!errors.password}
-        helperText={errors.password?.message}
-        {...register("password")}
+        control={control}
+        errorMsg={errors.password?.message}
+        name="password"
         label="Senha"
         type="password"
       />

@@ -7,7 +7,7 @@ import { useAppContext } from "@/hooks/useAppContext";
 import { IAddress } from "@/models/entities/IAddress";
 import { AddressService } from "@/services/address.service";
 
-import AppInput from "@/components/AppInput";
+import { AppInput } from "@/components/AppInput";
 import { AppMaskedInput } from "@/components/AppMaskedInput";
 import { AppSelect } from "@/components/AppSelect";
 
@@ -50,7 +50,6 @@ const AddressForm = ({ address, onSuccess }: IAddressFormProps) => {
   const {
     control,
     handleSubmit,
-    register,
     setValue,
     reset,
     formState: { errors },
@@ -150,39 +149,39 @@ const AddressForm = ({ address, onSuccess }: IAddressFormProps) => {
           />
         </Grid>
         <Grid item xs={12} md={6}>
-          <AppInput
+          <AppInput<IForm>
             formControl={{ fullWidth: true }}
-            error={!!errors.street}
-            helperText={errors.street?.message}
-            {...register("street")}
+            control={control}
+            errorMsg={errors.street?.message}
+            name="street"
             label="Rua"
           />
         </Grid>
         <Grid item xs={12} md={6}>
-          <AppInput
+          <AppInput<IForm>
             formControl={{ fullWidth: true }}
-            error={!!errors.number}
-            helperText={errors.number?.message}
-            {...register("number")}
+            control={control}
+            errorMsg={errors.number?.message}
+            name="number"
             label="Número"
             type="number"
           />
         </Grid>
         <Grid item xs={12}>
-          <AppInput
+          <AppInput<IForm>
             formControl={{ fullWidth: true }}
-            error={!!errors.complement}
-            helperText={errors.complement?.message}
-            {...register("complement")}
+            control={control}
+            errorMsg={errors.complement?.message}
+            name="complement"
             label="Complemento"
           />
         </Grid>
         <Grid item xs={12}>
-          <AppInput
+          <AppInput<IForm>
             formControl={{ fullWidth: true }}
-            error={!!errors.shortName}
-            helperText={errors.shortName?.message}
-            {...register("shortName")}
+            control={control}
+            errorMsg={errors.shortName?.message}
+            name="shortName"
             label="Nome do endereço (opcional)"
           />
         </Grid>

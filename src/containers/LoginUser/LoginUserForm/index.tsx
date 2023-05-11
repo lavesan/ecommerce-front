@@ -8,7 +8,7 @@ import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { ClientService } from "@/services/client.service";
 import { useAppContext } from "@/hooks/useAppContext";
 import { validationSchema } from "./validations";
-import AppInput from "@/components/AppInput";
+import { AppInput } from "@/components/AppInput";
 import { parseError } from "@/helpers/axiosError.helper";
 
 interface IForm {
@@ -24,7 +24,7 @@ export const LoginUserForm = () => {
   const router = useRouter();
 
   const {
-    register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<IForm>({
@@ -102,19 +102,19 @@ export const LoginUserForm = () => {
       >
         Faça seu login
       </Typography>
-      <AppInput
+      <AppInput<IForm>
         fullWidth
-        error={!!errors.email}
-        helperText={errors.email?.message}
-        {...register("email")}
+        control={control}
+        errorMsg={errors.email?.message}
+        name="email"
         label="Email"
         type="email"
       />
-      <AppInput
+      <AppInput<IForm>
         fullWidth
-        error={!!errors.password}
-        helperText={errors.password?.message}
-        {...register("password")}
+        control={control}
+        errorMsg={errors.password?.message}
+        name="password"
         label="Senha"
         type="password"
       />
