@@ -1,20 +1,16 @@
 import { AppBar, IconButton, Grid } from "@mui/material";
-import { useRouter } from "next/router";
 import Link from "next/link";
 import AdbIcon from "@mui/icons-material/Adb";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
 import { ThemeModeSwitch } from "@/components/Header/ThemeModeSwitch";
 import { useAppContext } from "@/hooks/useAppContext";
+import { useGoBack } from "@/hooks/useGoBack";
 
 export const ReturnHeader = () => {
   const { themeMode, toogleThemeMode } = useAppContext();
 
-  const router = useRouter();
-
-  const goBack = () => {
-    router.back();
-  };
+  const { goBack } = useGoBack();
 
   return (
     <AppBar

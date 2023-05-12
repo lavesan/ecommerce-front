@@ -17,11 +17,13 @@ import { useResponsive } from "@/hooks/useResponsive";
 import ChooseAddress from "@/containers/ChooseAddress";
 import { useCheckoutContext } from "@/hooks/useCheckoutContext";
 import { useAppContext } from "@/hooks/useAppContext";
+import { useGoBack } from "@/hooks/useGoBack";
 
 interface IManageAddressProps extends ChipProps {}
 
 export const ManageAddress = (chipProps: IManageAddressProps) => {
   const { isMobile } = useResponsive();
+  const { storeGoBackUrl } = useGoBack();
 
   const { token } = useAppContext();
   const { address } = useCheckoutContext();
@@ -41,7 +43,11 @@ export const ManageAddress = (chipProps: IManageAddressProps) => {
   };
 
   const onClick = () => {
-    if (!token) return router.push("/login");
+    if (!token) {
+      if (isMobile) storeGoBackUrl("/endereco");
+      else storeGoBackUrl(router.pathname);
+      return router.push("/login");
+    }
 
     if (isMobile) return router.push("/endereco");
 

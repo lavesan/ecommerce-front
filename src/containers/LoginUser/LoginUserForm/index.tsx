@@ -10,6 +10,8 @@ import { useAppContext } from "@/hooks/useAppContext";
 import { validationSchema } from "./validations";
 import { AppInput } from "@/components/AppInput";
 import { parseError } from "@/helpers/axiosError.helper";
+import { useGoBack } from "@/hooks/useGoBack";
+import { useEffect } from "react";
 
 interface IForm {
   email: string;
@@ -18,6 +20,8 @@ interface IForm {
 
 export const LoginUserForm = () => {
   const clientService = ClientService.getInstance();
+
+  const { goBack } = useGoBack();
 
   const { login, showToast, setIsLoading, isDarkMode } = useAppContext();
 
@@ -36,7 +40,7 @@ export const LoginUserForm = () => {
     try {
       const { credentials, ...client } = await clientService.login(values);
       login({ client, credentials });
-      router.push("/");
+      goBack();
     } catch (err: any) {
       showToast({
         status: "error",
@@ -54,7 +58,7 @@ export const LoginUserForm = () => {
           credential
         );
         login({ client, credentials });
-        router.push("/");
+        goBack();
         return;
       } catch (err: any) {
         if (err?.response?.status === 404) {
@@ -62,7 +66,10 @@ export const LoginUserForm = () => {
 
           router.push({
             pathname: "/criar-usuario",
-            query: data,
+            query: {
+              ...data,
+              // goBack,
+            },
           });
           return;
         }

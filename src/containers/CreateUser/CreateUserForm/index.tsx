@@ -11,6 +11,7 @@ import { useAppContext } from "@/hooks/useAppContext";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { parseError } from "@/helpers/axiosError.helper";
+import { useGoBack } from "@/hooks/useGoBack";
 
 interface IForm {
   name: string;
@@ -24,6 +25,8 @@ export const CreateUserForm = () => {
   const clientService = ClientService.getInstance();
 
   const router = useRouter();
+
+  const { goBack } = useGoBack();
 
   const { login, showToast, setIsLoading } = useAppContext();
 
@@ -49,7 +52,7 @@ export const CreateUserForm = () => {
         });
         login({ client, credentials });
 
-        router.push("/");
+        goBack();
       } catch (err: any) {
         const axiosErr = parseError(err);
 
