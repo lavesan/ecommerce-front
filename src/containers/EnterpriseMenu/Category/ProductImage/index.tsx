@@ -53,6 +53,7 @@ export const ProductImage = ({
         onError={() => {
           setIsError(true);
         }}
+        loading="lazy"
       />
     </Skeleton>
   ) : (
@@ -67,6 +68,7 @@ export const ProductImage = ({
       onError={() => {
         setIsError(true);
       }}
+      loading="lazy"
     />
   );
 };
