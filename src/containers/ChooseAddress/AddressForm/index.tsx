@@ -114,9 +114,7 @@ const AddressForm = ({ address, onSuccess }: IAddressFormProps) => {
 
       setValue("street", res.logradouro, config);
       setValue("complement", res.complemento, config);
-      setValue("district", res.bairro, config);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   };
 
   useEffect(() => {

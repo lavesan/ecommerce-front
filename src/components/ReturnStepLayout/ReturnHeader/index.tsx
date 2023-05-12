@@ -33,7 +33,13 @@ export const ReturnHeader = () => {
             <AppLogo />
           </IconButton>
         </Grid>
-        <Grid item xs={4} display="flex" justifyContent="flex-end">
+        <Grid
+          item
+          xs={4}
+          display="flex"
+          alignItems="center"
+          justifyContent="flex-end"
+        >
           <ThemeModeSwitch
             sx={{ m: 1 }}
             checked={themeMode === "dark"}

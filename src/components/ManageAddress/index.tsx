@@ -62,6 +62,11 @@ export const ManageAddress = (chipProps: IManageAddressProps) => {
         label={addressLabel}
         onClick={onClick}
         variant="outlined"
+        sx={{
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+        }}
       />
       <Modal
         keepMounted

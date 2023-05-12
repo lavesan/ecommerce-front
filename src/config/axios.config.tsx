@@ -22,10 +22,12 @@ export const AxiosInterceptorHOC = ({
 
   useEffect(() => {
     const successReqInterceptor = (config: InternalAxiosRequestConfig) => {
-      setIsLoading(true);
+      // @ts-ignore
+      if (!config.notLoad) setIsLoading(true);
       const token = getStorageToken();
 
       const headers = config.headers || {};
+
       headers.Authorization = headers.Authorization
         ? headers.Authorization
         : `Bearer ${token}`;

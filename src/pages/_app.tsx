@@ -58,6 +58,12 @@ export default function MyApp(props: MyAppProps) {
               name="viewport"
               content="initial-scale=1, width=device-width"
             />
+            <title>Marketplace - Restaurantes</title>
+            <link
+              rel="icon"
+              type="image/x-icon"
+              href="/static/logo-color.png"
+            ></link>
           </Head>
           <ThemeProvider theme={materialTheme}>
             {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}

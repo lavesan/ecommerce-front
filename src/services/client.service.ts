@@ -31,7 +31,11 @@ export class ClientService {
   }
 
   async findMe(): Promise<IClient> {
-    const response = await server.get<IClient>(`/client/me`);
+    const response = await server.get<IClient>(`/client/me`, {
+      // @ts-ignore
+      notLoad: true,
+    });
+    // @ts-ignore
     return response.data;
   }
 
