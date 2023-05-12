@@ -9,7 +9,6 @@ import {
   Tooltip,
   Badge,
 } from "@mui/material";
-import AdbIcon from "@mui/icons-material/Adb";
 import PersonIcon from "@mui/icons-material/Person";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import { useRouter } from "next/router";
@@ -20,6 +19,7 @@ import { ManageAddress } from "../ManageAddress";
 import { ThemeModeSwitch } from "./ThemeModeSwitch";
 import { useResponsive } from "@/hooks/useResponsive";
 import { useCheckoutContext } from "@/hooks/useCheckoutContext";
+import { AppLogo } from "../AppLogo";
 
 const settings = [
   { id: "my-data-menu", label: "Meus dados", route: "/meus-dados" },
@@ -70,8 +70,8 @@ export const Header = () => {
         py={1}
       >
         {/* Logo */}
-        <IconButton component={Link} href="/">
-          <AdbIcon />
+        <IconButton component={Link} href="/" title="logo">
+          <AppLogo />
         </IconButton>
 
         <ManageAddress

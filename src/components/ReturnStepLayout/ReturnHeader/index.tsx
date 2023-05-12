@@ -1,11 +1,11 @@
 import { AppBar, IconButton, Grid } from "@mui/material";
 import Link from "next/link";
-import AdbIcon from "@mui/icons-material/Adb";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
 import { ThemeModeSwitch } from "@/components/Header/ThemeModeSwitch";
 import { useAppContext } from "@/hooks/useAppContext";
 import { useGoBack } from "@/hooks/useGoBack";
+import { AppLogo } from "@/components/AppLogo";
 
 export const ReturnHeader = () => {
   const { themeMode, toogleThemeMode } = useAppContext();
@@ -30,7 +30,7 @@ export const ReturnHeader = () => {
         <Grid item xs={4} display="flex" justifyContent="center">
           {/* Logo */}
           <IconButton component={Link} href="/">
-            <AdbIcon />
+            <AppLogo />
           </IconButton>
         </Grid>
         <Grid item xs={4} display="flex" justifyContent="flex-end">
