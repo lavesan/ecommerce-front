@@ -85,7 +85,7 @@ export const useConfigApp = () => {
     try {
       const client = await clientService.findMe();
 
-      setUser(client);
+      setUser(JSON.parse(JSON.stringify(client)));
       setAddresses(client.addresses || []);
     } catch (err: any) {
       console.log("Deu pau no find me");

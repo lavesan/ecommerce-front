@@ -1,8 +1,9 @@
 export interface IUpdateClientRequest {
-  name: string;
-  email: string;
-  password: string;
-  cpf: string;
+  name?: string;
+  email?: string;
+  password?: string;
+  cpf?: string;
+  phone?: string;
   addressses?: {
     id?: string;
     cep: string;

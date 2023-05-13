@@ -81,28 +81,29 @@ export function AppInput<IForm extends FieldValues>({
   }, [errorMsg]);
 
   return (
-    <FormControl {...formControl} variant="outlined">
-      <InputLabel htmlFor={name}>{label}</InputLabel>
-      <Controller
-        name={name}
-        control={control}
-        render={({ field: { onChange, value } }) => (
+    <Controller
+      name={name}
+      control={control}
+      render={({ field: { onChange, value } }) => (
+        <FormControl {...formControl} variant="outlined">
+          <InputLabel htmlFor={name}>{label}</InputLabel>
           <OutlinedInput
             id={name}
             type={inputType}
             label={label}
             {...input}
             {...propsWithPwd}
+            name={name}
             onChange={onChange}
             value={value}
           />
-        )}
-      />
-      <Collapse in={!!errorMsg}>
-        <Typography sx={{ color: "error.main" }}>
-          {errorMsg || innerErrorMsg}
-        </Typography>
-      </Collapse>
-    </FormControl>
+          <Collapse in={!!errorMsg}>
+            <Typography sx={{ color: "error.main" }}>
+              {errorMsg || innerErrorMsg}
+            </Typography>
+          </Collapse>
+        </FormControl>
+      )}
+    />
   );
 }

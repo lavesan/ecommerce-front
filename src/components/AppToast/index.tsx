@@ -14,7 +14,12 @@ export const AppToast = ({
   onClose,
 }: IAppToastProps) => {
   return (
-    <Snackbar open={isOpen} autoHideDuration={6000} onClose={onClose}>
+    <Snackbar
+      open={isOpen}
+      autoHideDuration={6000}
+      onClose={onClose}
+      anchorOrigin={{ horizontal: "center", vertical: "top" }}
+    >
       <Alert onClose={onClose} severity={status} sx={{ width: "100%" }}>
         {message}
       </Alert>

@@ -3,6 +3,7 @@ import { Box, Grid } from "@mui/material";
 import { useResponsive } from "@/hooks/useResponsive";
 import { useAppContext } from "@/hooks/useAppContext";
 import { Header } from "../Header";
+import { ReturnHeader } from "../ReturnStepLayout/ReturnHeader";
 
 export const UserLayout = ({ children }: React.PropsWithChildren) => {
   const { isMobile } = useResponsive();
@@ -10,7 +11,7 @@ export const UserLayout = ({ children }: React.PropsWithChildren) => {
 
   return (
     <>
-      <Header />
+      <ReturnHeader />
       <Grid
         container
         spacing={[1, 4]}
