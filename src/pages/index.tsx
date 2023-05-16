@@ -18,7 +18,7 @@ export const getStaticProps: GetStaticProps<IHomeProps> = async () => {
   const enterprises = await enterpriseService.findAll();
 
   const todayWeekDay = getWeekDay();
-  const promotions = await promotionService.findAllByWeekDay(todayWeekDay);
+  const promotions = await promotionService.findAll({ weekDay: todayWeekDay });
 
   return {
     props: {
@@ -29,9 +29,11 @@ export const getStaticProps: GetStaticProps<IHomeProps> = async () => {
   };
 };
 
-// eslint-disable-next-line import/no-anonymous-default-export, react/display-name
-export default (props: IHomeProps) => (
+const HomePage = (props: IHomeProps) => (
   <AppLayout>
     <Home {...props} />
   </AppLayout>
 );
+
+// eslint-disable-next-line import/no-anonymous-default-export, react/display-name
+export default HomePage;

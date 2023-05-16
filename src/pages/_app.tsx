@@ -91,7 +91,6 @@ export default function MyApp(props: MyAppProps) {
                     <GoogleOAuthProvider
                       clientId={process.env.NEXT_PUBLIC_GOOGLE_ID || ""}
                     >
-                      {/* <Header /> */}
                       <Component {...pageProps} />
                       <Footer />
                     </GoogleOAuthProvider>

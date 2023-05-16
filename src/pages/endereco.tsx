@@ -1,9 +1,9 @@
-import { ReturnStepLayout } from "@/components/ReturnStepLayout";
 import ChooseAddress from "@/containers/ChooseAddress";
+
+import { ReturnStepLayout } from "@/components/ReturnStepLayout";
 import { useGoBack } from "@/hooks/useGoBack";
 
-// eslint-disable-next-line import/no-anonymous-default-export, react/display-name
-export default () => {
+const AddressPage = () => {
   const { goBack } = useGoBack();
 
   return (
@@ -12,3 +12,5 @@ export default () => {
     </ReturnStepLayout>
   );
 };
+
+export default AddressPage;

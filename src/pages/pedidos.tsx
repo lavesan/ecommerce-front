@@ -1,5 +1,5 @@
-const MyOrders = () => {
+const OrderPage = () => {
   return <h1>Meus pedidos</h1>;
 };
 
-export default MyOrders;
+export default OrderPage;

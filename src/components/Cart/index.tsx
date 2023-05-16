@@ -17,6 +17,8 @@ import React, { useMemo, useState } from "react";
 import { AddProduct } from "../AddProduct";
 import { ICheckoutProduct } from "@/models/checkout/ICheckoutProduct";
 import { IEnterprise } from "@/models/entities/IEnterprise";
+import { AddProductModal } from "../AddProductModal";
+import { useRouter } from "next/router";
 
 interface CartProps {
   onClose?: VoidFunction;
@@ -35,6 +37,8 @@ export const Cart = ({ onClose, isOnCheckoutPage }: CartProps) => {
 
   const { isMobile } = useResponsive();
 
+  const router = useRouter();
+
   const [selectedProd, setSelectedProd] = useState<ICheckoutProduct | null>();
 
   const isMobileContainerStyle = useMemo<BoxProps>(() => {
@@ -46,6 +50,9 @@ export const Cart = ({ onClose, isOnCheckoutPage }: CartProps) => {
   }, [isMobile]);
 
   const openModal = (product: ICheckoutProduct) => {
+    if (isMobile)
+      return router.push(`/produto/${enterprise?.id}/${product.id}`);
+
     setSelectedProd(product);
   };
 
@@ -238,7 +245,7 @@ export const Cart = ({ onClose, isOnCheckoutPage }: CartProps) => {
           </>
         )}
       </Box>
-      <AddProduct
+      <AddProductModal
         isOpen={!!selectedProd}
         product={selectedProd || ({} as ICheckoutProduct)}
         enterprise={enterprise || ({} as IEnterprise)}

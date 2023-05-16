@@ -37,6 +37,10 @@ export const Footer = () => {
 
   const [openDrawer, setOpenDrawer] = useState(false);
 
+  const hideFooter = useMemo(() => {
+    return router.pathname.includes("/produto/");
+  }, [router.pathname]);
+
   const selectedRoute = useMemo(() => {
     let selectedRoute: number;
 
@@ -86,7 +90,7 @@ export const Footer = () => {
     setOpenDrawer(false);
   };
 
-  if (!isMobile) return <></>;
+  if (!isMobile || hideFooter) return <></>;
 
   return (
     <>

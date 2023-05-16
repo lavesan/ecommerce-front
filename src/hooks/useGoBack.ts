@@ -9,12 +9,6 @@ export const useGoBack = () => {
   const router = useRouter();
 
   const goBack = () => {
-    const savedGoBackUrl = getGoBackUrl();
-    if (savedGoBackUrl) {
-      router.push(savedGoBackUrl);
-      return clearGoBackUrl();
-    }
-
     if (window.history.state && window.history.state.idx > 0) {
       router.back();
     } else {
@@ -22,9 +16,19 @@ export const useGoBack = () => {
     }
   };
 
+  const goStoreBackOrBack = () => {
+    const savedGoBackUrl = getGoBackUrl();
+    if (savedGoBackUrl) {
+      router.push(savedGoBackUrl);
+      return clearGoBackUrl();
+    }
+
+    goBack();
+  };
+
   const storeGoBackUrl = (url: string) => {
     saveGoBackUrl(url);
   };
 
-  return { goBack, storeGoBackUrl };
+  return { goBack, goStoreBackOrBack, storeGoBackUrl };
 };

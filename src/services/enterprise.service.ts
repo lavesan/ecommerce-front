@@ -19,6 +19,18 @@ export class EnterpriseService {
     return response.data;
   }
 
+  async findById(id: string): Promise<IEnterprise> {
+    const response = await server.get<IEnterprise>(`/enterprise/${id}`);
+    return response.data;
+  }
+
+  async findAllWithProducts(): Promise<IEnterprise[]> {
+    const response = await server.get<IEnterprise[]>(
+      "/enterprise/all/products"
+    );
+    return response.data;
+  }
+
   static getInstance() {
     if (!this.INSTANCE) this.INSTANCE = new EnterpriseService();
     return this.INSTANCE;

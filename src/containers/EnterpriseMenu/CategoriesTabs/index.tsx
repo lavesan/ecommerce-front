@@ -57,7 +57,7 @@ const CategoriesTabs: ForwardRefRenderFunction<
       scrollButtons="auto"
       sx={(theme) => ({
         position: "sticky",
-        top: isMobile ? "3.125rem" : "3.75rem",
+        top: isMobile ? "5.625rem" : "6.875rem",
         left: 0,
         zIndex: 10,
         backgroundColor: theme.palette.background.default,

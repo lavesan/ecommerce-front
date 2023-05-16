@@ -15,9 +15,15 @@ import Category from "./Category";
 import { debounce } from "@/helpers/debounce.helper";
 import { getOffset } from "@/helpers/document.helper";
 import { elemCategoryId } from "@/helpers/category.helper";
-import { AddProduct } from "@/components/AddProduct";
+import { AddProductModal } from "@/components/AddProductModal";
+import { useResponsive } from "@/hooks/useResponsive";
+import { useRouter } from "next/router";
 
 const EnterpriseMenu = ({ menu }: IEnterpriseMenuProps) => {
+  const { isMobile } = useResponsive();
+
+  const router = useRouter();
+
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedProd, setSelectedProd] = useState<IEnterpriseMenuProduct>();
   const categoriesTabsRef = useRef<IUseCategoriesTabsRef>(null);
@@ -25,6 +31,10 @@ const EnterpriseMenu = ({ menu }: IEnterpriseMenuProps) => {
   let categoryRefs: HTMLDivElement[] = [];
 
   const openModal = (product: IEnterpriseMenuProduct) => {
+    if (isMobile) return router.push(`/produto/${menu.id}/${product.id}`);
+
+    console.log("passando para cá");
+
     setSelectedProd(product);
     setModalIsOpen(true);
   };
@@ -111,7 +121,7 @@ const EnterpriseMenu = ({ menu }: IEnterpriseMenuProps) => {
           </Box>
         ))}
       </Box>
-      <AddProduct
+      <AddProductModal
         isOpen={modalIsOpen}
         product={selectedProd}
         enterprise={menu}

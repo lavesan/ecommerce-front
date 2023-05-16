@@ -84,9 +84,10 @@ export const getStaticProps: GetStaticProps<IEnterpriseMenuProps> = async ({
   };
 };
 
-// eslint-disable-next-line import/no-anonymous-default-export, react/display-name
-export default (props: IEnterpriseMenuProps) => (
+const EnterprisePage = (props: IEnterpriseMenuProps) => (
   <AppLayout>
     <EnterpriseMenu {...props} />
   </AppLayout>
 );
+
+export default EnterprisePage;

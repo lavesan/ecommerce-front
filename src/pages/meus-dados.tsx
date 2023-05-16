@@ -1,7 +1,7 @@
 import { UserLayout } from "@/components/UserLayout";
 import UserData from "@/containers/UserData";
 
-const MyUserData = () => {
+const MyDataPage = () => {
   return (
     <UserLayout>
       <UserData />
@@ -9,4 +9,4 @@ const MyUserData = () => {
   );
 };
 
-export default MyUserData;
+export default MyDataPage;

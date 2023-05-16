@@ -26,7 +26,7 @@ export const CreateUserForm = () => {
 
   const router = useRouter();
 
-  const { goBack } = useGoBack();
+  const { goStoreBackOrBack } = useGoBack();
 
   const { login, showToast, setIsLoading } = useAppContext();
 
@@ -52,7 +52,7 @@ export const CreateUserForm = () => {
         });
         login({ client, credentials });
 
-        goBack();
+        goStoreBackOrBack();
       } catch (err: any) {
         const axiosErr = parseError(err);
 

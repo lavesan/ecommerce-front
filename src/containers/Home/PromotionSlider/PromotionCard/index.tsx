@@ -33,6 +33,10 @@ export const PromotionCard = ({
     onInit();
   }, [onInit]);
 
+  useEffect(() => {
+    console.log("promotion card: ", promotion);
+  }, [promotion]);
+
   return isLoading ? (
     <Box {...boxProps} height={[150, 200]}>
       <Skeleton
