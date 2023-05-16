@@ -54,6 +54,7 @@ export const Cart = ({ onClose, isOnCheckoutPage }: CartProps) => {
       return router.push(`/produto/${enterprise?.id}/${product.id}`);
 
     setSelectedProd(product);
+    onPropClose();
   };
 
   const onPropClose = () => {
