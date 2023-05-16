@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Head from "next/head";
 import { AppProps } from "next/app";
 import {
@@ -29,6 +29,8 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
+import { useRouter } from "next/router";
+import { BouncingDotsLoader } from "@/components/BouncingDotsLoader";
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -48,6 +50,27 @@ export default function MyApp(props: MyAppProps) {
     () => theme(appConfig.themeMode),
     [appConfig.themeMode]
   );
+
+  const router = useRouter();
+
+  const [loadingPage, setLoadingPage] = useState(false);
+
+  useEffect(() => {
+    const handleStart = (url: string) =>
+      url !== router.asPath && setLoadingPage(true);
+    const handleComplete = (url: string) =>
+      url === router.asPath && setLoadingPage(false);
+
+    router.events.on("routeChangeStart", handleStart);
+    router.events.on("routeChangeComplete", handleComplete);
+    router.events.on("routeChangeError", handleComplete);
+
+    return () => {
+      router.events.off("routeChangeStart", handleStart);
+      router.events.off("routeChangeComplete", handleComplete);
+      router.events.off("routeChangeError", handleComplete);
+    };
+  });
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -83,7 +106,6 @@ export default function MyApp(props: MyAppProps) {
                 },
               }}
             />
-            <Loading isLoading={isLoading} />
             <AppContext.Provider value={appConfig}>
               <CheckoutContext.Provider value={checkoutConfig}>
                 <AxiosInterceptorHOC>
@@ -91,6 +113,8 @@ export default function MyApp(props: MyAppProps) {
                     <GoogleOAuthProvider
                       clientId={process.env.NEXT_PUBLIC_GOOGLE_ID || ""}
                     >
+                      <BouncingDotsLoader isLoading={loadingPage} />
+                      <Loading isLoading={isLoading} />
                       <Component {...pageProps} />
                       <Footer />
                     </GoogleOAuthProvider>
