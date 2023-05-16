@@ -72,6 +72,22 @@ export default function MyApp(props: MyAppProps) {
     };
   });
 
+  const [firstLoad, setFirstLoad] = useState(true);
+
+  const hideFirstLoading = () => {
+    setFirstLoad(false);
+  };
+
+  useEffect(() => {
+    window.addEventListener("load", hideFirstLoading);
+
+    return () => {
+      window.removeEventListener("load", hideFirstLoading);
+    };
+  });
+
+  if (firstLoad) return <BouncingDotsLoader isLoading={true} />;
+
   return (
     <QueryClientProvider client={queryClient}>
       <Hydrate state={pageProps.dehydratedState}>
