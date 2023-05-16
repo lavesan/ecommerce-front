@@ -79,6 +79,8 @@ export default function MyApp(props: MyAppProps) {
   };
 
   useEffect(() => {
+    if (document.readyState === "complete") return hideFirstLoading();
+
     window.addEventListener("load", hideFirstLoading);
 
     return () => {
