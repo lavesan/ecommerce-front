@@ -6,12 +6,10 @@ const Product = ({ enterprise, product }: IProductProps) => {
   const { goBack } = useGoBack();
 
   if (!product) {
-    goBack();
     return <h1>Produto não encontrado</h1>;
   }
 
   if (!enterprise) {
-    goBack();
     return <h1>Empresa não encontrada</h1>;
   }
 

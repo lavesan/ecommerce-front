@@ -67,7 +67,7 @@ export const AddProduct = ({
           mt: "auto",
           width: "100%",
           backgroundColor: isDarkMode ? "grey.900" : "white",
-          "-webkit-backface-visibility": "hidden",
+          WebkitBackfaceVisibility: "hidden",
         }
       : {};
   }, [isMobile, isDarkMode]);
@@ -193,7 +193,7 @@ export const AddProduct = ({
                     mb: `${footerHeight}px`,
                   }
                 : {
-                    "-webkit-overflow-scrolling": "touch",
+                    WebkitOverflowScrolling: "touch",
                     overflowY: "scroll",
                   }
             }

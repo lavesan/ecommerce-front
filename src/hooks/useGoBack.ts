@@ -9,11 +9,7 @@ export const useGoBack = () => {
   const router = useRouter();
 
   const goBack = () => {
-    if (window.history.state && window.history.state.idx > 0) {
-      router.back();
-    } else {
-      router.push("/");
-    }
+    router.back();
   };
 
   const goStoreBackOrBack = () => {

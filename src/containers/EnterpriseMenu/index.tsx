@@ -33,8 +33,6 @@ const EnterpriseMenu = ({ menu }: IEnterpriseMenuProps) => {
   const openModal = (product: IEnterpriseMenuProduct) => {
     if (isMobile) return router.push(`/produto/${menu.id}/${product.id}`);
 
-    console.log("passando para cá");
-
     setSelectedProd(product);
     setModalIsOpen(true);
   };

@@ -1,8 +1,7 @@
-import { Modal, Fade, Backdrop } from "@mui/material";
+import { Modal, Backdrop } from "@mui/material";
 import { AddProduct } from "../AddProduct";
 import { IEnterpriseMenuProduct } from "@/models/pages/IEnterpriseMenuProps";
 import { IEnterprise } from "@/models/entities/IEnterprise";
-import { useEffect } from "react";
 
 interface IAddProductModalProps {
   isOpen: boolean;
@@ -16,10 +15,6 @@ export const AddProductModal = ({
   isOpen,
   ...props
 }: IAddProductModalProps) => {
-  useEffect(() => {
-    console.log("abrindo: ", isOpen);
-  }, [isOpen]);
-
   return (
     <Modal
       disableAutoFocus
