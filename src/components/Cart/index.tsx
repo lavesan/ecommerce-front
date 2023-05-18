@@ -118,16 +118,12 @@ export const Cart = ({ onClose, isOnCheckoutPage }: CartProps) => {
                   mb={2}
                 >
                   <Box>
-                    <Typography component="p">
+                    <Typography component="p" fontSize="large">
                       {product.quantity}x {product.name}
                     </Typography>
-                    <Typography component="p">
-                      {product.productAdditionalCategory
-                        ?.map((addCat) =>
-                          addCat.productAdditionals?.map(
-                            (additional) => additional.name
-                          )
-                        )
+                    <Typography component="p" color="grey.600">
+                      {product.additionals
+                        .map(({ name, quantity }) => `${quantity}x ${name}`)
                         .join(", ")}
                     </Typography>
                     <Box

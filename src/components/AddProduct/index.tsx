@@ -21,12 +21,132 @@ import { useAppContext } from "@/hooks/useAppContext";
 import { IEnterprise } from "@/models/entities/IEnterprise";
 import { DifferentEnterpriseDialog } from "./DifferentEnterpriseDialog";
 import { ICheckoutProduct } from "@/models/checkout/ICheckoutProduct";
+import { IAddProductAdditional } from "@/models/components/IAddProductAdditional";
 
 interface IAddProductProps {
   product?: IEnterpriseMenuProduct;
   enterprise: IEnterprise;
   onSuccess: VoidFunction;
 }
+
+const useAddProduct = (product?: IEnterpriseMenuProduct) => {
+  const [selectedOptions, setSelectedOptions] = useState<
+    IAddProductAdditional[]
+  >([]);
+
+  const addAdditional = (additional: IAddProductAdditional) => {
+    setSelectedOptions((actual) => {
+      const additionalExists = actual.find((elem) => elem.id === additional.id);
+
+      // Adds one more additional on quantity
+      if (additionalExists) {
+        return actual.map((elem) => {
+          if (elem.id === additional.id) {
+            return {
+              ...elem,
+              quantity: elem.quantity + 1,
+            };
+          }
+
+          return elem;
+        });
+      }
+
+      return [...actual, additional];
+    });
+  };
+
+  const subtractAdditional = (id: string) => {
+    setSelectedOptions((actual) => {
+      const additionalExists = actual.find((elem) => elem.id === id);
+
+      if (additionalExists) {
+        if (additionalExists.quantity === 1) {
+          return actual.filter((elem) => elem.id !== id);
+        }
+
+        return actual.map((elem) => {
+          if (elem.id === id) {
+            return {
+              ...elem,
+              quantity: elem.quantity - 1,
+            };
+          }
+
+          return elem;
+        });
+      }
+
+      return actual;
+    });
+  };
+
+  const addToCartIsDisabled = useMemo(() => {
+    if (!product) return true;
+
+    return product.productAdditionalCategory?.some(
+      ({ id, isOptional, limit }) => {
+        const additionalOptions = selectedOptions.filter(
+          (opt) => opt.addCategoryId === id
+        );
+        const additionalCount: number = additionalOptions.reduce(
+          (opt1, opt2) => opt1 + opt2.quantity,
+          0
+        );
+
+        return !isOptional && additionalCount < limit;
+      }
+    );
+  }, [product, selectedOptions]);
+
+  const disabledAddAddditional = ({
+    addCategoryId,
+    limit,
+  }: {
+    addCategoryId: string;
+    limit: number;
+  }): boolean => {
+    if (!limit) return false;
+
+    const categoryOptions = selectedOptions.filter(
+      (opt) => opt.addCategoryId === addCategoryId
+    );
+    const additionalCount: number = categoryOptions.reduce(
+      (opt1, opt2) => opt1 + opt2.quantity,
+      0
+    );
+
+    return additionalCount >= limit;
+  };
+
+  const getAdditionalQuantity = (id: string): number => {
+    const additional = selectedOptions.find((opt) => opt.id === id);
+
+    if (additional) return additional.quantity;
+
+    return 0;
+  };
+
+  const getAdditionalCategoryQuantity = useCallback(
+    (id: string): number => {
+      const additionals = selectedOptions.filter(
+        (opt) => opt.addCategoryId === id
+      );
+      return additionals.reduce((opt1, opt2) => opt1 + opt2.quantity, 0);
+    },
+    [selectedOptions]
+  );
+
+  return {
+    addAdditional,
+    subtractAdditional,
+    disabledAddAddditional,
+    getAdditionalQuantity,
+    getAdditionalCategoryQuantity,
+    addToCartIsDisabled,
+    selectedOptions,
+  };
+};
 
 export const AddProduct = ({
   product,
@@ -35,6 +155,16 @@ export const AddProduct = ({
 }: IAddProductProps) => {
   const { isDarkMode, showToast } = useAppContext();
   const { addProduct, enterprise: checkoutEnterprise } = useCheckoutContext();
+
+  const {
+    selectedOptions,
+    addToCartIsDisabled,
+    addAdditional,
+    subtractAdditional,
+    disabledAddAddditional,
+    getAdditionalQuantity,
+    getAdditionalCategoryQuantity,
+  } = useAddProduct(product);
 
   const { isMobile } = useResponsive();
 
@@ -76,8 +206,13 @@ export const AddProduct = ({
     const prodValue: number =
       (product?.promotionId ? product.promotionValue : product?.value) || 0;
 
-    return maskMoney(prodValue * quantity);
-  }, [quantity, product]);
+    const additionalsValue = selectedOptions.reduce(
+      (value, opt) => value + opt.value * opt.quantity,
+      0
+    );
+
+    return maskMoney((prodValue + additionalsValue) * quantity);
+  }, [quantity, product, selectedOptions]);
 
   const addQuantity = () => {
     setQuantity((actual) => actual + 1);
@@ -93,9 +228,10 @@ export const AddProduct = ({
       return;
     }
 
-    const productToAdd = {
+    const productToAdd: ICheckoutProduct = {
       ...product,
       quantity,
+      additionals: selectedOptions,
     };
 
     if (checkoutEnterprise && checkoutEnterprise.id !== enterprise.id) {
@@ -144,18 +280,6 @@ export const AddProduct = ({
               }
         }
       >
-        {!isMobile && (
-          <Box
-            display="flex"
-            flexDirection="row"
-            justifyContent="flex-end"
-            paddingBottom={1}
-          >
-            <IconButton onClick={onSuccess} title="Fechar">
-              <CloseIcon fontSize="medium" />
-            </IconButton>
-          </Box>
-        )}
         <Box
           width={["100%", "49%"]}
           display="flex"
@@ -170,7 +294,7 @@ export const AddProduct = ({
             height={["auto", "auto"]}
           />
         </Box>
-        <Box width={["100%", "49%"]}>
+        <Box width={["100%", "49%"]} display="flex" flexDirection="column">
           {!isMobile && (
             <Box
               display="flex"
@@ -186,7 +310,7 @@ export const AddProduct = ({
           <Box
             display="flex"
             flexDirection="column"
-            maxHeight={["inherit", "70%"]}
+            height="100%"
             sx={
               isMobile
                 ? {
@@ -236,6 +360,11 @@ export const AddProduct = ({
               <Additional
                 key={`additional_category_${additionaCat.id}`}
                 additionaCat={additionaCat}
+                addAdditional={addAdditional}
+                subtractAdditional={subtractAdditional}
+                disabledAddAddditional={disabledAddAddditional}
+                getAdditionalQuantity={getAdditionalQuantity}
+                getAdditionalCategoryQuantity={getAdditionalCategoryQuantity}
               />
             ))}
           </Box>
@@ -243,12 +372,12 @@ export const AddProduct = ({
             ref={getFooterRef}
             {...footerStyle}
             component="footer"
-            height={150}
+            width="100%"
             alignSelf="flex-end"
             justifySelf="flex-end"
             display="flex"
             justifyContent="flex-end"
-            alignItems="center"
+            alignItems="flex-end"
             flexDirection={isMobile ? "column" : "row"}
             gap={2}
             paddingY={2}
@@ -267,7 +396,7 @@ export const AddProduct = ({
                 justifyContent: "space-between",
               }}
             >
-              <IconButton onClick={removeQuantity}>
+              <IconButton disabled={quantity <= 1} onClick={removeQuantity}>
                 <RemoveIcon />
               </IconButton>
               {quantity}
@@ -278,6 +407,7 @@ export const AddProduct = ({
             <Button
               variant="contained"
               size="large"
+              disabled={addToCartIsDisabled}
               sx={{
                 textTransform: "none",
                 display: "flex",

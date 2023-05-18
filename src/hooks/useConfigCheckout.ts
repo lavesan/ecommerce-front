@@ -64,17 +64,7 @@ export const useConfigCheckout = (
       JSON.stringify(checkoutProducts)
     ) as ICheckoutProduct[];
 
-    const hasProduct = newProducts.some(({ id }) => product.id === id);
-    if (!hasProduct) newProducts.push(product);
-    else
-      newProducts = newProducts.map((storedProduct) =>
-        storedProduct.id === product.id
-          ? {
-              ...storedProduct,
-              quantity: storedProduct.quantity + 1,
-            }
-          : storedProduct
-      );
+    newProducts.push(product);
 
     saveCheckoutProductsStorage(newProducts);
     setCheckoutProducts(newProducts);

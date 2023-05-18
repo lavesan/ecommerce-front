@@ -1,19 +1,43 @@
 import { Typography, Box, Chip, IconButton } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
 
 import { IProductAdditionalCategory } from "@/models/entities/IProductAdditionalCategory";
 import { useAppContext } from "@/hooks/useAppContext";
 import { maskMoney } from "@/helpers/money.helper";
 import { getImgUrl } from "@/helpers/image.helper";
 import { useResponsive } from "@/hooks/useResponsive";
+import { IAddProductAdditional } from "@/models/components/IAddProductAdditional";
+import { useMemo } from "react";
 
 interface IAdditionaProps {
   additionaCat: IProductAdditionalCategory;
+  addAdditional: (additional: IAddProductAdditional) => void;
+  subtractAdditional: (id: string) => void;
+  disabledAddAddditional: (data: {
+    addCategoryId: string;
+    limit: number;
+  }) => boolean;
+  getAdditionalQuantity: (id: string) => number;
+  getAdditionalCategoryQuantity: (id: string) => number;
 }
 
-export const Additional = ({ additionaCat }: IAdditionaProps) => {
+export const Additional = ({
+  additionaCat,
+  addAdditional,
+  subtractAdditional,
+  disabledAddAddditional,
+  getAdditionalQuantity,
+  getAdditionalCategoryQuantity,
+}: IAdditionaProps) => {
   const { isDarkMode } = useAppContext();
   const { isMobile } = useResponsive();
+
+  const totalQuantityCount = useMemo<string>(() => {
+    return `${getAdditionalCategoryQuantity(additionaCat.id)}/${
+      additionaCat.limit
+    }`;
+  }, [additionaCat, getAdditionalCategoryQuantity]);
 
   return (
     <>
@@ -36,7 +60,9 @@ export const Additional = ({ additionaCat }: IAdditionaProps) => {
           <Typography variant="body2">{additionaCat.description}</Typography>
         </Box>
         <Box display="flex" flexDirection="row" justifyContent="flex-end">
-          <Chip label={`0/${additionaCat.limit}`} variant="outlined" />
+          {!!additionaCat.limit && (
+            <Chip label={totalQuantityCount} variant="outlined" />
+          )}
           {!additionaCat.isOptional && (
             <Chip
               label="Obrigatório"
@@ -47,19 +73,18 @@ export const Additional = ({ additionaCat }: IAdditionaProps) => {
         </Box>
       </Box>
       {additionaCat.productAdditionals?.map((additional) => (
-        <IconButton
+        <Box
           key={`additional_${additional.id}`}
           sx={{
             borderRadius: 0,
             width: "100%",
             display: "flex",
-            flexdirection: "row",
+            flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
             paddingBlock: 2,
             paddingInline: 4,
           }}
-          title={`Adicionar ${additional.name}`}
         >
           <Box
             display="flex"
@@ -83,8 +108,44 @@ export const Additional = ({ additionaCat }: IAdditionaProps) => {
             width={[40, 60]}
             height={[40, 60]}
           />
-          <AddIcon />
-        </IconButton>
+          <Box
+            display="flex"
+            flexDirection="row"
+            justifyContent="flex-end"
+            alignItems="center"
+            width={50}
+          >
+            {!!getAdditionalQuantity(additional.id) && (
+              <>
+                <IconButton
+                  onClick={() => subtractAdditional(additional.id)}
+                  title={`Substrair ${additional.name}`}
+                >
+                  <RemoveIcon />
+                </IconButton>
+                <Typography>{getAdditionalQuantity(additional.id)}</Typography>
+              </>
+            )}
+            <IconButton
+              title={`Adicionar ${additional.name}`}
+              onClick={() =>
+                addAdditional({
+                  addCategoryId: additionaCat.id,
+                  id: additional.id,
+                  quantity: 1,
+                  value: additional.value,
+                  name: additional.name,
+                })
+              }
+              disabled={disabledAddAddditional({
+                limit: additionaCat.limit,
+                addCategoryId: additionaCat.id,
+              })}
+            >
+              <AddIcon />
+            </IconButton>
+          </Box>
+        </Box>
       ))}
     </>
   );

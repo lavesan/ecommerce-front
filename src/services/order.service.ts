@@ -1,4 +1,5 @@
 import { server } from "@/config/axios.config";
+import { IOrderCreateRequest } from "@/models/IOrderCreateRequest";
 import { IPaginateOrderFilter } from "@/models/IPaginateOrderFilter";
 import { IOrder } from "@/models/entities/IOrder";
 import {
@@ -8,6 +9,11 @@ import {
 
 export class OrderService {
   private static INSTANCE: OrderService;
+
+  async create(body: IOrderCreateRequest): Promise<IOrder> {
+    const response = await server.post<IOrder>("/order", body);
+    return response.data;
+  }
 
   async findById(id: string): Promise<IOrder> {
     const response = await server.get<IOrder>(`/order/${id}`);
