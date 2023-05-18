@@ -22,4 +22,8 @@ export const CheckoutContext = React.createContext({
   total: 0,
   hasProducts: false,
   productsCount: 0,
+  getProdTotalValue: (product: ICheckoutProduct) => ({
+    value: 0,
+    formatted: "",
+  }),
 });

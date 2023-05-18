@@ -33,6 +33,7 @@ export const Cart = ({ onClose, isOnCheckoutPage }: CartProps) => {
     prodTotal,
     freightTotal,
     removeProduct,
+    getProdTotalValue,
   } = useCheckoutContext();
 
   const { isMobile } = useResponsive();
@@ -48,6 +49,14 @@ export const Cart = ({ onClose, isOnCheckoutPage }: CartProps) => {
           width: "600px",
         };
   }, [isMobile]);
+
+  const isOnCheckoutPageStyle = useMemo<BoxProps>(() => {
+    return isOnCheckoutPage
+      ? {
+          width: "100%",
+        }
+      : {};
+  }, [isOnCheckoutPage]);
 
   const openModal = (product: ICheckoutProduct) => {
     if (isMobile)
@@ -72,6 +81,7 @@ export const Cart = ({ onClose, isOnCheckoutPage }: CartProps) => {
         alignItems="flex-start"
         flex={1}
         {...isMobileContainerStyle}
+        {...isOnCheckoutPageStyle}
       >
         {onClose && (
           <IconButton
@@ -144,9 +154,7 @@ export const Cart = ({ onClose, isOnCheckoutPage }: CartProps) => {
                     </Box>
                   </Box>
                   <Typography component="p" sx={{ color: "primary.main" }}>
-                    {product.promotionId
-                      ? product.promotionValueFormat
-                      : product.valueFormat}
+                    {getProdTotalValue(product).formatted}
                   </Typography>
                 </Box>
                 {index < products.length - 1 ? (

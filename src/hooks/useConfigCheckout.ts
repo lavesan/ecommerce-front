@@ -12,12 +12,11 @@ import {
 } from "@/helpers/checkout.helper";
 import { IAddress } from "@/models/entities/IAddress";
 import { useConfigApp } from "./useConfigApp";
+import { maskMoney } from "@/helpers/money.helper";
 
 export const useConfigCheckout = (
   appConfig: Partial<ReturnType<typeof useConfigApp>>
 ) => {
-  // const { addresses, user } = useAppContext();
-
   const [checkoutEnterprise, setCheckoutEnterprise] =
     useState<IEnterprise | null>(null);
   const [checkoutProducts, setCheckoutProducts] = useState<ICheckoutProduct[]>(
@@ -94,18 +93,39 @@ export const useConfigCheckout = (
     setOpen(false);
   };
 
-  const freightTotal = useMemo(() => {
-    return 0;
-  }, []);
+  const getProdTotalValue = (product: ICheckoutProduct) => {
+    const additionalsValue = product.additionals.reduce(
+      (value, additional) => value + additional.value * additional.quantity,
+      0
+    );
+    const productValue =
+      (product.promotionId ? product.promotionValue : product.value) ||
+      product.value;
 
-  const prodTotal = useMemo(() => {
+    const totalSum = (productValue + additionalsValue) * product.quantity;
+
+    return {
+      value: totalSum,
+      formatted: maskMoney(totalSum),
+    };
+  };
+
+  const freightTotal = useMemo<number>(() => {
+    const freight = checkoutEnterprise?.freights?.find(
+      ({ addressValue }) => addressValue === address?.district
+    );
+
+    return freight?.value || 0;
+  }, [checkoutEnterprise, address]);
+
+  const prodTotal = useMemo<number>(() => {
     const productValues = checkoutProducts.map(
-      (prod) => prod.value * prod.quantity
+      (prod) => getProdTotalValue(prod).value
     );
     return sumValues(productValues);
   }, [checkoutProducts]);
 
-  const total = useMemo(() => {
+  const total = useMemo<number>(() => {
     return freightTotal + prodTotal;
   }, [freightTotal, prodTotal]);
 
@@ -149,5 +169,6 @@ export const useConfigCheckout = (
     productsCount,
     address,
     setAddress,
+    getProdTotalValue,
   };
 };

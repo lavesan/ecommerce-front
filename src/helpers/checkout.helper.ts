@@ -35,5 +35,5 @@ export const removeCheckoutProductsStorage = () => {
 };
 
 export const sumValues = (arr: number[]): number => {
-  return arr.length ? arr.reduce((elem1, elem2) => elem1 + elem2) : 0;
+  return arr.reduce((elem1, elem2) => elem1 + elem2, 0);
 };

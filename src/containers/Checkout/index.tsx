@@ -14,11 +14,22 @@ const Checkout = () => {
       flexDirection="row"
       flexWrap="nowrap"
       gap={2}
+      sx={{
+        "> *": {
+          width: "50%",
+        },
+      }}
     >
       <FormCheckout width="48%" />
       <Paper
         elevation={3}
-        sx={{ position: "sticky", top: 76, left: 0, height: "fit-content" }}
+        sx={{
+          position: "sticky",
+          top: 76,
+          left: 0,
+          height: "fit-content",
+          px: 2,
+        }}
       >
         <Cart isOnCheckoutPage />
       </Paper>

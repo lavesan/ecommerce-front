@@ -102,12 +102,14 @@ export const Additional = ({
               <Typography>+ {maskMoney(additional.value)}</Typography>
             )}
           </Box>
-          <Box
-            component="img"
-            src={getImgUrl(additional.imageKey)}
-            width={[40, 60]}
-            height={[40, 60]}
-          />
+          {!!additional.imageKey && (
+            <Box
+              component="img"
+              src={getImgUrl(additional.imageKey)}
+              width={[40, 60]}
+              height={[40, 60]}
+            />
+          )}
           <Box
             display="flex"
             flexDirection="row"

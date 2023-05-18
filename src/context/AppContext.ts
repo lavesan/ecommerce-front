@@ -6,6 +6,7 @@ import { IUserToken } from "@/models/context/IUserToken";
 import { IClient } from "@/models/entities/IClient";
 import { IEnterprise } from "@/models/entities/IEnterprise";
 import { IAddress } from "@/models/entities/IAddress";
+import { ICheckoutProduct } from "@/models/checkout/ICheckoutProduct";
 
 export const AppContext = React.createContext({
   enterprises: [] as IEnterprise[],
