@@ -140,7 +140,7 @@ export const FormCheckout = (props: BoxProps) => {
             additionals,
           })
         ),
-        freightId: freight.id,
+        freightId: freight?.id || "",
         freightValue: freightTotal,
         enterpriseId: enterprise.id,
         productsValue: prodTotal,
