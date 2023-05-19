@@ -10,10 +10,9 @@ export interface IOrderCreateRequest {
   freightValue: number;
   productsValue: number;
   paymentType: PaymentType;
-  moneyExchange?: number;
   enterpriseId: string;
   freightId: string;
-  clientId: string;
+  hasCents?: boolean;
   products: {
     id: string;
     quantity: number;
@@ -31,4 +30,8 @@ export interface IOrderCreateRequest {
     city: string;
     shortName?: string;
   };
+  moneyExchange?: {
+    value: number;
+    quantity: number;
+  }[];
 }

@@ -29,6 +29,7 @@ export const useConfigApp = () => {
   const [toast, setToast] = useState<IToastState>({
     isOpen: false,
   } as IToastState);
+  const [showAddressModal, setShowAddressModal] = useState(false);
 
   const setEnterpriseMenu = (enterprise: IEnterprise) => {
     setEnterprises((actual) =>
@@ -81,6 +82,10 @@ export const useConfigApp = () => {
     setToken({ accessToken: token, refreshToken: "" });
   };
 
+  const toogleAddressModal = () => {
+    setShowAddressModal((actual) => !actual);
+  };
+
   const getMe = useCallback(async () => {
     try {
       const client = await clientService.findMe();
@@ -129,5 +134,7 @@ export const useConfigApp = () => {
     addresses,
     setAddresses,
     getMe,
+    showAddressModal,
+    toogleAddressModal,
   };
 };

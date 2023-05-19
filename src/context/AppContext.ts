@@ -26,4 +26,6 @@ export const AppContext = React.createContext({
   isDarkMode: false,
   toogleThemeMode: () => {},
   showToast: (data: IToastParams) => {},
+  showAddressModal: false,
+  toogleAddressModal: () => {},
 });

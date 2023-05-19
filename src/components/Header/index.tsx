@@ -15,11 +15,11 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 
 import { useAppContext } from "@/hooks/useAppContext";
-import { ManageAddress } from "../ManageAddress";
 import { ThemeModeSwitch } from "./ThemeModeSwitch";
 import { useResponsive } from "@/hooks/useResponsive";
 import { useCheckoutContext } from "@/hooks/useCheckoutContext";
 import { AppLogo } from "../AppLogo";
+import { AddressChip } from "../AddressChip";
 
 const settings = [
   { id: "my-data-menu", label: "Meus dados", route: "/meus-dados" },
@@ -74,7 +74,7 @@ export const Header = () => {
           <AppLogo />
         </IconButton>
 
-        <ManageAddress
+        <AddressChip
           sx={{
             marginRight: isMobile ? 0 : "auto",
           }}

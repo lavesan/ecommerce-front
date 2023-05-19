@@ -39,3 +39,34 @@ export const districtOptions: ISelectData[] = districts.map((district) => ({
   label: district,
   value: district,
 }));
+
+export const exchangeNotesOpts: ISelectData[] = [
+  {
+    label: "R$ 2,00",
+    value: 200,
+  },
+  {
+    label: "R$ 5,00",
+    value: 500,
+  },
+  {
+    label: "R$ 10,00",
+    value: 1000,
+  },
+  {
+    label: "R$ 20,00",
+    value: 2000,
+  },
+  {
+    label: "R$ 50,00",
+    value: 5000,
+  },
+  {
+    label: "R$ 100,00",
+    value: 10000,
+  },
+  {
+    label: "R$ 200,00",
+    value: 20000,
+  },
+];

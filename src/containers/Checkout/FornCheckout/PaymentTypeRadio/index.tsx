@@ -18,67 +18,52 @@ export function PaymentTypeRadio<IForm extends FieldValues>({
   control,
   name,
 }: IPaymentTypeRadioProps<IForm>) {
-  const handlePaymentType = {
-    [PaymentType.CREDIT_CARD_MACHINE]: {
-      icon: "",
-      label: "Cartão de crédito",
-      value: PaymentType.CREDIT_CARD_MACHINE,
-    },
-    [PaymentType.DEBIT_CARD_MACHINE]: {
-      icon: "",
-      label: "Cartão de débito",
-      value: PaymentType.DEBIT_CARD_MACHINE,
-    },
-    [PaymentType.MONEY]: {
-      icon: "",
-      label: "Dinheiro",
-      value: PaymentType.MONEY,
-    },
-  };
-
-  const optionStyle: Partial<FormControlLabelProps> = {
+  const optionStyle = (
+    optValue: PaymentType,
+    value: PaymentType
+  ): Partial<FormControlLabelProps> => ({
     sx: (theme) => ({
       p: 2,
+      mx: 0,
       border: `thin solid ${theme.palette.grey[300]}`,
       borderRadius: 2,
       transition: "0.2s",
-      boxShadow: `1px 1px 0 gray`,
-      _hover: {
-        boxShadow: `1px 1px 3px ${theme.palette.grey[600]}`,
+      boxShadow: `0 0 0 ${theme.palette.grey[300]}`,
+      ":hover": {
+        boxShadow: `2px 2px 8px ${theme.palette.grey[300]}`,
       },
-      _selected: {
-        borderColor: "grey.500",
-      },
+      borderColor: optValue === value ? "grey.500" : "grey.300",
     }),
-  };
+  });
 
   return (
     <Controller
       name={name}
       control={control}
       render={({ field: { onChange, value } }) => (
-        <FormControl>
+        <FormControl fullWidth>
           <RadioGroup
             aria-labelledby="payment-type-radio-group"
             defaultValue={value}
             value={value}
             name="payment-type-radio"
             onChange={onChange}
+            sx={{ gap: 2 }}
           >
             <FormControlLabel
-              {...optionStyle}
+              {...optionStyle(PaymentType.CREDIT_CARD_MACHINE, value)}
               value={PaymentType.CREDIT_CARD_MACHINE}
               control={<Radio />}
-              label="Cartão de crédito"
+              label="Cartão de crédito na entrega"
             />
             <FormControlLabel
-              {...optionStyle}
+              {...optionStyle(PaymentType.DEBIT_CARD_MACHINE, value)}
               value={PaymentType.DEBIT_CARD_MACHINE}
               control={<Radio />}
-              label="Cartão de débito"
+              label="Cartão de débito na entrega"
             />
             <FormControlLabel
-              {...optionStyle}
+              {...optionStyle(PaymentType.MONEY, value)}
               value={PaymentType.MONEY}
               control={<Radio />}
               label="Dinheiro"

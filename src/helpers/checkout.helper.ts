@@ -37,3 +37,16 @@ export const removeCheckoutProductsStorage = () => {
 export const sumValues = (arr: number[]): number => {
   return arr.reduce((elem1, elem2) => elem1 + elem2, 0);
 };
+
+export const exchangeIsEnough = (
+  exchange: { value: number; quantity: string }[],
+  total: number
+): boolean => {
+  const totalExchangeValue = exchange.reduce(
+    (sumValue, { value, quantity }) =>
+      sumValue + value * (Number.isNaN(quantity) ? 1 : Number(quantity)),
+    0
+  );
+
+  return totalExchangeValue >= total;
+};

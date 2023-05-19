@@ -31,6 +31,7 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { useRouter } from "next/router";
 import { BouncingDotsLoader } from "@/components/BouncingDotsLoader";
+import { ManageAddressModal } from "@/components/ManageAddress";
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -147,6 +148,7 @@ export default function MyApp(props: MyAppProps) {
                       onClose={checkoutConfig.closeCheckout}
                       onOpen={checkoutConfig.openCheckout}
                     />
+                    <ManageAddressModal />
                   </>
                 </AxiosInterceptorHOC>
               </CheckoutContext.Provider>

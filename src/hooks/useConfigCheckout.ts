@@ -110,13 +110,15 @@ export const useConfigCheckout = (
     };
   };
 
-  const freightTotal = useMemo<number>(() => {
-    const freight = checkoutEnterprise?.freights?.find(
+  const freight = useMemo(() => {
+    return checkoutEnterprise?.freights?.find(
       ({ addressValue }) => addressValue === address?.district
     );
+  }, [address, checkoutEnterprise]);
 
+  const freightTotal = useMemo<number>(() => {
     return freight?.value || 0;
-  }, [checkoutEnterprise, address]);
+  }, [freight]);
 
   const prodTotal = useMemo<number>(() => {
     const productValues = checkoutProducts.map(
@@ -170,5 +172,6 @@ export const useConfigCheckout = (
     address,
     setAddress,
     getProdTotalValue,
+    freight,
   };
 };
