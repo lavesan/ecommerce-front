@@ -24,6 +24,7 @@ const Checkout = () => {
       flexWrap="nowrap"
       gap={2}
       px={4}
+      mb={2}
       sx={{
         "> *": {
           width: isMobile ? "100%" : "50%",
