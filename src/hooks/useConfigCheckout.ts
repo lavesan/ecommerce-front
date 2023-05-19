@@ -111,8 +111,10 @@ export const useConfigCheckout = (
   };
 
   const freight = useMemo(() => {
-    return checkoutEnterprise?.freights?.find(
-      ({ addressValue }) => addressValue === address?.district
+    return (
+      checkoutEnterprise?.freights?.find(
+        ({ addressValue }) => addressValue === address?.district
+      ) || null
     );
   }, [address, checkoutEnterprise]);
 

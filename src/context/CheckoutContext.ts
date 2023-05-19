@@ -7,7 +7,7 @@ import { IFreight } from "@/models/entities/IFreight";
 
 export const CheckoutContext = React.createContext({
   enterprise: {} as IEnterprise | null,
-  freight: {} as IFreight,
+  freight: {} as IFreight | null,
   setEnterprise: (enterprise: IEnterprise) => {},
   products: [] as ICheckoutProduct[],
   removeProduct: (id: string) => {},
