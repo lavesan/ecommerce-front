@@ -1,10 +1,10 @@
-import { AppLayout } from "@/components/AppLayout";
+import { ReturnStepLayout } from "@/components/ReturnStepLayout";
 import Checkout from "@/containers/Checkout";
 
 const PaymentPage = () => (
-  <AppLayout>
+  <ReturnStepLayout>
     <Checkout />
-  </AppLayout>
+  </ReturnStepLayout>
 );
 
 export default PaymentPage;

@@ -131,6 +131,7 @@ export function MoneyExchange({
           <FormControlLabel
             control={<Checkbox checked={value} onChange={onChange} />}
             label="Tenho as moedas do troco"
+            sx={{ mt: 2 }}
           />
         )}
       />

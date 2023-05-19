@@ -38,7 +38,9 @@ export const Footer = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
 
   const hideFooter = useMemo(() => {
-    return router.pathname.includes("/produto/");
+    const dontShowRoutes = ["/produto/", "/pagamento"];
+
+    return dontShowRoutes.some((route) => router.pathname.includes(route));
   }, [router.pathname]);
 
   const selectedRoute = useMemo(() => {

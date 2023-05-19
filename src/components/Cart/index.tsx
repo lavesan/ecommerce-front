@@ -58,6 +58,15 @@ export const Cart = ({ onClose, isOnCheckoutPage }: CartProps) => {
       : {};
   }, [isOnCheckoutPage]);
 
+  const hideCart = useMemo(() => {
+    const dontShowRoutes = ["/pagamento"];
+
+    return (
+      dontShowRoutes.some((route) => router.pathname.includes(route)) ||
+      !isMobile
+    );
+  }, [router.pathname, isMobile]);
+
   const openModal = (product: ICheckoutProduct) => {
     if (isMobile)
       return router.push(`/produto/${enterprise?.id}/${product.id}`);
@@ -69,6 +78,10 @@ export const Cart = ({ onClose, isOnCheckoutPage }: CartProps) => {
   const onPropClose = () => {
     if (onClose) onClose();
   };
+
+  if (hideCart) {
+    return <></>;
+  }
 
   return (
     <>
