@@ -74,8 +74,7 @@ export const Cart = ({ onClose, isOnCheckoutPage }: CartProps) => {
     <>
       <Box
         pt={4}
-        pl={1}
-        pr={4}
+        px={2}
         display="flex"
         flexDirection="row"
         alignItems="flex-start"

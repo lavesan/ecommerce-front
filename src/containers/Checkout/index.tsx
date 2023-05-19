@@ -1,36 +1,63 @@
-import { Box, Paper } from "@mui/material";
+import {
+  Box,
+  Paper,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Typography,
+} from "@mui/material";
+
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import { Cart } from "@/components/Cart";
 import { FormCheckout } from "./FornCheckout";
+import { useResponsive } from "@/hooks/useResponsive";
 
 const Checkout = () => {
+  const { isMobile } = useResponsive();
+
   return (
     <Box
       component="section"
       display="flex"
-      flexDirection="row"
+      flexDirection={["column-reverse", "row"]}
       flexWrap="nowrap"
       gap={2}
       px={4}
       sx={{
         "> *": {
-          width: "50%",
+          width: isMobile ? "100%" : "50%",
         },
       }}
     >
       <FormCheckout />
-      <Paper
-        elevation={3}
-        sx={{
-          position: "sticky",
-          top: 76,
-          left: 0,
-          height: "fit-content",
-          px: 2,
-        }}
-      >
-        <Cart isOnCheckoutPage />
-      </Paper>
+      {isMobile ? (
+        <Accordion>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <Typography>Carrinho</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Cart isOnCheckoutPage />
+          </AccordionDetails>
+        </Accordion>
+      ) : (
+        <Paper
+          elevation={3}
+          sx={{
+            position: "sticky",
+            top: isMobile ? 110 : 76,
+            left: 0,
+            height: "fit-content",
+            px: 2,
+          }}
+        >
+          <Cart isOnCheckoutPage />
+        </Paper>
+      )}
     </Box>
   );
 };

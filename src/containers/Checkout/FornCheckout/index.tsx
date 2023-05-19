@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+import { useRouter } from "next/router";
 import { Box, Typography, BoxProps, Button, Collapse } from "@mui/material";
 import { useForm, useWatch } from "react-hook-form";
 
@@ -11,10 +13,9 @@ import { MoneyExchange } from "./MoneyExchange";
 import { exchangeIsEnough } from "@/helpers/checkout.helper";
 import { useCheckoutContext } from "@/hooks/useCheckoutContext";
 import { useAppContext } from "@/hooks/useAppContext";
-import { useMemo } from "react";
-import { useRouter } from "next/router";
 import { useGoBack } from "@/hooks/useGoBack";
 import { useResponsive } from "@/hooks/useResponsive";
+import { IOrderCreateRequest } from "@/models/IOrderCreateRequest";
 
 export interface IForm {
   paymentType: string;
@@ -76,61 +77,79 @@ export const FormCheckout = (props: BoxProps) => {
     );
   }, [isValid, exchangeNotes, paymentType, total]);
 
-  const onSubmit = handleSubmit(async ({ paymentType, ...values }) => {
-    if (!user) {
-      showToast({ status: "error", message: "Entre ou crie sua conta" });
-      storeGoBackUrl("/pagamento");
-      return router.push("/login");
-    }
-
-    if (
-      paymentType === PaymentType.MONEY &&
-      !exchangeIsEnough(values.exchangeNotes, total)
-    ) {
-      return showToast({
-        status: "error",
-        message: "Adicione o troco necessário",
-      });
-    }
-
-    if (!address) {
-      showToast({ status: "error", message: "Adicione um endereço" });
-
-      if (isMobile) {
+  const onSubmit = handleSubmit(
+    async ({ paymentType, exchangeNotes, hasCents, ...values }) => {
+      if (!user) {
+        showToast({ status: "error", message: "Entre ou crie sua conta" });
         storeGoBackUrl("/pagamento");
-        return router.push("/endereco");
+        return router.push("/login");
       }
 
-      return toogleAddressModal();
-    }
+      if (
+        paymentType === PaymentType.MONEY &&
+        !exchangeIsEnough(exchangeNotes, total)
+      ) {
+        return showToast({
+          status: "error",
+          message: "Adicione o troco necessário",
+        });
+      }
 
-    if (!enterprise) {
-      showToast({
-        status: "warning",
-        message: "O carrinho está vazio, olhe nossos menus!",
+      if (!address) {
+        showToast({ status: "error", message: "Adicione um endereço" });
+
+        if (isMobile) {
+          storeGoBackUrl("/pagamento");
+          return router.push("/endereco");
+        }
+
+        return toogleAddressModal();
+      }
+
+      if (!enterprise) {
+        showToast({
+          status: "warning",
+          message: "O carrinho está vazio, olhe nossos menus!",
+        });
+        return router.push("/");
+      }
+
+      let exchangeObj: Pick<IOrderCreateRequest, "moneyExchange" | "hasCents"> =
+        {
+          moneyExchange: [],
+        };
+
+      if (paymentType === PaymentType.MONEY) {
+        exchangeObj = {
+          hasCents,
+          moneyExchange: exchangeNotes.map(({ value, quantity }) => ({
+            value,
+            quantity: Number.isNaN(quantity) ? 0 : Number(quantity),
+          })),
+        };
+      }
+
+      orderService.create({
+        address,
+        products: products.map(
+          ({ id, quantity, value, givenPoints, additionals }) => ({
+            id,
+            value,
+            quantity,
+            points: givenPoints,
+            additionals,
+          })
+        ),
+        freightId: freight.id,
+        freightValue: freightTotal,
+        enterpriseId: enterprise.id,
+        productsValue: prodTotal,
+        paymentType: paymentType as PaymentType,
+        ...values,
+        ...exchangeObj,
       });
-      return router.push("/");
     }
-
-    orderService.create({
-      address,
-      products: products.map(
-        ({ id, quantity, value, givenPoints, additionals }) => ({
-          id,
-          value,
-          quantity,
-          points: givenPoints,
-          additionals,
-        })
-      ),
-      freightId: freight.id,
-      freightValue: freightTotal,
-      enterpriseId: enterprise.id,
-      productsValue: prodTotal,
-      paymentType: paymentType as PaymentType,
-      ...values,
-    });
-  });
+  );
 
   return (
     <Box {...props} component="form" onSubmit={onSubmit}>

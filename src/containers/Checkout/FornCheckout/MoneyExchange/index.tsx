@@ -8,9 +8,17 @@ import {
   IconButton,
   Divider,
   BoxProps,
+  Checkbox,
+  FormControlLabel,
 } from "@mui/material";
 import { TransitionGroup } from "react-transition-group";
-import { Control, useFieldArray, FieldErrors, useWatch } from "react-hook-form";
+import {
+  Control,
+  useFieldArray,
+  FieldErrors,
+  useWatch,
+  Controller,
+} from "react-hook-form";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import DeleteIcon from "@mui/icons-material/Delete";
 
@@ -116,6 +124,16 @@ export function MoneyExchange({
           </Collapse>
         ))}
       </TransitionGroup>
+      <Controller
+        control={control}
+        name="hasCents"
+        render={({ field: { onChange, value } }) => (
+          <FormControlLabel
+            control={<Checkbox checked={value} onChange={onChange} />}
+            label="Tenho as moedas do troco"
+          />
+        )}
+      />
     </Box>
   );
 }
