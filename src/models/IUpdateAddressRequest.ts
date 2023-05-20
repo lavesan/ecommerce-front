@@ -8,5 +8,4 @@ export interface IUpdateAddressRequest {
   city?: string;
   shortName?: string;
   isDefault?: boolean;
-  clientId: string;
 }

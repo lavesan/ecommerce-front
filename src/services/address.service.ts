@@ -1,7 +1,6 @@
 import { server } from "@/config/axios.config";
 import { ICreateAddressRequest } from "@/models/ICreateAddressRequest";
 import { IFindByCepResponse } from "@/models/IFindByCepResponse";
-import { IUpdateAddressDefaultRequest } from "@/models/IUpdateAddressDefaultRequest";
 import { IUpdateAddressRequest } from "@/models/IUpdateAddressRequest";
 import { IAddress } from "@/models/entities/IAddress";
 
@@ -18,11 +17,8 @@ export class AddressService {
     return response.data;
   }
 
-  async updateDefault(
-    id: string,
-    body: IUpdateAddressDefaultRequest
-  ): Promise<boolean> {
-    const response = await server.patch<boolean>(`/address/${id}`, body, {
+  async updateDefault(id: string): Promise<boolean> {
+    const response = await server.patch<boolean>(`/address/${id}`, null, {
       // @ts-ignore
       notLoad: true,
     });

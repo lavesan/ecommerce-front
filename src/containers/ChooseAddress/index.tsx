@@ -26,7 +26,7 @@ interface IChooseAddressProps {
 const ChooseAddress = ({ onChoose }: IChooseAddressProps) => {
   const addressService = AddressService.getInstance();
 
-  const { addresses, user, token, isDarkMode, setIsLoading, showToast, getMe } =
+  const { addresses, token, isDarkMode, setIsLoading, showToast, getMe } =
     useAppContext();
   const { address: checkoutAddress, setAddress } = useCheckoutContext();
 
@@ -80,7 +80,7 @@ const ChooseAddress = ({ onChoose }: IChooseAddressProps) => {
 
   const selectAddress = (address: IAddress) => {
     setAddress(address);
-    addressService.updateDefault(address.id, { clientId: user?.id || "" });
+    addressService.updateDefault(address.id);
     setEditAddress(null);
     onChoose();
   };

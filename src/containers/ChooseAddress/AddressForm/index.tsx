@@ -15,6 +15,8 @@ import { districtOptions } from "@/helpers/select.helper";
 import { cepMask } from "@/helpers/mask.helper";
 
 import { validationSchema } from "./validation";
+import { useResponsive } from "@/hooks/useResponsive";
+import { useRouter } from "next/router";
 
 interface IForm {
   cep: string;
@@ -33,7 +35,18 @@ interface IAddressFormProps {
 const AddressForm = ({ address, onSuccess }: IAddressFormProps) => {
   const addressService = AddressService.getInstance();
 
-  const { user, getMe, setIsLoading, addresses, showToast } = useAppContext();
+  const {
+    user,
+    getMe,
+    setIsLoading,
+    addresses,
+    showToast,
+    toogleAddressModal,
+  } = useAppContext();
+
+  const { isMobile } = useResponsive();
+
+  const router = useRouter();
 
   const addressForm = useMemo<IForm>(
     () => ({
@@ -61,11 +74,19 @@ const AddressForm = ({ address, onSuccess }: IAddressFormProps) => {
 
   const onSubmit = handleSubmit(
     async ({ cep, complement, district, number, shortName, street }) => {
+      if (!user) {
+        showToast({
+          status: "warning",
+          message: "Entre em sua conta ou se cadastre",
+        });
+        if (isMobile) return toogleAddressModal();
+        return router.push("/login");
+      }
+
       try {
         const body = {
           district,
           isDefault: true,
-          clientId: user?.id || "",
           state: "PE",
           city: "Arco verde",
           cep: cep.trim().replace(/\D/g, ""),
