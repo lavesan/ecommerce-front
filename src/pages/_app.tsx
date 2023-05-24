@@ -54,24 +54,24 @@ export default function MyApp(props: MyAppProps) {
 
   const router = useRouter();
 
-  const [loadingPage, setLoadingPage] = useState(false);
+  // const [loadingPage, setLoadingPage] = useState(false);
 
-  useEffect(() => {
-    const handleStart = (url: string) =>
-      url !== router.asPath && setLoadingPage(true);
-    const handleComplete = (url: string) =>
-      url === router.asPath && setLoadingPage(false);
+  // useEffect(() => {
+  //   const handleStart = (url: string) =>
+  //     url !== router.asPath && setLoadingPage(true);
+  //   const handleComplete = (url: string) =>
+  //     url === router.asPath && setLoadingPage(false);
 
-    router.events.on("routeChangeStart", handleStart);
-    router.events.on("routeChangeComplete", handleComplete);
-    router.events.on("routeChangeError", handleComplete);
+  //   router.events.on("routeChangeStart", handleStart);
+  //   router.events.on("routeChangeComplete", handleComplete);
+  //   router.events.on("routeChangeError", handleComplete);
 
-    return () => {
-      router.events.off("routeChangeStart", handleStart);
-      router.events.off("routeChangeComplete", handleComplete);
-      router.events.off("routeChangeError", handleComplete);
-    };
-  });
+  //   return () => {
+  //     router.events.off("routeChangeStart", handleStart);
+  //     router.events.off("routeChangeComplete", handleComplete);
+  //     router.events.off("routeChangeError", handleComplete);
+  //   };
+  // });
 
   const [firstLoad, setFirstLoad] = useState(true);
 
@@ -132,7 +132,7 @@ export default function MyApp(props: MyAppProps) {
                     <GoogleOAuthProvider
                       clientId={process.env.NEXT_PUBLIC_GOOGLE_ID || ""}
                     >
-                      <BouncingDotsLoader isLoading={loadingPage} />
+                      {/* <BouncingDotsLoader isLoading={loadingPage} /> */}
                       <Loading isLoading={isLoading} />
                       <Component {...pageProps} />
                       <Footer />
