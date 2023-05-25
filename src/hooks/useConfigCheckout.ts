@@ -76,9 +76,11 @@ export const useConfigCheckout = (
     setCheckoutProducts(newProducts);
   };
 
-  const removeCheckoutProduct = (id: string) => {
+  const removeCheckoutProduct = (key: number | null) => {
+    if (!key) return console.log("Não há key");
+
     setCheckoutProducts((actual) => {
-      const filtered = actual.filter(({ id: storedId }) => storedId !== id);
+      const filtered = actual.filter(({ key: storedKey }) => storedKey !== key);
       saveCheckoutProductsStorage(filtered);
 
       if (!filtered.length) clearEnterprise();

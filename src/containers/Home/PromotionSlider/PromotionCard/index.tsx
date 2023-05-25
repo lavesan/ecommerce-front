@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Box, Skeleton, BoxProps, Link as MUILink } from "@mui/material";
 import Link from "next/link";
 
@@ -15,6 +15,10 @@ export const PromotionCard = ({
 }: IPromotionCardProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
+
+  const goToStoreLink = useMemo(() => {
+    return promotion.enterprise?.id ? `/loja/${promotion.enterprise.id}` : "";
+  }, [promotion.enterprise]);
 
   const onInit = useCallback(() => {
     const img = new Image();
@@ -47,7 +51,7 @@ export const PromotionCard = ({
     <MUILink
       component={Link}
       color="inherit"
-      href={`/promocao/${promotion.id}`}
+      href={goToStoreLink}
       underline="none"
       title={promotion.name}
     >

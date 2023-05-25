@@ -114,15 +114,12 @@ export const AddProduct = ({
       additionals: selectedOptions,
     };
 
-    if (filled) {
-    }
-
     if (checkoutEnterprise && checkoutEnterprise.id !== enterprise.id) {
       setDialogOpt({ open: true, product: productToAdd });
       return;
     }
 
-    if (filled) updateProduct(productToAdd);
+    if (filled) updateProduct({ key: filled.key, ...productToAdd });
     else addProduct(enterprise, productToAdd);
     onSuccess();
   };

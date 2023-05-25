@@ -10,7 +10,7 @@ export const CheckoutContext = React.createContext({
   freight: {} as IFreight | null,
   setEnterprise: (enterprise: IEnterprise) => {},
   products: [] as ICheckoutProduct[],
-  removeProduct: (id: string) => {},
+  removeProduct: (key: number | null) => {},
   address: {} as IAddress | null,
   setAddress: (address: IAddress) => {},
   updateProduct: (product: ICheckoutProduct) => {},
