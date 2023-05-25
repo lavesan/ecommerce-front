@@ -32,25 +32,12 @@ const Checkout = () => {
       }}
     >
       <FormCheckout />
-      {isMobile ? (
-        <Accordion>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-          >
-            <Typography>Carrinho</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Cart isOnCheckoutPage />
-          </AccordionDetails>
-        </Accordion>
-      ) : (
+      {!isMobile && (
         <Paper
           elevation={3}
           sx={{
             position: "sticky",
-            top: isMobile ? 110 : 76,
+            top: 130,
             left: 0,
             height: "fit-content",
             px: 2,

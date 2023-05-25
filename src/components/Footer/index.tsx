@@ -38,7 +38,13 @@ export const Footer = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
 
   const hideFooter = useMemo(() => {
-    const dontShowRoutes = ["/produto/", "/pagamento"];
+    const dontShowRoutes = ["/produto/"];
+
+    return dontShowRoutes.some((route) => router.pathname.includes(route));
+  }, [router.pathname]);
+
+  const hideFooterActions = useMemo(() => {
+    const dontShowRoutes = ["/pagamento"];
 
     return dontShowRoutes.some((route) => router.pathname.includes(route));
   }, [router.pathname]);
@@ -143,25 +149,27 @@ export const Footer = () => {
             </Grid>
           </Grid>
         </Slide>
-        <BottomNavigation showLabels value={selectedRoute}>
-          <BottomNavigationAction
-            onClick={goToRoute("/")}
-            label="Início"
-            icon={<HomeIcon />}
-          />
-          {token && (
+        {!hideFooterActions && (
+          <BottomNavigation showLabels value={selectedRoute}>
             <BottomNavigationAction
-              onClick={goToRoute("/pedidos")}
-              label="Pedidos"
-              icon={<ReceiptIcon />}
+              onClick={goToRoute("/")}
+              label="Início"
+              icon={<HomeIcon />}
             />
-          )}
-          <BottomNavigationAction
-            onClick={onUserIconClick}
-            label={token ? "Perfil" : "Login"}
-            icon={<PersonIcon />}
-          />
-        </BottomNavigation>
+            {token && (
+              <BottomNavigationAction
+                onClick={goToRoute("/pedidos")}
+                label="Pedidos"
+                icon={<ReceiptIcon />}
+              />
+            )}
+            <BottomNavigationAction
+              onClick={onUserIconClick}
+              label={token ? "Perfil" : "Login"}
+              icon={<PersonIcon />}
+            />
+          </BottomNavigation>
+        )}
       </Paper>
       <Drawer anchor="top" open={openDrawer} onClose={closeModal}>
         <List>

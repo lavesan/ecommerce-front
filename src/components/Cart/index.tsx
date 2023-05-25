@@ -45,6 +45,10 @@ export const Cart = ({ onClose, isOnCheckoutPage }: CartProps) => {
 
   const [selectedProd, setSelectedProd] = useState<ICheckoutProduct | null>();
 
+  const hideSubmitButton = useMemo(() => {
+    return router.pathname.includes("/pagamento");
+  }, [router.pathname]);
+
   const isMobileContainerStyle = useMemo<BoxProps>(() => {
     return isMobile
       ? {}
@@ -215,7 +219,7 @@ export const Cart = ({ onClose, isOnCheckoutPage }: CartProps) => {
                 <Typography fontWeight="bold">Total</Typography>
                 <Typography fontWeight="bold">{maskMoney(total)}</Typography>
               </Box>
-              {!isOnCheckoutPage && (
+              {!hideSubmitButton && (
                 <Button
                   fullWidth
                   component={Link}
