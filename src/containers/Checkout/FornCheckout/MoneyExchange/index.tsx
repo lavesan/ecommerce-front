@@ -29,14 +29,16 @@ import { exchangeNotesOpts } from "@/helpers/select.helper";
 import { AppInput } from "@/components/AppInput";
 import { useAppContext } from "@/hooks/useAppContext";
 import { exchangeIsEnough } from "@/helpers/checkout.helper";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 
 interface IMoneyExchangeProps extends BoxProps {
+  open: boolean;
   control: Control<IForm>;
   errors: FieldErrors<IForm>;
 }
 
 export function MoneyExchange({
+  open,
   control,
   errors,
   ...boxProps
@@ -56,6 +58,8 @@ export function MoneyExchange({
     name: "exchangeNotes",
   });
 
+  const hasMoreThanOneField = useMemo(() => fields.length > 1, [fields]);
+
   const addExchange = () => {
     if (exchangeIsEnough(exchangeNotes, total)) {
       return showToast({
@@ -68,9 +72,9 @@ export function MoneyExchange({
   };
 
   useEffect(() => {
-    if (!fields.length) append(defaultField);
+    if (open && !fields.length) append(defaultField);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fields, append]);
+  }, [open]);
 
   return (
     <Box {...boxProps}>
@@ -96,12 +100,14 @@ export function MoneyExchange({
       <TransitionGroup>
         {fields.map(({ id }, index) => (
           <Collapse key={`money_exchange_${id}`}>
-            <Divider sx={{ mt: 2 }} />
-            <Box display="flex" justifyContent="flex-end">
-              <IconButton onClick={() => remove(index)}>
-                <DeleteIcon color="error" />
-              </IconButton>
-            </Box>
+            <Divider sx={{ mt: 2, mb: hasMoreThanOneField ? 0 : 2 }} />
+            <Collapse in={hasMoreThanOneField}>
+              <Box display="flex" justifyContent="flex-end">
+                <IconButton onClick={() => remove(index)}>
+                  <DeleteIcon color="error" />
+                </IconButton>
+              </Box>
+            </Collapse>
             <Grid container spacing={2}>
               <Grid item xs={6}>
                 <AppSelect<IForm>

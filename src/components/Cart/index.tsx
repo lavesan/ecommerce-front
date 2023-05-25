@@ -19,6 +19,7 @@ import { ICheckoutProduct } from "@/models/checkout/ICheckoutProduct";
 import { IEnterprise } from "@/models/entities/IEnterprise";
 import { AddProductModal } from "../AddProductModal";
 import { useRouter } from "next/router";
+import { useAppContext } from "@/hooks/useAppContext";
 
 interface CartProps {
   onClose?: VoidFunction;
@@ -26,6 +27,8 @@ interface CartProps {
 }
 
 export const Cart = ({ onClose, isOnCheckoutPage }: CartProps) => {
+  const { isDarkMode } = useAppContext();
+
   const {
     enterprise,
     products = [],
@@ -179,7 +182,7 @@ export const Cart = ({ onClose, isOnCheckoutPage }: CartProps) => {
               bottom={0}
               right={0}
               pb={2}
-              sx={{ backgroundColor: "white" }}
+              sx={{ backgroundColor: isDarkMode ? "invisible" : "white" }}
             >
               <Divider sx={{ mb: 2 }} />
               <Box

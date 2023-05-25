@@ -162,7 +162,12 @@ export const FormCheckout = (props: BoxProps) => {
       </Typography>
       <PaymentTypeRadio<IForm> control={control} name="paymentType" />
       <Collapse in={paymentType === PaymentType.MONEY}>
-        <MoneyExchange mt={4} control={control} errors={errors} />
+        <MoneyExchange
+          mt={4}
+          control={control}
+          errors={errors}
+          open={paymentType === PaymentType.MONEY}
+        />
       </Collapse>
       <Button
         fullWidth

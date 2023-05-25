@@ -5,7 +5,7 @@ import { useCheckoutContext } from "@/hooks/useCheckoutContext";
 import { useAppContext } from "@/hooks/useAppContext";
 
 export const Address = () => {
-  const { toogleAddressModal } = useAppContext();
+  const { toogleAddressModal, isDarkMode } = useAppContext();
   const { address } = useCheckoutContext();
 
   const { isMobile } = useResponsive();
@@ -36,6 +36,7 @@ export const Address = () => {
           background: "none",
           transition: "0.3s",
           textAlign: "start",
+          color: isDarkMode ? "white" : "grey.900",
           boxShadow: `0 0 0 ${theme.palette.grey[300]}`,
           ":hover": {
             boxShadow: `2px 2px 8px ${theme.palette.grey[300]}`,

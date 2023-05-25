@@ -1,5 +1,4 @@
 import { Box, Stack, Typography } from "@mui/material";
-import Head from "next/head";
 
 import { IHomeProps } from "@/models/pages/IHomeProps";
 import { useResponsive } from "@/hooks/useResponsive";
