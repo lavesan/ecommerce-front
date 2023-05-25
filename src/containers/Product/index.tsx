@@ -1,9 +1,19 @@
+import { useMemo } from "react";
+import { useRouter } from "next/router";
+
 import { AddProduct } from "@/components/AddProduct";
 import { useGoBack } from "@/hooks/useGoBack";
 import { IProductProps } from "@/models/pages/IProductProps";
 
 const Product = ({ enterprise, product }: IProductProps) => {
+  const router = useRouter();
+
   const { goBack } = useGoBack();
+
+  const filledProduct = useMemo(() => {
+    const filled = router.query?.product as string;
+    return filled ? JSON.parse(filled) : null;
+  }, [router]);
 
   if (!product) {
     return <h1>Produto não encontrado</h1>;
@@ -14,7 +24,12 @@ const Product = ({ enterprise, product }: IProductProps) => {
   }
 
   return (
-    <AddProduct product={product} enterprise={enterprise} onSuccess={goBack} />
+    <AddProduct
+      product={product}
+      enterprise={enterprise}
+      onSuccess={goBack}
+      filled={filledProduct}
+    />
   );
 };
 

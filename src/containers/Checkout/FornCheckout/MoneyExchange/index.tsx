@@ -29,6 +29,7 @@ import { exchangeNotesOpts } from "@/helpers/select.helper";
 import { AppInput } from "@/components/AppInput";
 import { useAppContext } from "@/hooks/useAppContext";
 import { exchangeIsEnough } from "@/helpers/checkout.helper";
+import { useEffect } from "react";
 
 interface IMoneyExchangeProps extends BoxProps {
   control: Control<IForm>;
@@ -42,6 +43,8 @@ export function MoneyExchange({
 }: IMoneyExchangeProps) {
   const { showToast } = useAppContext();
   const { total } = useCheckoutContext();
+
+  const defaultField = { quantity: "", value: 2000 };
 
   const { append, fields, remove } = useFieldArray({
     control,
@@ -61,8 +64,13 @@ export function MoneyExchange({
       });
     }
 
-    append({ quantity: "", value: 2000 });
+    append(defaultField);
   };
+
+  useEffect(() => {
+    if (!fields.length) append(defaultField);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fields, append]);
 
   return (
     <Box {...boxProps}>

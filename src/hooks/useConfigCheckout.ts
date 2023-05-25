@@ -51,10 +51,17 @@ export const useConfigCheckout = (
     enterprise: IEnterprise,
     product: ICheckoutProduct
   ) => {
+    const productKey = Date.now();
+
+    const productWithKey = {
+      ...product,
+      key: productKey,
+    };
+
     if (checkoutEnterprise?.id !== enterprise.id) {
       saveCheckoutEnterpriseStorage(enterprise);
       setCheckoutEnterprise(enterprise);
-      setCheckoutProducts([product]);
+      setCheckoutProducts([productWithKey]);
       openCheckout();
       return;
     }
@@ -63,7 +70,7 @@ export const useConfigCheckout = (
       JSON.stringify(checkoutProducts)
     ) as ICheckoutProduct[];
 
-    newProducts.push(product);
+    newProducts.push(productWithKey);
 
     saveCheckoutProductsStorage(newProducts);
     setCheckoutProducts(newProducts);
@@ -80,9 +87,13 @@ export const useConfigCheckout = (
   };
 
   const updateCheckoutProduct = (product: ICheckoutProduct) => {
-    setCheckoutProducts((actual) =>
-      actual.map((prod) => (prod.id === product.id ? product : prod))
-    );
+    setCheckoutProducts((actual) => {
+      const mappedProducts = actual.map((prod) =>
+        prod.key === product.key ? product : prod
+      );
+      saveCheckoutProductsStorage(mappedProducts);
+      return mappedProducts;
+    });
   };
 
   const openCheckout = () => {

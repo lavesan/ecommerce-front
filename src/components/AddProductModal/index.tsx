@@ -2,17 +2,20 @@ import { Modal, Backdrop } from "@mui/material";
 import { AddProduct } from "../AddProduct";
 import { IEnterpriseMenuProduct } from "@/models/pages/IEnterpriseMenuProps";
 import { IEnterprise } from "@/models/entities/IEnterprise";
+import { ICheckoutProduct } from "@/models/checkout/ICheckoutProduct";
 
 interface IAddProductModalProps {
   isOpen: boolean;
   product?: IEnterpriseMenuProduct;
   enterprise: IEnterprise;
   onClose: VoidFunction;
+  filled: ICheckoutProduct | null;
 }
 
 export const AddProductModal = ({
   onClose,
   isOpen,
+  filled,
   ...props
 }: IAddProductModalProps) => {
   return (
@@ -32,7 +35,7 @@ export const AddProductModal = ({
         },
       }}
     >
-      <AddProduct {...props} onSuccess={onClose} />
+      <AddProduct {...props} onSuccess={onClose} filled={filled} />
     </Modal>
   );
 };

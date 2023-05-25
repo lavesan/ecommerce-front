@@ -1,11 +1,7 @@
 import { CreateUserForm } from "./CreateUserForm";
 
 const CreateUser = () => {
-  return (
-    <>
-      <CreateUserForm />
-    </>
-  );
+  return <CreateUserForm />;
 };
 
 export default CreateUser;

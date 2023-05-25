@@ -1,20 +1,20 @@
 import {
-  SwipeableDrawer,
   Box,
   Typography,
   Button,
   IconButton,
   Divider,
   BoxProps,
+  Collapse,
 } from "@mui/material";
 import Link from "next/link";
+import { TransitionGroup } from "react-transition-group";
 
 import { useResponsive } from "@/hooks/useResponsive";
 import { useCheckoutContext } from "@/hooks/useCheckoutContext";
 import CloseIcon from "@mui/icons-material/Close";
 import { maskMoney } from "@/helpers/money.helper";
 import React, { useMemo, useState } from "react";
-import { AddProduct } from "../AddProduct";
 import { ICheckoutProduct } from "@/models/checkout/ICheckoutProduct";
 import { IEnterprise } from "@/models/entities/IEnterprise";
 import { AddProductModal } from "../AddProductModal";
@@ -58,18 +58,14 @@ export const Cart = ({ onClose, isOnCheckoutPage }: CartProps) => {
       : {};
   }, [isOnCheckoutPage]);
 
-  const hideCart = useMemo(() => {
-    const dontShowRoutes = ["/pagamento"];
-
-    return (
-      dontShowRoutes.some((route) => router.pathname.includes(route)) ||
-      !isMobile
-    );
-  }, [router.pathname, isMobile]);
-
   const openModal = (product: ICheckoutProduct) => {
-    if (isMobile)
-      return router.push(`/produto/${enterprise?.id}/${product.id}`);
+    if (isMobile) {
+      onPropClose();
+      return router.push({
+        pathname: `/produto/${enterprise?.id}/${product.id}`,
+        query: { product: JSON.stringify(product) },
+      });
+    }
 
     setSelectedProd(product);
     onPropClose();
@@ -78,10 +74,6 @@ export const Cart = ({ onClose, isOnCheckoutPage }: CartProps) => {
   const onPropClose = () => {
     if (onClose) onClose();
   };
-
-  if (hideCart) {
-    return <></>;
-  }
 
   return (
     <>
@@ -131,51 +123,56 @@ export const Cart = ({ onClose, isOnCheckoutPage }: CartProps) => {
               </Button>
             </Box>
             <Divider sx={{ my: 2 }} />
-            {products.map((product, index) => (
-              <React.Fragment key={`checkout_${product.id}`}>
-                <Box
-                  display="flex"
-                  flexDirection="row"
-                  justifyContent="space-between"
-                  mb={2}
-                >
-                  <Box>
-                    <Typography component="p" fontSize="large">
-                      {product.quantity}x {product.name}
-                    </Typography>
-                    <Typography component="p" color="grey.600">
-                      {product.additionals
-                        .map(({ name, quantity }) => `${quantity}x ${name}`)
-                        .join(", ")}
-                    </Typography>
-                    <Box
-                      display="flex"
-                      flexDirection="row"
-                      justifyContent="flex-start"
-                    >
-                      <Button type="button" onClick={() => openModal(product)}>
-                        Editar
-                      </Button>
-                      <Button
-                        type="button"
-                        onClick={() => removeProduct(product.id)}
-                        color="error"
+            <TransitionGroup>
+              {products.map((product, index) => (
+                <Collapse key={`checkout_${product.id}`}>
+                  <Box
+                    display="flex"
+                    flexDirection="row"
+                    justifyContent="space-between"
+                    mb={2}
+                  >
+                    <Box>
+                      <Typography component="p" fontSize="large">
+                        {product.quantity}x {product.name}
+                      </Typography>
+                      <Typography component="p" color="grey.600">
+                        {product.additionals
+                          .map(({ name, quantity }) => `${quantity}x ${name}`)
+                          .join(", ")}
+                      </Typography>
+                      <Box
+                        display="flex"
+                        flexDirection="row"
+                        justifyContent="flex-start"
                       >
-                        Remover
-                      </Button>
+                        <Button
+                          type="button"
+                          onClick={() => openModal(product)}
+                        >
+                          Editar
+                        </Button>
+                        <Button
+                          type="button"
+                          onClick={() => removeProduct(product.id)}
+                          color="error"
+                        >
+                          Remover
+                        </Button>
+                      </Box>
                     </Box>
+                    <Typography component="p" sx={{ color: "primary.main" }}>
+                      {getProdTotalValue(product).formatted}
+                    </Typography>
                   </Box>
-                  <Typography component="p" sx={{ color: "primary.main" }}>
-                    {getProdTotalValue(product).formatted}
-                  </Typography>
-                </Box>
-                {index < products.length - 1 ? (
-                  <Divider sx={{ mb: 2 }} />
-                ) : (
-                  <></>
-                )}
-              </React.Fragment>
-            ))}
+                  {index < products.length - 1 ? (
+                    <Divider sx={{ mb: 2 }} />
+                  ) : (
+                    <></>
+                  )}
+                </Collapse>
+              ))}
+            </TransitionGroup>
             <Box
               marginTop="auto"
               position="sticky"
@@ -267,6 +264,7 @@ export const Cart = ({ onClose, isOnCheckoutPage }: CartProps) => {
         product={selectedProd || ({} as ICheckoutProduct)}
         enterprise={enterprise || ({} as IEnterprise)}
         onClose={() => setSelectedProd(null)}
+        filled={selectedProd || null}
       />
     </>
   );
