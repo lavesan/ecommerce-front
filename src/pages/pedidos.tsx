@@ -1,5 +1,10 @@
-const OrderPage = () => {
-  return <h1>Meus pedidos</h1>;
-};
+import { ReturnStepLayout } from "@/components/ReturnStepLayout";
+import Orders from "@/containers/Orders";
+
+const OrderPage = () => (
+  <ReturnStepLayout>
+    <Orders />
+  </ReturnStepLayout>
+);
 
 export default OrderPage;

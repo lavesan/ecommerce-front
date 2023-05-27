@@ -1,6 +1,5 @@
 import { server } from "@/config/axios.config";
 import { IOrderCreateRequest } from "@/models/IOrderCreateRequest";
-import { IPaginateOrderFilter } from "@/models/IPaginateOrderFilter";
 import { IOrder } from "@/models/entities/IOrder";
 import {
   IPaginationRequest,
@@ -20,12 +19,15 @@ export class OrderService {
     return response.data;
   }
 
-  async paginate(
-    params: IPaginationRequest & IPaginateOrderFilter
+  async paginateMine(
+    params: IPaginationRequest
   ): Promise<IPaginationResponse<IOrder>> {
-    const response = await server.get<IPaginationResponse<IOrder>>(`/order`, {
-      params,
-    });
+    const response = await server.get<IPaginationResponse<IOrder>>(
+      `/order/mine`,
+      {
+        params,
+      }
+    );
     return response.data;
   }
 

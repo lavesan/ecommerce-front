@@ -1,13 +1,4 @@
-import {
-  Box,
-  Paper,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Typography,
-} from "@mui/material";
-
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { Box, Paper } from "@mui/material";
 
 import { Cart } from "@/components/Cart";
 import { FormCheckout } from "./FornCheckout";
