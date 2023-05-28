@@ -38,6 +38,7 @@ export const FormCheckout = (props: BoxProps) => {
     freight,
     enterprise,
     products,
+    clearCheckout,
   } = useCheckoutContext();
 
   const { isMobile } = useResponsive();
@@ -149,13 +150,23 @@ export const FormCheckout = (props: BoxProps) => {
         ...exchangeObj,
       };
 
-      await orderService.create(body).finally(() => setIsLoading(false));
+      try {
+        await orderService.create(body);
 
-      showToast({
-        status: "success",
-        message: "Seu pedido foi feito, você pode acompanhe ele",
-      });
-      router.push("/pedidos");
+        showToast({
+          status: "success",
+          message: "Seu pedido foi feito, acompanhe ele!",
+        });
+        clearCheckout();
+        router.push("/pedidos");
+      } catch {
+        showToast({
+          status: "error",
+          message: "Aconteceu um erro ao fazer seu pedido",
+        });
+      } finally {
+        setIsLoading(false);
+      }
     }
   );
 

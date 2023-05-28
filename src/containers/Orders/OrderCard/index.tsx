@@ -1,7 +1,16 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
-import { Card, Box, Avatar, Typography, Divider, Button } from "@mui/material";
+import {
+  Card,
+  Box,
+  Avatar,
+  Typography,
+  Divider,
+  Button,
+  LinearProgress,
+} from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { styled } from "@mui/styles";
 
 import { IOrder } from "@/models/entities/IOrder";
 import { getImgUrl } from "@/helpers/image.helper";
@@ -29,6 +38,21 @@ const translateOrderStatus = {
   [OrderStatus.DELETED]: "Pedido deletado",
 };
 
+const SlowLinearProgress = styled(LinearProgress)((theme) => {
+  console.log("theme.value: ", theme.value);
+
+  return {
+    '&[aria-valuenow="0"]': {
+      "& > $progressBarInner": {
+        transition: "none",
+      },
+    },
+    "& .MuiLinearProgress-bar": {
+      transition: `transform 2s linear`,
+    },
+  };
+});
+
 export const OrderCard = ({
   order,
   isLast,
@@ -38,6 +62,8 @@ export const OrderCard = ({
   fetchNextPage,
 }: IOrderCardProps) => {
   const { setCart, setAddress, openCheckout } = useCheckoutContext();
+
+  const [progress, setProgress] = useState(0);
 
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -75,6 +101,40 @@ export const OrderCard = ({
     observer.observe(cardRef.current);
   }, [isLast, hasNextPage, fetchNextPage]);
 
+  useEffect(() => {
+    let timer: any;
+
+    if (
+      isActive &&
+      [OrderStatus.TO_APPROVE, OrderStatus.DOING, OrderStatus.SENDING].includes(
+        order.status
+      )
+    ) {
+      const handleOrderStatusProgress = {
+        [OrderStatus.TO_APPROVE]: 30,
+        [OrderStatus.DOING]: 50,
+        [OrderStatus.SENDING]: 100,
+      };
+
+      // @ts-ignore
+      const maximumProgress = handleOrderStatusProgress[order.status] || 0;
+
+      timer = setInterval(() => {
+        let actualProgress;
+
+        setProgress((actual) => {
+          actualProgress = actual;
+          if (!actual) return maximumProgress;
+          return 0;
+        });
+      }, 2000);
+    }
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [isActive, order.status]);
+
   return (
     <Card
       ref={cardRef}
@@ -104,7 +164,15 @@ export const OrderCard = ({
         <ArrowForwardIosIcon />
       </Box>
 
-      <Divider sx={{ my: 2 }} />
+      {isActive ? (
+        <SlowLinearProgress
+          variant="determinate"
+          value={progress}
+          sx={{ my: 2 }}
+        />
+      ) : (
+        <Divider sx={{ my: 2 }} />
+      )}
 
       <Box flexDirection="column">
         <Typography component="p">

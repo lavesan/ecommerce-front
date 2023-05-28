@@ -53,7 +53,9 @@ const Orders = () => {
 
       <Divider sx={{ my: 2 }} />
 
-      <Typography component="h2">Pedidos finalizados</Typography>
+      {!!finishedPages?.pages.some((page) => page.count > 0) && (
+        <Typography component="h2">Pedidos finalizados</Typography>
+      )}
       <Box
         display="flex"
         flexDirection={["column", "row"]}

@@ -123,7 +123,10 @@ export const Cart = ({ onClose, isOnCheckoutPage }: CartProps) => {
                 variant="outlined"
                 component={Link}
                 href={`/loja/${enterprise?.id}`}
-                sx={{ textTransform: "none" }}
+                sx={{
+                  textTransform: "none",
+                  textAlign: isMobile ? "end" : "start",
+                }}
                 onClick={onPropClose}
               >
                 Ver menu
