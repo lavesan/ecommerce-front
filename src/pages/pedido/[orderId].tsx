@@ -1,9 +1,9 @@
 import { AppLayout } from "@/components/AppLayout";
-import Orders from "@/containers/Orders";
+import Order from "@/containers/Order";
 
 const OrderPage = () => (
   <AppLayout>
-    <Orders />
+    <Order />
   </AppLayout>
 );
 

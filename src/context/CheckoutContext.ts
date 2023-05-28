@@ -9,6 +9,7 @@ export const CheckoutContext = React.createContext({
   enterprise: {} as IEnterprise | null,
   freight: {} as IFreight | null,
   setEnterprise: (enterprise: IEnterprise) => {},
+  setCart: (enterprise: IEnterprise, products: ICheckoutProduct[]) => {},
   products: [] as ICheckoutProduct[],
   removeProduct: (key: number | null) => {},
   address: {} as IAddress | null,

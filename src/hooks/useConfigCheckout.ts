@@ -42,6 +42,13 @@ export const useConfigCheckout = (
     clearEnterprise();
   };
 
+  const setCart = (enterprise: IEnterprise, products: ICheckoutProduct[]) => {
+    saveCheckoutEnterpriseStorage(enterprise);
+    setCheckoutEnterprise(enterprise);
+    saveCheckoutProductsStorage(products);
+    setCheckoutProducts(products);
+  };
+
   const setCheckoutEnterpriseFunc = (enterprise: IEnterprise) => {
     saveCheckoutEnterpriseStorage(enterprise);
     setCheckoutEnterprise(enterprise);
@@ -61,6 +68,7 @@ export const useConfigCheckout = (
     if (checkoutEnterprise?.id !== enterprise.id) {
       saveCheckoutEnterpriseStorage(enterprise);
       setCheckoutEnterprise(enterprise);
+      saveCheckoutProductsStorage([productWithKey]);
       setCheckoutProducts([productWithKey]);
       openCheckout();
       return;
@@ -188,5 +196,6 @@ export const useConfigCheckout = (
     setAddress,
     getProdTotalValue,
     freight,
+    setCart,
   };
 };

@@ -1,4 +1,3 @@
-import {} from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 // @ts-ignore
 import { Autoplay, Pagination } from "swiper";
@@ -19,6 +18,7 @@ export const PromotionSlider = ({ promotions }: IPromotionSliderProps) => {
   return (
     <Swiper
       loop
+      autoHeight
       slidesPerView={isMobile ? 1 : 3}
       autoplay={{
         delay: 5000,

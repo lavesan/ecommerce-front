@@ -1,6 +1,7 @@
 export interface IPaginationRequest {
   page: number;
   size: number;
+  isActive: boolean;
 }
 
 export interface IPaginationResponse<Data> {
