@@ -6,6 +6,12 @@ import {
 } from "@/helpers/validation.helper";
 import * as yup from "yup";
 
+const requiredWhenMoney = (paymentType: any, schema: any) => {
+  if ((paymentType as unknown as PaymentType) === PaymentType.MONEY)
+    return schema.required(REQUIRED_MSG);
+  return schema.notRequired();
+};
+
 export const validationSchema = yup.object({
   paymentType: yup
     .mixed()
@@ -15,18 +21,14 @@ export const validationSchema = yup.object({
       PaymentType.MONEY,
     ])
     .required(REQUIRED_MSG),
-  hasCents: yup.boolean().when("paymentType", (paymentType, schema) => {
-    if ((paymentType as unknown as PaymentType) === PaymentType.MONEY)
-      return schema.required(REQUIRED_MSG);
-    return schema.nullable();
-  }),
+  hasCents: yup.boolean().when("paymentType", requiredWhenMoney),
   exchangeNotes: yup.array().of(
     yup.object({
-      value: yup.number().required(REQUIRED_MSG),
+      value: yup.number().when("paymentType", requiredWhenMoney),
       quantity: yup
         .string()
         .matches(onlyNumberReg, ONLY_NUMBER_MSG)
-        .required(REQUIRED_MSG),
+        .when("paymentType", requiredWhenMoney),
     })
   ),
 });

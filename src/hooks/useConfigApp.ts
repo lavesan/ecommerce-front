@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { PaletteMode } from "@mui/material";
 import { googleLogout } from "@react-oauth/google";
 import jwt_decode from "jwt-decode";
@@ -24,12 +24,15 @@ export const useConfigApp = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState<null | IClient>(null);
   const [token, setToken] = useState<null | IUserToken>(null);
-  const [addresses, setAddresses] = useState<IAddress[]>([]);
   const [themeMode, setThemeMode] = useState<PaletteMode>("light");
   const [toast, setToast] = useState<IToastState>({
     isOpen: false,
   } as IToastState);
   const [showAddressModal, setShowAddressModal] = useState(false);
+
+  const addresses = useMemo(() => {
+    return user?.addresses || [];
+  }, [user?.addresses]);
 
   const setEnterpriseMenu = (enterprise: IEnterprise) => {
     setEnterprises((actual) =>
@@ -91,7 +94,6 @@ export const useConfigApp = () => {
       const client = await clientService.findMe();
 
       setUser(JSON.parse(JSON.stringify(client)));
-      setAddresses(client.addresses || []);
     } catch (err: any) {
       console.log("Deu pau no find me");
     } finally {
@@ -132,7 +134,6 @@ export const useConfigApp = () => {
     showToast,
     onToastClose,
     addresses,
-    setAddresses,
     getMe,
     showAddressModal,
     toogleAddressModal,

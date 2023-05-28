@@ -30,6 +30,6 @@ export interface IEnterprise {
   orders?: IOrder[];
   freights?: IFreight[];
   promotions?: IPromotion[];
-  user?: IUser;
+  users?: IUser[];
   schedules?: ISchedule[];
 }

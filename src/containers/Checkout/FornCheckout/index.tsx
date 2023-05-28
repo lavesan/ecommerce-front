@@ -29,7 +29,7 @@ export interface IForm {
 export const FormCheckout = (props: BoxProps) => {
   const orderService = OrderService.getInstance();
 
-  const { showToast, user, toogleAddressModal } = useAppContext();
+  const { showToast, user, toogleAddressModal, setIsLoading } = useAppContext();
   const {
     total,
     freightTotal,
@@ -129,7 +129,7 @@ export const FormCheckout = (props: BoxProps) => {
         };
       }
 
-      orderService.create({
+      const body = {
         address,
         products: products.map(
           ({ id, quantity, value, givenPoints, additionals }) => ({
@@ -147,7 +147,15 @@ export const FormCheckout = (props: BoxProps) => {
         paymentType: paymentType as PaymentType,
         ...values,
         ...exchangeObj,
+      };
+
+      await orderService.create(body).finally(() => setIsLoading(false));
+
+      showToast({
+        status: "success",
+        message: "Seu pedido foi feito, você pode acompanhe ele",
       });
+      router.push("/pedidos");
     }
   );
 

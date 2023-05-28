@@ -1,4 +1,5 @@
 import { server } from "@/config/axios.config";
+import { getStorageToken } from "@/helpers/auth.helper";
 import { IClientCreateResponse } from "@/models/IClientCreateResponse";
 import { IClientLoginRequest } from "@/models/IClientLoginRequest";
 import { IClientLoginResponse } from "@/models/IClientLoginResponse";
@@ -34,6 +35,9 @@ export class ClientService {
     const response = await server.get<IClient>(`/client/me`, {
       // @ts-ignore
       notLoad: true,
+      headers: {
+        Authorization: `Bearer ${getStorageToken()}`,
+      },
     });
     // @ts-ignore
     return response.data;

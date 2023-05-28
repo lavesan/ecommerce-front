@@ -24,6 +24,7 @@ export const AxiosInterceptorHOC = ({
     const successReqInterceptor = (config: InternalAxiosRequestConfig) => {
       // @ts-ignore
       if (!config.notLoad) setIsLoading(true);
+
       const token = getStorageToken();
 
       const headers = config.headers || {};

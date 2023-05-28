@@ -1,11 +1,7 @@
 import { LoginUserForm } from "./LoginUserForm";
 
 const LoginUser = () => {
-  return (
-    <>
-      <LoginUserForm />
-    </>
-  );
+  return <LoginUserForm />;
 };
 
 export default LoginUser;

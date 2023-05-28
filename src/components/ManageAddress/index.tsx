@@ -51,6 +51,7 @@ export const ManageAddressModal = (chipProps: IManageAddressModalProps) => {
             boxShadow: 24,
             p: 4,
             border: "none",
+            overflowY: "scroll",
             ":focus": {
               border: "none",
             },
