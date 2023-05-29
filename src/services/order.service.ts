@@ -15,7 +15,7 @@ export class OrderService {
   }
 
   async findById(id: string): Promise<IOrder> {
-    const response = await server.get<IOrder>(`/order/${id}`);
+    const response = await server.get<IOrder>(`/order/mine/${id}`);
     return response.data;
   }
 
@@ -23,7 +23,7 @@ export class OrderService {
     params: IPaginationRequest
   ): Promise<IPaginationResponse<IOrder>> {
     const response = await server.get<IPaginationResponse<IOrder>>(
-      `/order/mine`,
+      `/order/mine/all`,
       {
         params,
       }

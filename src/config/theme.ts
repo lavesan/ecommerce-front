@@ -11,6 +11,26 @@ const theme = (mode: PaletteMode = "light") =>
           // },
         },
       },
+      typography: {
+        h1: {
+          fontSize: 40,
+          fontWeight: "bold",
+        },
+        h3: {
+          fontSize: 20,
+          fontWeight: "bold",
+        },
+        body1: {
+          fontSize: 20,
+        },
+      },
+      components: {
+        MuiButton: {
+          defaultProps: {
+            sx: { textTransform: "none" },
+          },
+        },
+      },
     })
   );
 

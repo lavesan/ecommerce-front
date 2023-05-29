@@ -1,7 +1,6 @@
 import React from "react";
 import { Swiper } from "swiper/react";
-// @ts-ignore
-import { FreeMode } from "swiper";
+import { FreeMode, Mousewheel } from "swiper";
 
 import "swiper/css";
 import "swiper/css/free-mode";
@@ -15,9 +14,10 @@ export const VerticalSlider = ({ children }: React.PropsWithChildren) => {
       freeMode
       centeredSlides
       grabCursor
+      mousewheel
       slidesPerView={isMobile ? 1 : 3}
       spaceBetween={30}
-      modules={[FreeMode]}
+      modules={[FreeMode, Mousewheel]}
     >
       {children}
     </Swiper>

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { useRouter } from "next/router";
 import {
   Card,
@@ -7,10 +7,9 @@ import {
   Typography,
   Divider,
   Button,
-  LinearProgress,
+  Chip,
 } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { styled } from "@mui/styles";
 
 import { IOrder } from "@/models/entities/IOrder";
 import { getImgUrl } from "@/helpers/image.helper";
@@ -19,6 +18,7 @@ import { useCheckoutContext } from "@/hooks/useCheckoutContext";
 import { ICheckoutProduct } from "@/models/checkout/ICheckoutProduct";
 import { IPromotion } from "@/models/entities/IPromotion";
 import { orderProdToCheckoutProd } from "@/helpers/orderProdToCheckoutProd.helper";
+import { LinearProgress } from "@/components/LinearProgress";
 
 interface IOrderCardProps {
   order: IOrder;
@@ -29,29 +29,41 @@ interface IOrderCardProps {
   fetchNextPage: VoidFunction;
 }
 
+type ChipColor =
+  | "primary"
+  | "error"
+  | "warning"
+  | "default"
+  | "secondary"
+  | "info"
+  | "success";
+
 const translateOrderStatus = {
-  [OrderStatus.DONE]: "Pedido concluído",
-  [OrderStatus.SENDING]: "Pedido enviado",
-  [OrderStatus.CANCELED]: "Pedido cancelado",
-  [OrderStatus.DOING]: "Pedido em preparo",
-  [OrderStatus.TO_APPROVE]: "A ser aprovado",
-  [OrderStatus.DELETED]: "Pedido deletado",
+  [OrderStatus.DONE]: {
+    label: "Pedido concluído",
+    color: "primary" as ChipColor,
+  },
+  [OrderStatus.SENDING]: {
+    label: "Pedido enviado",
+    color: "primary" as ChipColor,
+  },
+  [OrderStatus.CANCELED]: {
+    label: "Pedido cancelado",
+    color: "error" as ChipColor,
+  },
+  [OrderStatus.DOING]: {
+    label: "Pedido em preparo",
+    color: "primary" as ChipColor,
+  },
+  [OrderStatus.TO_APPROVE]: {
+    label: "A ser aprovado",
+    color: "warning" as ChipColor,
+  },
+  [OrderStatus.DELETED]: {
+    label: "Pedido deletado",
+    color: "error" as ChipColor,
+  },
 };
-
-const SlowLinearProgress = styled(LinearProgress)((theme) => {
-  console.log("theme.value: ", theme.value);
-
-  return {
-    '&[aria-valuenow="0"]': {
-      "& > $progressBarInner": {
-        transition: "none",
-      },
-    },
-    "& .MuiLinearProgress-bar": {
-      transition: `transform 2s linear`,
-    },
-  };
-});
 
 export const OrderCard = ({
   order,
@@ -63,11 +75,20 @@ export const OrderCard = ({
 }: IOrderCardProps) => {
   const { setCart, setAddress, openCheckout } = useCheckoutContext();
 
-  const [progress, setProgress] = useState(0);
-
   const cardRef = useRef<HTMLDivElement>(null);
 
   const router = useRouter();
+
+  const progressWidth = useMemo(() => {
+    const handleOrderStatusProgress = {
+      [OrderStatus.TO_APPROVE]: "30%",
+      [OrderStatus.DOING]: "50%",
+      [OrderStatus.SENDING]: "100%",
+    };
+
+    // @ts-ignore
+    return handleOrderStatusProgress[order.status] || "10%";
+  }, [order.status]);
 
   const goToOrder = () => {
     router.push(`/pedido/${order.id}`);
@@ -101,40 +122,6 @@ export const OrderCard = ({
     observer.observe(cardRef.current);
   }, [isLast, hasNextPage, fetchNextPage]);
 
-  useEffect(() => {
-    let timer: any;
-
-    if (
-      isActive &&
-      [OrderStatus.TO_APPROVE, OrderStatus.DOING, OrderStatus.SENDING].includes(
-        order.status
-      )
-    ) {
-      const handleOrderStatusProgress = {
-        [OrderStatus.TO_APPROVE]: 30,
-        [OrderStatus.DOING]: 50,
-        [OrderStatus.SENDING]: 100,
-      };
-
-      // @ts-ignore
-      const maximumProgress = handleOrderStatusProgress[order.status] || 0;
-
-      timer = setInterval(() => {
-        let actualProgress;
-
-        setProgress((actual) => {
-          actualProgress = actual;
-          if (!actual) return maximumProgress;
-          return 0;
-        });
-      }, 2000);
-    }
-
-    return () => {
-      clearInterval(timer);
-    };
-  }, [isActive, order.status]);
-
   return (
     <Card
       ref={cardRef}
@@ -156,20 +143,19 @@ export const OrderCard = ({
           />
           <Box display="flex" flexDirection="column" ml={1}>
             <Typography component="h3">{order.enterprise?.name}</Typography>
-            <Typography component="p">
-              {translateOrderStatus[order.status]}
-            </Typography>
+            <Chip
+              label={translateOrderStatus[order.status].label}
+              color={translateOrderStatus[order.status].color}
+              size="small"
+              sx={{ mt: 1 }}
+            />
           </Box>
         </Box>
         <ArrowForwardIosIcon />
       </Box>
 
       {isActive ? (
-        <SlowLinearProgress
-          variant="determinate"
-          value={progress}
-          sx={{ my: 2 }}
-        />
+        <LinearProgress progressWidth={progressWidth} my={2} />
       ) : (
         <Divider sx={{ my: 2 }} />
       )}

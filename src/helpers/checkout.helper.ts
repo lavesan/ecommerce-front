@@ -4,6 +4,7 @@ import {
 } from "@/constants/checkout.storage";
 import { ICheckoutProduct } from "@/models/checkout/ICheckoutProduct";
 import { IEnterprise } from "@/models/entities/IEnterprise";
+import { maskMoney } from "./money.helper";
 
 export const getSavedCheckout = () => {
   const storedEnterprise = localStorage.getItem(CHECKOUT_ENTERPRISE_KEY);
@@ -49,4 +50,36 @@ export const exchangeIsEnough = (
   );
 
   return totalExchangeValue >= total;
+};
+
+export const getProductValue = (product: ICheckoutProduct): number => {
+  return product.promotionValue ? product.promotionValue : product.value;
+};
+
+export const getProductValueFormat = (product: ICheckoutProduct): string => {
+  return product.promotionValueFormat
+    ? product.promotionValueFormat
+    : product.valueFormat;
+};
+
+export const getFullProductCheckoutValue = (
+  product: ICheckoutProduct
+): number => {
+  const additionalsValue = product.additionals.reduce(
+    (value, additional) => value + additional.quantity * additional.value,
+    0
+  );
+  const prodValue = product.promotionId
+    ? product.promotionValue || 0
+    : product.value;
+
+  return (additionalsValue + prodValue) * product.quantity;
+};
+
+export const getFullProductCheckoutValueFormat = (
+  product: ICheckoutProduct
+): string => {
+  const fullValue = getFullProductCheckoutValue(product);
+
+  return maskMoney(fullValue);
 };

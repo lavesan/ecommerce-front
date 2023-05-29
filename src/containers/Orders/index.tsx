@@ -4,7 +4,7 @@ import { SwiperSlide } from "swiper/react";
 
 import { OrderCard } from "./OrderCard";
 import { useResponsive } from "@/hooks/useResponsive";
-import { useTodayPromotionsQuery } from "@/hooks/useTodayPromotionsQuery";
+import { useTodayPromotionsQuery } from "@/hooks/fetch/useTodayPromotionsQuery";
 import { usePaginateOrders } from "@/hooks/fetch/usePaginateOrders";
 import { VerticalSlider } from "./VerticalSlider";
 

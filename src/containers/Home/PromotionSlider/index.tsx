@@ -1,6 +1,6 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 // @ts-ignore
-import { Autoplay, Pagination } from "swiper";
+import { Autoplay, Pagination, Mousewheel } from "swiper";
 import "swiper/css";
 import "swiper/css/pagination";
 
@@ -19,6 +19,7 @@ export const PromotionSlider = ({ promotions }: IPromotionSliderProps) => {
     <Swiper
       loop
       autoHeight
+      mousewheel
       slidesPerView={isMobile ? 1 : 3}
       autoplay={{
         delay: 5000,
@@ -28,7 +29,7 @@ export const PromotionSlider = ({ promotions }: IPromotionSliderProps) => {
       pagination={{
         clickable: true,
       }}
-      modules={[Autoplay, Pagination]}
+      modules={[Autoplay, Pagination, Mousewheel]}
     >
       {promotions.map((promotion) => (
         <SwiperSlide key={`promotion_${promotion.id}`}>

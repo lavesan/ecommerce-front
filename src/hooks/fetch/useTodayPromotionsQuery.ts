@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { getWeekDay } from "@/helpers/date.helper";
 import { PromotionService } from "@/services/promotion.service";
-import { useAppContext } from "./useAppContext";
+import { useAppContext } from "../useAppContext";
 import { IPromotion } from "@/models/entities/IPromotion";
 
 export const useTodayPromotionsQuery = () => {
