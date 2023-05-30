@@ -1,3 +1,5 @@
+import { OrderStatus } from "@/enums/OrderStatus.enum";
+import { PaymentType } from "@/enums/PaymentType.enum";
 import { format, parse } from "date-fns";
 
 export const phoneMask = "(99) 99999-9999";
@@ -12,7 +14,7 @@ export const maskDate = (dateString: any): string => {
   return format(parsedDate, "dd/MM/yyyy");
 };
 
-const addDigits = (digits: number) => {
+export const addDigits = (digits: number) => {
   return digits.toString().length > 1 ? digits : `0${digits}`;
 };
 
@@ -26,4 +28,19 @@ export const maskDateTime = (dateString: any): string => {
   )}/${date.getFullYear()} ${addDigits(date.getHours())}:${addDigits(
     date.getMinutes()
   )}h`;
+};
+
+export const translatePaymentType = {
+  [PaymentType.CREDIT_CARD_MACHINE]: "Pago na maquininha de cartão de crédito",
+  [PaymentType.DEBIT_CARD_MACHINE]: "Pago na maquininha de cartão de débito",
+  [PaymentType.MONEY]: "Pago em dinheiro",
+};
+
+export const translateOrderStatus = {
+  [OrderStatus.CANCELED]: "Cancelado",
+  [OrderStatus.DELETED]: "Deletado",
+  [OrderStatus.DOING]: "Fazendo",
+  [OrderStatus.DONE]: "Feito",
+  [OrderStatus.SENDING]: "Entregando",
+  [OrderStatus.TO_APPROVE]: "A aprovar",
 };

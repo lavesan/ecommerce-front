@@ -16,6 +16,7 @@ import { useAppContext } from "@/hooks/useAppContext";
 import { useGoBack } from "@/hooks/useGoBack";
 import { useResponsive } from "@/hooks/useResponsive";
 import { IOrderCreateRequest } from "@/models/IOrderCreateRequest";
+import { useAuthContext } from "@/hooks/useAuthContext";
 
 export interface IForm {
   paymentType: string;
@@ -29,7 +30,8 @@ export interface IForm {
 export const FormCheckout = (props: BoxProps) => {
   const orderService = OrderService.getInstance();
 
-  const { showToast, user, toogleAddressModal, setIsLoading } = useAppContext();
+  const { showToast, toogleAddressModal, setIsLoading } = useAppContext();
+  const { user } = useAuthContext();
   const {
     total,
     freightTotal,
@@ -151,14 +153,14 @@ export const FormCheckout = (props: BoxProps) => {
       };
 
       try {
-        await orderService.create(body);
+        const order = await orderService.create(body);
 
         showToast({
           status: "success",
           message: "Seu pedido foi feito, acompanhe ele!",
         });
         clearCheckout();
-        router.push("/pedidos");
+        router.push(`/pedido/${order.id}`);
       } catch {
         showToast({
           status: "error",

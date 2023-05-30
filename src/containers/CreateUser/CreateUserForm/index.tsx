@@ -12,6 +12,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { parseError } from "@/helpers/axiosError.helper";
 import { useGoBack } from "@/hooks/useGoBack";
+import { useAuthContext } from "@/hooks/useAuthContext";
 
 interface IForm {
   name: string;
@@ -28,7 +29,8 @@ export const CreateUserForm = () => {
 
   const { goStoreBackOrBack } = useGoBack();
 
-  const { login, showToast, setIsLoading } = useAppContext();
+  const { showToast, setIsLoading } = useAppContext();
+  const { login } = useAuthContext();
 
   const {
     control,

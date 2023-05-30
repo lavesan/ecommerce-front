@@ -11,6 +11,7 @@ import { validationSchema } from "./validations";
 import { AppInput } from "@/components/AppInput";
 import { parseError } from "@/helpers/axiosError.helper";
 import { useGoBack } from "@/hooks/useGoBack";
+import { useAuthContext } from "@/hooks/useAuthContext";
 
 interface IForm {
   email: string;
@@ -22,7 +23,8 @@ export const LoginUserForm = () => {
 
   const { goStoreBackOrBack } = useGoBack();
 
-  const { login, showToast, setIsLoading, isDarkMode } = useAppContext();
+  const { showToast, setIsLoading, isDarkMode } = useAppContext();
+  const { login } = useAuthContext();
 
   const router = useRouter();
 

@@ -18,7 +18,8 @@ import { useCheckoutContext } from "@/hooks/useCheckoutContext";
 import { ICheckoutProduct } from "@/models/checkout/ICheckoutProduct";
 import { IPromotion } from "@/models/entities/IPromotion";
 import { orderProdToCheckoutProd } from "@/helpers/orderProdToCheckoutProd.helper";
-import { LinearProgress } from "@/components/LinearProgress";
+import { useAppContext } from "@/hooks/useAppContext";
+import { LinearProgressOrder } from "@/components/LinearProgressOrder";
 
 interface IOrderCardProps {
   order: IOrder;
@@ -75,20 +76,11 @@ export const OrderCard = ({
 }: IOrderCardProps) => {
   const { setCart, setAddress, openCheckout } = useCheckoutContext();
 
+  const { isDarkMode } = useAppContext();
+
   const cardRef = useRef<HTMLDivElement>(null);
 
   const router = useRouter();
-
-  const progressWidth = useMemo(() => {
-    const handleOrderStatusProgress = {
-      [OrderStatus.TO_APPROVE]: "30%",
-      [OrderStatus.DOING]: "50%",
-      [OrderStatus.SENDING]: "100%",
-    };
-
-    // @ts-ignore
-    return handleOrderStatusProgress[order.status] || "10%";
-  }, [order.status]);
 
   const goToOrder = () => {
     router.push(`/pedido/${order.id}`);
@@ -125,7 +117,16 @@ export const OrderCard = ({
   return (
     <Card
       ref={cardRef}
-      sx={{ p: 4, cursor: "pointer", userSelect: "none", mb: 1 }}
+      sx={{
+        p: 4,
+        cursor: "pointer",
+        userSelect: "none",
+        my: 1,
+        transition: "background-color 0.3s",
+        ":hover": {
+          backgroundColor: isDarkMode ? "grey.900" : "grey.100",
+        },
+      }}
       onClick={goToOrder}
       elevation={4}
     >
@@ -155,7 +156,7 @@ export const OrderCard = ({
       </Box>
 
       {isActive ? (
-        <LinearProgress progressWidth={progressWidth} my={2} />
+        <LinearProgressOrder status={order.status} my={2} />
       ) : (
         <Divider sx={{ my: 2 }} />
       )}

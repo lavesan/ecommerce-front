@@ -20,6 +20,7 @@ import { useResponsive } from "@/hooks/useResponsive";
 import { useCheckoutContext } from "@/hooks/useCheckoutContext";
 import { AppLogo } from "../AppLogo";
 import { AddressChip } from "../AddressChip";
+import { useAuthContext } from "@/hooks/useAuthContext";
 
 const settings = [
   { id: "my-data-menu", label: "Meus dados", route: "/meus-dados" },
@@ -29,7 +30,8 @@ const settings = [
 
 export const Header = () => {
   const { openCheckout, hasProducts, productsCount } = useCheckoutContext();
-  const { user, token, logout, toogleThemeMode, themeMode } = useAppContext();
+  const { toogleThemeMode, themeMode } = useAppContext();
+  const { user, token, logout } = useAuthContext();
   const { isMobile } = useResponsive();
 
   const router = useRouter();

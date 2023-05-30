@@ -7,12 +7,14 @@ import { useGoBack } from "@/hooks/useGoBack";
 import { useResponsive } from "@/hooks/useResponsive";
 import { useAppContext } from "@/hooks/useAppContext";
 import { useRouter } from "next/router";
+import { useAuthContext } from "@/hooks/useAuthContext";
 
 export const AddressChip = (chipProps: Partial<ChipProps>) => {
   const { storeGoBackUrl } = useGoBack();
   const { isMobile } = useResponsive();
 
-  const { token, toogleAddressModal } = useAppContext();
+  const { toogleAddressModal } = useAppContext();
+  const { token } = useAuthContext();
   const { address } = useCheckoutContext();
 
   const router = useRouter();

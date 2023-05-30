@@ -32,6 +32,8 @@ import "@fontsource/roboto/700.css";
 import { useRouter } from "next/router";
 import { BouncingDotsLoader } from "@/components/BouncingDotsLoader";
 import { ManageAddressModal } from "@/components/ManageAddress";
+import { AuthContext } from "@/context/AuthContext";
+import { useConfigAuth } from "@/hooks/useConfigAuth";
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -45,7 +47,8 @@ export default function MyApp(props: MyAppProps) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
 
   const { isLoading, toast, onToastClose, ...appConfig } = useConfigApp();
-  const checkoutConfig = useConfigCheckout(appConfig);
+  const authConfig = useConfigAuth(appConfig);
+  const checkoutConfig = useConfigCheckout(appConfig, authConfig);
 
   const materialTheme = useMemo(
     () => theme(appConfig.themeMode),
@@ -126,32 +129,34 @@ export default function MyApp(props: MyAppProps) {
               }}
             />
             <AppContext.Provider value={appConfig}>
-              <CheckoutContext.Provider value={checkoutConfig}>
-                <AxiosInterceptorHOC>
-                  <>
-                    <GoogleOAuthProvider
-                      clientId={process.env.NEXT_PUBLIC_GOOGLE_ID || ""}
-                    >
-                      {/* <BouncingDotsLoader isLoading={loadingPage} /> */}
-                      <Loading isLoading={isLoading} />
-                      <Component {...pageProps} />
-                      <Footer />
-                    </GoogleOAuthProvider>
-                    <AppToast
-                      onClose={onToastClose}
-                      isOpen={toast.isOpen}
-                      message={toast.message}
-                      status={toast.status}
-                    />
-                    <SwipeableCart
-                      isOpen={checkoutConfig.open}
-                      onClose={checkoutConfig.closeCheckout}
-                      onOpen={checkoutConfig.openCheckout}
-                    />
-                    <ManageAddressModal />
-                  </>
-                </AxiosInterceptorHOC>
-              </CheckoutContext.Provider>
+              <AuthContext.Provider value={authConfig}>
+                <CheckoutContext.Provider value={checkoutConfig}>
+                  <AxiosInterceptorHOC>
+                    <>
+                      <GoogleOAuthProvider
+                        clientId={process.env.NEXT_PUBLIC_GOOGLE_ID || ""}
+                      >
+                        {/* <BouncingDotsLoader isLoading={loadingPage} /> */}
+                        <Loading isLoading={isLoading} />
+                        <Component {...pageProps} />
+                        <Footer />
+                      </GoogleOAuthProvider>
+                      <AppToast
+                        onClose={onToastClose}
+                        isOpen={toast.isOpen}
+                        message={toast.message}
+                        status={toast.status}
+                      />
+                      <SwipeableCart
+                        isOpen={checkoutConfig.open}
+                        onClose={checkoutConfig.closeCheckout}
+                        onOpen={checkoutConfig.openCheckout}
+                      />
+                      <ManageAddressModal />
+                    </>
+                  </AxiosInterceptorHOC>
+                </CheckoutContext.Provider>
+              </AuthContext.Provider>
             </AppContext.Provider>
           </ThemeProvider>
         </CacheProvider>

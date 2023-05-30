@@ -6,9 +6,14 @@ import { ICheckoutProduct } from "@/models/checkout/ICheckoutProduct";
 import { orderProdToCheckoutProd } from "@/helpers/orderProdToCheckoutProd.helper";
 import { PromotionService } from "@/services/promotion.service";
 import { getWeekDay } from "@/helpers/date.helper";
+import { IOrder } from "@/models/entities/IOrder";
 
 interface IUseFetchOrderParams {
   orderId: string;
+}
+
+export interface IUseFetchOrderData extends IOrder {
+  products: ICheckoutProduct[];
 }
 
 export const useFetchOrder = ({ orderId }: IUseFetchOrderParams) => {
@@ -19,7 +24,7 @@ export const useFetchOrder = ({ orderId }: IUseFetchOrderParams) => {
 
   const todayWeekDay = getWeekDay();
 
-  const fetchOrders = async (param: any) => {
+  const fetchOrders = async (param: any): Promise<IUseFetchOrderData> => {
     const order = await orderService.findById(orderId);
     const promotions = await promotionService.findAll({
       weekDay: todayWeekDay,

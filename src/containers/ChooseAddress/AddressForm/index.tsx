@@ -17,6 +17,7 @@ import { cepMask } from "@/helpers/mask.helper";
 import { validationSchema } from "./validation";
 import { useResponsive } from "@/hooks/useResponsive";
 import { useRouter } from "next/router";
+import { useAuthContext } from "@/hooks/useAuthContext";
 
 interface IForm {
   cep: string;
@@ -35,14 +36,8 @@ interface IAddressFormProps {
 const AddressForm = ({ address, onSuccess }: IAddressFormProps) => {
   const addressService = AddressService.getInstance();
 
-  const {
-    user,
-    getMe,
-    setIsLoading,
-    addresses,
-    showToast,
-    toogleAddressModal,
-  } = useAppContext();
+  const { setIsLoading, showToast, toogleAddressModal } = useAppContext();
+  const { user, getMe, addresses } = useAuthContext();
 
   const { isMobile } = useResponsive();
 

@@ -7,7 +7,9 @@ export const AppLayout = ({ children }: IAppLayoutProps) => {
   return (
     <>
       <Header />
-      <Box py={[2, 4]}>{children}</Box>;
+      <Box pt={[2, 4]} flex={1} display="flex" flexDirection="column">
+        {children}
+      </Box>
     </>
   );
 };

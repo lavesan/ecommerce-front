@@ -1,4 +1,5 @@
 import { server } from "@/config/axios.config";
+import { IOrderConcludeRequest } from "@/models/IOrderConcludeRequest";
 import { IOrderCreateRequest } from "@/models/IOrderCreateRequest";
 import { IOrder } from "@/models/entities/IOrder";
 import {
@@ -11,6 +12,11 @@ export class OrderService {
 
   async create(body: IOrderCreateRequest): Promise<IOrder> {
     const response = await server.post<IOrder>("/order", body);
+    return response.data;
+  }
+
+  async conclude(body: IOrderConcludeRequest): Promise<boolean> {
+    const response = await server.patch<boolean>("/order/mine/conclude", body);
     return response.data;
   }
 

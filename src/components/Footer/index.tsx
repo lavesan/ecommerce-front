@@ -22,15 +22,15 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 
-import { useAppContext } from "@/hooks/useAppContext";
 import { useResponsive } from "@/hooks/useResponsive";
 import { useCheckoutContext } from "@/hooks/useCheckoutContext";
 import { maskMoney } from "@/helpers/money.helper";
+import { useAuthContext } from "@/hooks/useAuthContext";
 
 export const Footer = () => {
   const { openCheckout, hasProducts, total, productsCount } =
     useCheckoutContext();
-  const { token, logout } = useAppContext();
+  const { token, logout } = useAuthContext();
   const { isMobile } = useResponsive();
 
   const router = useRouter();
@@ -112,6 +112,7 @@ export const Footer = () => {
           marginTop: "auto",
         }}
         elevation={3}
+        component="footer"
       >
         <Slide direction="up" in={hasProducts} mountOnEnter unmountOnExit>
           <Grid

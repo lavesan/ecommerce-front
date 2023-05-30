@@ -10,6 +10,7 @@ import { ClientService } from "@/services/client.service";
 import { AppInput } from "@/components/AppInput";
 import { AppMaskedInput } from "@/components/AppMaskedInput";
 import { cpfMask, phoneMask } from "@/helpers/mask.helper";
+import { useAuthContext } from "@/hooks/useAuthContext";
 
 interface IForm {
   name: string;
@@ -24,7 +25,8 @@ const UserData = () => {
 
   const router = useRouter();
 
-  const { user, showToast, setIsLoading } = useAppContext();
+  const { showToast, setIsLoading } = useAppContext();
+  const { user } = useAuthContext();
 
   const userForm = useMemo<Partial<IForm>>(() => {
     if (!user) return {};

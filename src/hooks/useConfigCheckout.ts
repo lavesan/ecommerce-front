@@ -13,9 +13,14 @@ import {
 import { IAddress } from "@/models/entities/IAddress";
 import { useConfigApp } from "./useConfigApp";
 import { maskMoney } from "@/helpers/money.helper";
+import { useConfigAuth } from "./useConfigAuth";
 
 export const useConfigCheckout = (
-  appConfig: Partial<ReturnType<typeof useConfigApp>>
+  appConfig: Omit<
+    ReturnType<typeof useConfigApp>,
+    "isLoading" | "toast" | "onToastClose"
+  >,
+  authConfig: ReturnType<typeof useConfigAuth>
 ) => {
   const [checkoutEnterprise, setCheckoutEnterprise] =
     useState<IEnterprise | null>(null);
@@ -166,7 +171,7 @@ export const useConfigCheckout = (
   }, []);
 
   useEffect(() => {
-    const addresses = appConfig.addresses;
+    const addresses = authConfig.addresses;
 
     if (addresses?.length) {
       const selectedAddr =
@@ -174,7 +179,7 @@ export const useConfigCheckout = (
 
       if (selectedAddr) setAddress(selectedAddr);
     }
-  }, [appConfig.addresses]);
+  }, [authConfig.addresses]);
 
   return {
     enterprise: checkoutEnterprise,

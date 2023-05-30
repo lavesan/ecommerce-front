@@ -18,6 +18,7 @@ import { useCheckoutContext } from "@/hooks/useCheckoutContext";
 import { IAddress } from "@/models/entities/IAddress";
 import { DeleteAddressDialog } from "./DeleteAddressDialog";
 import { AddressService } from "@/services/address.service";
+import { useAuthContext } from "@/hooks/useAuthContext";
 
 interface IChooseAddressProps {
   onChoose: VoidFunction;
@@ -26,9 +27,9 @@ interface IChooseAddressProps {
 const ChooseAddress = ({ onChoose }: IChooseAddressProps) => {
   const addressService = AddressService.getInstance();
 
-  const { addresses, token, isDarkMode, setIsLoading, showToast, getMe } =
-    useAppContext();
+  const { isDarkMode, setIsLoading, showToast } = useAppContext();
   const { address: checkoutAddress, setAddress } = useCheckoutContext();
+  const { token, addresses, getMe } = useAuthContext();
 
   const [editAddress, setEditAddress] = useState<number | null>(null);
 
