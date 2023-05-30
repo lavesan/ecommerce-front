@@ -15,8 +15,10 @@ export class OrderService {
     return response.data;
   }
 
-  async conclude(body: IOrderConcludeRequest): Promise<boolean> {
-    const response = await server.patch<boolean>("/order/mine/conclude", body);
+  async conclude({ orderId }: IOrderConcludeRequest): Promise<boolean> {
+    const response = await server.patch<boolean>(
+      `/order/mine/conclude/${orderId}`
+    );
     return response.data;
   }
 
