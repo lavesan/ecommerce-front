@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Typography, Divider } from "@mui/material";
 import { SwiperSlide } from "swiper/react";
 
@@ -7,23 +7,50 @@ import { useResponsive } from "@/hooks/useResponsive";
 import { useTodayPromotionsQuery } from "@/hooks/fetch/useTodayPromotionsQuery";
 import { usePaginateOrders } from "@/hooks/fetch/usePaginateOrders";
 import { VerticalSlider } from "./VerticalSlider";
+import { useAuthContext } from "@/hooks/useAuthContext";
+import { useAppContext } from "@/hooks/useAppContext";
 
 const Orders = () => {
   const { data: promotions } = useTodayPromotionsQuery();
+
+  const { user } = useAuthContext();
+  const { setIsLoading } = useAppContext();
+
+  const [fetchEnabled, setFetchEnabled] = useState(true);
 
   const {
     data: activePages,
     hasNextPage: hasActiveNextPage,
     fetchNextPage: fetchActiveNextPage,
-  } = usePaginateOrders({ isActive: true });
+  } = usePaginateOrders({
+    isActive: true,
+    userId: user?.id || "",
+    enabled: fetchEnabled,
+  });
 
   const {
     data: finishedPages,
     hasNextPage: hasFinishedNextPage,
     fetchNextPage: fetchFinishedNextPage,
-  } = usePaginateOrders({ isActive: false });
+  } = usePaginateOrders({
+    isActive: false,
+    userId: user?.id || "",
+    enabled: fetchEnabled,
+  });
 
   const { isMobile } = useResponsive();
+
+  useEffect(() => {
+    const hasActiveOrders = activePages?.pages.every((page) => page.count > 0);
+
+    if (!hasActiveOrders) {
+      setFetchEnabled(false);
+    }
+  }, [activePages]);
+
+  useEffect(() => {
+    setIsLoading(true);
+  }, [setIsLoading]);
 
   return (
     <Box display="flex" flexDirection="column" px={4}>

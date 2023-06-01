@@ -38,6 +38,7 @@ export const LoginUserForm = () => {
   });
 
   const onSubmit = handleSubmit(async (values) => {
+    setIsLoading(true);
     try {
       const { credentials, ...client } = await clientService.login(values);
       login({ client, credentials });
@@ -123,7 +124,7 @@ export const LoginUserForm = () => {
         label="Senha"
         type="password"
       />
-      <Button type="submit" variant="contained" sx={{ textTransform: "none" }}>
+      <Button type="submit" variant="contained" size="large">
         Submeter
       </Button>
       <Box display="flex" justifyContent="center">

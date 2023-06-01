@@ -17,9 +17,10 @@ import { useAuthContext } from "@/hooks/useAuthContext";
 interface IForm {
   name: string;
   email: string;
-  password: string;
   cpf: string;
   phone: string;
+  password: string;
+  confirmPassword: string;
 }
 
 export const CreateUserForm = () => {
@@ -44,6 +45,7 @@ export const CreateUserForm = () => {
 
   const onSubmit = handleSubmit(
     async ({ cpf, phone, name, email, password }) => {
+      setIsLoading(true);
       try {
         const { credentials, ...client } = await clientService.create({
           password,
@@ -146,7 +148,15 @@ export const CreateUserForm = () => {
         label="Senha"
         type="password"
       />
-      <Button type="submit" variant="contained" sx={{ textTransform: "none" }}>
+      <AppInput<IForm>
+        fullWidth
+        control={control}
+        errorMsg={errors.confirmPassword?.message}
+        name="confirmPassword"
+        label="Confirmar senha"
+        type="password"
+      />
+      <Button type="submit" variant="contained" size="large">
         Criar
       </Button>
     </Box>

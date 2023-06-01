@@ -5,9 +5,15 @@ import { useAppContext } from "../useAppContext";
 
 interface IUsePaginateOrdersParams {
   isActive: boolean;
+  userId: string;
+  enabled: boolean;
 }
 
-export const usePaginateOrders = ({ isActive }: IUsePaginateOrdersParams) => {
+export const usePaginateOrders = ({
+  isActive,
+  userId,
+  enabled,
+}: IUsePaginateOrdersParams) => {
   const orderService = OrderService.getInstance();
 
   const { setIsLoading } = useAppContext();
@@ -17,12 +23,14 @@ export const usePaginateOrders = ({ isActive }: IUsePaginateOrdersParams) => {
   };
 
   return useInfiniteQuery({
-    queryKey: ["orders", isActive],
+    queryKey: ["orders", isActive, userId],
     queryFn: fetchOrders,
     getNextPageParam: (lastPage, pages) =>
       lastPage.size * (lastPage.page + 1) < lastPage.count,
     onSettled() {
       setIsLoading(false);
     },
+    refetchInterval: 2 * 60000,
+    enabled,
   });
 };

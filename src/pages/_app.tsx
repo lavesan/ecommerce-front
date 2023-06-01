@@ -21,7 +21,6 @@ import { useConfigApp } from "@/hooks/useConfigApp";
 import { AppContext } from "@/context/AppContext";
 import { Loading } from "@/components/Loading";
 import { AppToast } from "@/components/AppToast";
-import { AxiosInterceptorHOC } from "@/config/axios.config";
 import { Footer } from "@/components/Footer";
 import { SwipeableCart } from "@/components/SwipeableCart";
 
@@ -131,30 +130,28 @@ export default function MyApp(props: MyAppProps) {
             <AppContext.Provider value={appConfig}>
               <AuthContext.Provider value={authConfig}>
                 <CheckoutContext.Provider value={checkoutConfig}>
-                  <AxiosInterceptorHOC>
-                    <>
-                      <GoogleOAuthProvider
-                        clientId={process.env.NEXT_PUBLIC_GOOGLE_ID || ""}
-                      >
-                        {/* <BouncingDotsLoader isLoading={loadingPage} /> */}
-                        <Loading isLoading={isLoading} />
-                        <Component {...pageProps} />
-                        <Footer />
-                      </GoogleOAuthProvider>
-                      <AppToast
-                        onClose={onToastClose}
-                        isOpen={toast.isOpen}
-                        message={toast.message}
-                        status={toast.status}
-                      />
-                      <SwipeableCart
-                        isOpen={checkoutConfig.open}
-                        onClose={checkoutConfig.closeCheckout}
-                        onOpen={checkoutConfig.openCheckout}
-                      />
-                      <ManageAddressModal />
-                    </>
-                  </AxiosInterceptorHOC>
+                  <>
+                    <GoogleOAuthProvider
+                      clientId={process.env.NEXT_PUBLIC_GOOGLE_ID || ""}
+                    >
+                      {/* <BouncingDotsLoader isLoading={loadingPage} /> */}
+                      <Loading isLoading={isLoading} />
+                      <Component {...pageProps} />
+                      <Footer />
+                    </GoogleOAuthProvider>
+                    <AppToast
+                      onClose={onToastClose}
+                      isOpen={toast.isOpen}
+                      message={toast.message}
+                      status={toast.status}
+                    />
+                    <SwipeableCart
+                      isOpen={checkoutConfig.open}
+                      onClose={checkoutConfig.closeCheckout}
+                      onOpen={checkoutConfig.openCheckout}
+                    />
+                    <ManageAddressModal />
+                  </>
                 </CheckoutContext.Provider>
               </AuthContext.Provider>
             </AppContext.Provider>

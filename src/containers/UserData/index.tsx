@@ -65,6 +65,7 @@ const UserData = () => {
       if (!values.password) delete values.password;
       else values.password = values.password.trim();
 
+      setIsLoading(true);
       await clientService
         .update(user.id, {
           ...values,

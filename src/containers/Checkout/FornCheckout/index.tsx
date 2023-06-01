@@ -152,6 +152,7 @@ export const FormCheckout = (props: BoxProps) => {
         ...exchangeObj,
       };
 
+      setIsLoading(true);
       try {
         const order = await orderService.create(body);
 

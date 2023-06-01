@@ -7,3 +7,4 @@ export const EMAIL_MSG = "Digite um email válido";
 export const CPF_MSG = "Digite um cpf válido";
 export const PHONE_MSG = "Digite um telefone válido";
 export const ONLY_NUMBER_MSG = "Digite apenas números";
+export const CONFIRM_PASSWORD_MSG = "As senhas devem ser iguais";

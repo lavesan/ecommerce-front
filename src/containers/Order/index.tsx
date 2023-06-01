@@ -1,32 +1,39 @@
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Typography } from "@mui/material";
 
 import { useFetchOrder } from "@/hooks/fetch/useFetchOrder";
-import { OrderStatus } from "@/enums/OrderStatus.enum";
-import { useResponsive } from "@/hooks/useResponsive";
 import { Active } from "./Active";
 import { Inactive } from "./Inactive";
 import { BouncingDotsLoader } from "@/components/BouncingDotsLoader";
+import { useAppContext } from "@/hooks/useAppContext";
+import { isActiveOrder } from "@/constants/order.constants";
 
 const Order = () => {
   const { query } = useRouter();
 
-  const { isMobile } = useResponsive();
+  const { setIsLoading } = useAppContext();
+
+  const [firstLoad, setFirstLoad] = useState(true);
+  const [isActive, setIsActive] = useState(true);
 
   const { data: order, isFetching } = useFetchOrder({
     orderId: query.orderId as string,
   });
 
-  const isActive = useMemo(() => {
-    const activeStatus: string[] = [
-      OrderStatus.TO_APPROVE,
-      OrderStatus.DOING,
-      OrderStatus.SENDING,
-    ];
+  useEffect(() => {
+    setIsLoading(true);
+  }, [setIsLoading]);
 
-    return activeStatus.includes(order?.status || "");
-  }, [order]);
+  useEffect(() => {
+    if (!firstLoad) return;
+
+    if (!order) return;
+    else setFirstLoad(false);
+
+    const updateIsActive = isActiveOrder(order.status);
+    setIsActive(updateIsActive);
+  }, [order, firstLoad]);
 
   if (!order && isFetching) return <BouncingDotsLoader isLoading />;
 

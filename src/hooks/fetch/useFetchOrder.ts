@@ -7,6 +7,8 @@ import { orderProdToCheckoutProd } from "@/helpers/orderProdToCheckoutProd.helpe
 import { PromotionService } from "@/services/promotion.service";
 import { getWeekDay } from "@/helpers/date.helper";
 import { IOrder } from "@/models/entities/IOrder";
+import { useState } from "react";
+import { isActiveOrder } from "@/constants/order.constants";
 
 interface IUseFetchOrderParams {
   orderId: string;
@@ -22,9 +24,11 @@ export const useFetchOrder = ({ orderId }: IUseFetchOrderParams) => {
 
   const { setIsLoading } = useAppContext();
 
+  const [enabled, setEnabled] = useState(true);
+
   const todayWeekDay = getWeekDay();
 
-  const fetchOrders = async (param: any): Promise<IUseFetchOrderData> => {
+  const fetchOrder = async (): Promise<IUseFetchOrderData> => {
     const order = await orderService.findById(orderId);
     const promotions = await promotionService.findAll({
       weekDay: todayWeekDay,
@@ -35,6 +39,12 @@ export const useFetchOrder = ({ orderId }: IUseFetchOrderParams) => {
       promotions
     );
 
+    const isActive = isActiveOrder(order.status);
+
+    if (!isActive) {
+      setEnabled(false);
+    }
+
     return {
       ...order,
       products: checkoutProducts || [],
@@ -43,9 +53,11 @@ export const useFetchOrder = ({ orderId }: IUseFetchOrderParams) => {
 
   return useQuery({
     queryKey: ["order", orderId],
-    queryFn: fetchOrders,
+    queryFn: fetchOrder,
     onSettled() {
       setIsLoading(false);
     },
+    refetchInterval: 2 * 60000,
+    enabled,
   });
 };

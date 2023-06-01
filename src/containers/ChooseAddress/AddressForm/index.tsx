@@ -78,6 +78,7 @@ const AddressForm = ({ address, onSuccess }: IAddressFormProps) => {
         return router.push("/login");
       }
 
+      setIsLoading(true);
       try {
         const body = {
           district,

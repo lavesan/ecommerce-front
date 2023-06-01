@@ -10,6 +10,7 @@ import { IUseFetchOrderData } from "@/hooks/fetch/useFetchOrder";
 import { OrderStatus } from "@/enums/OrderStatus.enum";
 import { maskMoney } from "@/helpers/money.helper";
 import { OrderService } from "@/services/order.service";
+import { isActiveOrder } from "@/constants/order.constants";
 
 type ConcludeIconType = "Ok" | "Cancel";
 
@@ -101,13 +102,7 @@ export const Active = ({
   }, [status]);
 
   useEffect(() => {
-    const activeStatuses = [
-      OrderStatus.TO_APPROVE,
-      OrderStatus.DOING,
-      OrderStatus.SENDING,
-    ];
-
-    if (!activeStatuses.includes(status)) {
+    if (!isActiveOrder(status)) {
       setInactiveStatus(true);
     }
   }, [status]);
@@ -115,90 +110,94 @@ export const Active = ({
   return (
     <>
       <Box px={2}>
-        <Typography variant="h3" color="grey.500">
-          Previsão de entrega
-        </Typography>
-        <Typography component="p" fontSize={32} mb={2}>
-          Hoje, {formattedEstimatedTime}
-        </Typography>
-        <Collapse in={!inactiveStatus}>
-          <LinearProgressOrder status={status} mb={2} />
-          <Typography mb={2}>{formattedStatus}</Typography>
-        </Collapse>
+        <Box width={["100%", "60%"]} mx={[0, "auto"]}>
+          <Typography variant="h3" color="grey.500">
+            Previsão de entrega
+          </Typography>
+          <Typography component="p" fontSize={32} mb={2}>
+            Hoje, {formattedEstimatedTime}
+          </Typography>
+          <Collapse in={!inactiveStatus}>
+            <LinearProgressOrder status={status} mb={2} />
+            <Typography mb={2}>{formattedStatus}</Typography>
+          </Collapse>
+        </Box>
       </Box>
       <Box p={4} flex={1} sx={{ backgroundColor: "grey.100" }}>
-        <Collapse in={inactiveStatus}>
-          <Paper
-            elevation={2}
-            sx={{
-              p: 2,
-              mb: 2,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              flexDirection: "column",
-            }}
-          >
-            <ConcludedIcon icon={concludedText.icon} />
-            <Typography>{concludedText.label}</Typography>
-          </Paper>
-        </Collapse>
-        <Paper elevation={2} sx={{ p: 2 }}>
-          <Typography variant="h3" mb={1}>
-            Endereço de entrega
-          </Typography>
-          <Typography>{deliveryAddress}</Typography>
-          {!inactiveStatus && status == OrderStatus.SENDING && (
-            <Button
-              fullWidth
-              type="button"
-              variant="contained"
-              onClick={onConfirmClick}
-              size="large"
-              sx={{ mt: 2, textTransform: "none" }}
+        <Box width={["100%", "60%"]} mx={[0, "auto"]}>
+          <Collapse in={inactiveStatus}>
+            <Paper
+              elevation={2}
+              sx={{
+                p: 2,
+                mb: 2,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "column",
+              }}
             >
-              Confirmar entrega
-            </Button>
-          )}
-        </Paper>
-        <Paper elevation={2} sx={{ mt: 2, p: 2 }}>
-          <Typography variant="h3" mb={1}>
-            Detalhe do pedido
-          </Typography>
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            mb={1}
-          >
-            <Typography>Tipo de pagamento</Typography>
-            <Typography textAlign="end">
-              {translatePaymentType[paymentType]}
+              <ConcludedIcon icon={concludedText.icon} />
+              <Typography>{concludedText.label}</Typography>
+            </Paper>
+          </Collapse>
+          <Paper elevation={2} sx={{ p: 2 }}>
+            <Typography variant="h3" mb={1}>
+              Endereço de entrega
             </Typography>
-          </Box>
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Typography>Total</Typography>
-            <Typography>{totalFormat}</Typography>
-          </Box>
-          {!inactiveStatus && (
-            <Link
-              href={whatsappLink}
-              target="_blank"
-              underline="none"
+            <Typography>{deliveryAddress}</Typography>
+            {!inactiveStatus && status == OrderStatus.SENDING && (
+              <Button
+                fullWidth
+                type="button"
+                variant="contained"
+                onClick={onConfirmClick}
+                size="large"
+                sx={{ mt: 2, textTransform: "none" }}
+              >
+                Confirmar entrega
+              </Button>
+            )}
+          </Paper>
+          <Paper elevation={2} sx={{ mt: 2, p: 2 }}>
+            <Typography variant="h3" mb={1}>
+              Detalhe do pedido
+            </Typography>
+            <Box
               display="flex"
-              justifyContent="center"
+              justifyContent="space-between"
               alignItems="center"
-              mt={2}
-              color="green"
+              mb={1}
             >
-              <WhatsAppIcon sx={{ mr: 1 }} /> Falar pelo whatsapp
-            </Link>
-          )}
-        </Paper>
+              <Typography>Tipo de pagamento</Typography>
+              <Typography textAlign="end">
+                {translatePaymentType[paymentType]}
+              </Typography>
+            </Box>
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Typography>Total</Typography>
+              <Typography>{totalFormat}</Typography>
+            </Box>
+            {!inactiveStatus && (
+              <Link
+                href={whatsappLink}
+                target="_blank"
+                underline="none"
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                mt={2}
+                color="green"
+              >
+                <WhatsAppIcon sx={{ mr: 1 }} /> Falar pelo whatsapp
+              </Link>
+            )}
+          </Paper>
+        </Box>
       </Box>
     </>
   );

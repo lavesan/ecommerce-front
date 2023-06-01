@@ -64,6 +64,7 @@ const ChooseAddress = ({ onChoose }: IChooseAddressProps) => {
   const onDeleteAddressConfirm = async (address: IAddress) => {
     onCloseDeleteDialog();
 
+    setIsLoading(true);
     await addressService
       .delete(address.id)
       .then(async () => {

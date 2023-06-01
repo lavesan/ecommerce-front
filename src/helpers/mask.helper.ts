@@ -37,10 +37,10 @@ export const translatePaymentType = {
 };
 
 export const translateOrderStatus = {
-  [OrderStatus.CANCELED]: "Cancelado",
-  [OrderStatus.DELETED]: "Deletado",
+  [OrderStatus.CANCELED]: "Cancelada",
+  [OrderStatus.DELETED]: "Deletada",
   [OrderStatus.DOING]: "Fazendo",
-  [OrderStatus.DONE]: "Feito",
+  [OrderStatus.DONE]: "Feita",
   [OrderStatus.SENDING]: "Entregando",
   [OrderStatus.TO_APPROVE]: "A aprovar",
 };
