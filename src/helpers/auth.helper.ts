@@ -1,15 +1,21 @@
-const TOKEN_KEY = "17847468-188a-4978-a423-c1b2f2b49cd9tok";
+import { ICredentialsToken } from "@/models/context/ICredentialsToken";
 
-export const getStorageToken = () => {
-  return typeof localStorage !== "undefined"
-    ? localStorage.getItem(TOKEN_KEY)
-    : "";
+const TOKEN_KEY = "17847468-188a-4978-a423-c1b2f2b49cd9cred";
+
+export const getCredentialsToken = (): ICredentialsToken | null => {
+  if (typeof localStorage === "undefined") return null;
+
+  const storedCredentials = localStorage.getItem(TOKEN_KEY);
+
+  if (!storedCredentials) return null;
+
+  return JSON.parse(storedCredentials);
 };
 
-export const setStorageToken = (token: string) => {
-  localStorage.setItem(TOKEN_KEY, token);
+export const setCredentialsToken = (credentials: ICredentialsToken) => {
+  localStorage.setItem(TOKEN_KEY, JSON.stringify(credentials));
 };
 
-export const clearToken = () => {
+export const clearCredentials = () => {
   localStorage.removeItem(TOKEN_KEY);
 };

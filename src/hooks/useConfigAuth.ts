@@ -1,16 +1,17 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { IUserToken } from "@/models/context/IUserToken";
+import { ICredentialsToken } from "@/models/context/ICredentialsToken";
 import { IClient } from "@/models/entities/IClient";
 import {
-  clearToken,
-  getStorageToken,
-  setStorageToken,
+  clearCredentials,
+  getCredentialsToken,
+  setCredentialsToken,
 } from "@/helpers/auth.helper";
 import { googleLogout } from "@react-oauth/google";
 import { ClientService } from "@/services/client.service";
 import { ILoginUserParams } from "@/models/context/ILoginUserParams";
 import { useConfigApp } from "./useConfigApp";
+import { RefreshTokenService } from "@/services/refreshToken.service";
 
 export const useConfigAuth = ({
   setIsLoading,
@@ -19,9 +20,10 @@ export const useConfigAuth = ({
   "isLoading" | "toast" | "onToastClose"
 >) => {
   const clientService = ClientService.getInstance();
+  const refreshTokenService = RefreshTokenService.getInstance();
 
   const [user, setUser] = useState<null | IClient>(null);
-  const [token, setToken] = useState<null | IUserToken>(null);
+  const [token, setToken] = useState<null | ICredentialsToken>(null);
 
   const addresses = useMemo(() => {
     return user?.addresses || [];
@@ -30,7 +32,7 @@ export const useConfigAuth = ({
   const login = ({ client, credentials }: ILoginUserParams) => {
     setToken(credentials);
     setUser(client);
-    setStorageToken(credentials.accessToken);
+    setCredentialsToken(credentials);
   };
 
   const logout = () => {
@@ -42,18 +44,21 @@ export const useConfigAuth = ({
     googleLogout();
     setUser(null);
     setToken(null);
-    clearToken();
+    clearCredentials();
+    refreshTokenService.logout();
   };
 
-  const modifyToken = (token: string) => {
-    setStorageToken(token);
-    setToken({ accessToken: token, refreshToken: "" });
+  const modifyToken = (credentials: ICredentialsToken) => {
+    setCredentialsToken(credentials);
+    setToken(credentials);
   };
 
   const getMe = useCallback(async () => {
     try {
       const client = await clientService.findMe();
 
+      const storageCredentials = getCredentialsToken();
+      setToken(storageCredentials);
       setUser(JSON.parse(JSON.stringify(client)));
     } catch (err: any) {
       console.log("Deu pau no find me");
@@ -63,11 +68,9 @@ export const useConfigAuth = ({
   }, [clientService]);
 
   const onInit = useCallback(async () => {
-    const storageToken = getStorageToken();
+    const storageCredentials = getCredentialsToken();
 
-    if (storageToken) {
-      setToken({ accessToken: storageToken, refreshToken: "" });
-
+    if (storageCredentials) {
       getMe();
     }
   }, [getMe]);

@@ -1,8 +1,8 @@
 import React from "react";
 import { Box, Grid } from "@mui/material";
+
 import { useResponsive } from "@/hooks/useResponsive";
 import { useAppContext } from "@/hooks/useAppContext";
-import { Header } from "../Header";
 import { ReturnHeader } from "../ReturnStepLayout/ReturnHeader";
 
 export const UserLayout = ({ children }: React.PropsWithChildren) => {
@@ -14,7 +14,7 @@ export const UserLayout = ({ children }: React.PropsWithChildren) => {
       <ReturnHeader />
       <Grid
         container
-        spacing={[1, 4]}
+        spacing={[0, 4]}
         flex={1}
         minWidth="100vw"
         alignItems="center"
@@ -48,16 +48,14 @@ export const UserLayout = ({ children }: React.PropsWithChildren) => {
           display="flex"
           alignItems="center"
           height="fit-content"
+          padding={4}
           sx={
             isMobile
               ? {
                   backgroundColor: isDarkMode ? "grey.900" : "white",
                   borderRadius: 3,
-                  padding: 2,
                 }
-              : {
-                  paddingRight: 4,
-                }
+              : {}
           }
         >
           {children}

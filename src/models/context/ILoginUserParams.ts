@@ -1,7 +1,7 @@
 import { IClient } from "../entities/IClient";
-import { IUserToken } from "./IUserToken";
+import { ICredentialsToken } from "./ICredentialsToken";
 
 export interface ILoginUserParams {
   client: IClient;
-  credentials: IUserToken;
+  credentials: ICredentialsToken;
 }
