@@ -124,7 +124,15 @@ export const LoginUserForm = () => {
         label="Senha"
         type="password"
       />
-      <Button type="submit" variant="contained" size="large">
+      <MUILink
+        component={Link}
+        sx={{ textTransform: "none", textAlign: "end" }}
+        fontSize={16}
+        href="/esqueci-a-senha"
+      >
+        Esqueci minha senha
+      </MUILink>
+      <Button fullWidth type="submit" variant="contained" size="large">
         Submeter
       </Button>
       <Box display="flex" justifyContent="center">

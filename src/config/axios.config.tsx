@@ -31,6 +31,8 @@ const successResInterceptor = (response: AxiosResponse) => {
 };
 
 const errResInterceptor = (error: any) => {
+  console.log("error: ", error);
+
   return Promise.reject(error);
 };
 
