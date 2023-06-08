@@ -18,5 +18,6 @@ export const useTodayPromotionsQuery = () => {
     onSettled() {
       setIsLoading(false);
     },
+    refetchInterval: 10 * 60000,
   });
 };

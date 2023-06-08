@@ -53,6 +53,7 @@ export function AppSelect<IForm extends FieldValues>({
             value={value}
             name={name}
             onChange={onChange}
+            error={!!errorMsg}
           >
             {data.map(({ label, value }) => (
               <MenuItem key={`${label}_${value}`} value={value}>

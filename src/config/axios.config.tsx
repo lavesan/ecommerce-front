@@ -11,8 +11,6 @@ import axios, {
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from "axios";
-import { useAuthContext } from "@/hooks/useAuthContext";
-import { useEffect } from "react";
 
 let isRefreshing = false;
 let failedRequestsQueue: {

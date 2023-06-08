@@ -57,7 +57,7 @@ export const useFetchOrder = ({ orderId }: IUseFetchOrderParams) => {
     onSettled() {
       setIsLoading(false);
     },
-    refetchInterval: 2 * 60000,
+    refetchInterval: 1 * 60000,
     enabled,
   });
 };

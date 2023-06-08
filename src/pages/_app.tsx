@@ -28,7 +28,7 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-import { useRouter } from "next/router";
+
 import { BouncingDotsLoader } from "@/components/BouncingDotsLoader";
 import { ManageAddressModal } from "@/components/ManageAddress";
 import { AuthContext } from "@/context/AuthContext";
@@ -42,11 +42,11 @@ interface MyAppProps extends AppProps {
 }
 
 export default function MyApp(props: MyAppProps) {
-  const [queryClient] = React.useState(() => new QueryClient());
+  const [queryClient] = useState(() => new QueryClient());
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
 
   const { isLoading, toast, onToastClose, ...appConfig } = useConfigApp();
-  const authConfig = useConfigAuth(appConfig);
+  const authConfig = useConfigAuth();
   const checkoutConfig = useConfigCheckout(appConfig, authConfig);
 
   const materialTheme = useMemo(
@@ -54,7 +54,7 @@ export default function MyApp(props: MyAppProps) {
     [appConfig.themeMode]
   );
 
-  const router = useRouter();
+  // const router = useRouter();
 
   // const [loadingPage, setLoadingPage] = useState(false);
 

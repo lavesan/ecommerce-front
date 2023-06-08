@@ -1,10 +1,4 @@
-import {
-  forwardRef,
-  ForwardRefRenderFunction,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   InputAdornment,
   OutlinedInput,
@@ -96,6 +90,7 @@ export function AppInput<IForm extends FieldValues>({
             name={name}
             onChange={onChange}
             value={value}
+            error={!!errorMsg}
           />
           <Collapse in={!!errorMsg}>
             <Typography sx={{ color: "error.main" }}>

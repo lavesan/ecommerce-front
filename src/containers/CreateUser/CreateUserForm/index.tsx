@@ -128,7 +128,6 @@ export const CreateUserForm = () => {
         errorMsg={errors.cpf?.message}
         name="cpf"
         label="CPF"
-        variant="outlined"
       />
       <AppMaskedInput<IForm>
         fullWidth
@@ -137,7 +136,6 @@ export const CreateUserForm = () => {
         errorMsg={errors.phone?.message}
         name="phone"
         label="Celular"
-        variant="outlined"
         type="tel"
       />
       <AppInput<IForm>

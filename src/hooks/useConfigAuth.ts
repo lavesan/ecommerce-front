@@ -10,15 +10,9 @@ import {
 import { googleLogout } from "@react-oauth/google";
 import { ClientService } from "@/services/client.service";
 import { ILoginUserParams } from "@/models/context/ILoginUserParams";
-import { useConfigApp } from "./useConfigApp";
 import { RefreshTokenService } from "@/services/refreshToken.service";
 
-export const useConfigAuth = ({
-  setIsLoading,
-}: Omit<
-  ReturnType<typeof useConfigApp>,
-  "isLoading" | "toast" | "onToastClose"
->) => {
+export const useConfigAuth = () => {
   const clientService = ClientService.getInstance();
   const refreshTokenService = RefreshTokenService.getInstance();
 
@@ -36,6 +30,7 @@ export const useConfigAuth = ({
   };
 
   const logout = () => {
+    refreshTokenService.logout();
     // @ts-ignore
     if (window?.google?.accounts?.id?.revoke) {
       // @ts-ignore
@@ -45,7 +40,6 @@ export const useConfigAuth = ({
     setUser(null);
     setToken(null);
     clearCredentials();
-    refreshTokenService.logout();
   };
 
   const modifyToken = (credentials: ICredentialsToken) => {
@@ -62,8 +56,6 @@ export const useConfigAuth = ({
       setUser(JSON.parse(JSON.stringify(client)));
     } catch (err: any) {
       console.log("Deu pau no find me");
-    } finally {
-      setIsLoading(false);
     }
   }, [clientService]);
 

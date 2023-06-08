@@ -41,7 +41,9 @@ const Orders = () => {
   const { isMobile } = useResponsive();
 
   useEffect(() => {
-    const hasActiveOrders = activePages?.pages.every((page) => page.count > 0);
+    if (!activePages) return;
+
+    const hasActiveOrders = activePages.pages.every((page) => page.count > 0);
 
     if (!hasActiveOrders) {
       setFetchEnabled(false);

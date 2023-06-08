@@ -18,8 +18,12 @@ export const usePaginateOrders = ({
 
   const { setIsLoading } = useAppContext();
 
-  const fetchOrders = async ({ pageParam = 0 }) => {
-    return orderService.paginateMine({ size: 10, page: pageParam, isActive });
+  const fetchOrders = ({ pageParam = 0 }) => {
+    return orderService.paginateMine({
+      size: 10,
+      page: pageParam,
+      isActive,
+    });
   };
 
   return useInfiniteQuery({
@@ -30,7 +34,7 @@ export const usePaginateOrders = ({
     onSettled() {
       setIsLoading(false);
     },
-    refetchInterval: 2 * 60000,
+    refetchInterval: 1 * 60000,
     enabled,
   });
 };

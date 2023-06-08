@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { Typography } from "@mui/material";
+import { Typography, Box } from "@mui/material";
 
 import { useFetchOrder } from "@/hooks/fetch/useFetchOrder";
 import { Active } from "./Active";
@@ -44,7 +44,11 @@ const Order = () => {
       </>
     );
 
-  return <>{isActive ? <Active {...order} /> : <Inactive {...order} />}</>;
+  return (
+    <Box pb={4}>
+      {isActive ? <Active {...order} /> : <Inactive {...order} />}
+    </Box>
+  );
 };
 
 export default Order;

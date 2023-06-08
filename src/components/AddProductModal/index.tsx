@@ -1,4 +1,4 @@
-import { Modal, Backdrop } from "@mui/material";
+import { Modal, Backdrop, Box } from "@mui/material";
 import { AddProduct } from "../AddProduct";
 import { IEnterpriseMenuProduct } from "@/models/pages/IEnterpriseMenuProps";
 import { IEnterprise } from "@/models/entities/IEnterprise";
@@ -35,7 +35,9 @@ export const AddProductModal = ({
         },
       }}
     >
-      <AddProduct {...props} onSuccess={onClose} filled={filled} />
+      <Box>
+        <AddProduct {...props} onSuccess={onClose} filled={filled} />
+      </Box>
     </Modal>
   );
 };

@@ -139,7 +139,6 @@ const UserData = () => {
         errorMsg={errors.cpf?.message}
         name="cpf"
         label="CPF"
-        variant="outlined"
       />
       <AppMaskedInput<IForm>
         fullWidth
@@ -148,7 +147,6 @@ const UserData = () => {
         errorMsg={errors.phone?.message}
         name="phone"
         label="Celular"
-        variant="outlined"
         type="tel"
       />
       <AppInput<IForm>
