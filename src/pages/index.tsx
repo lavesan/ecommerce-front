@@ -1,12 +1,12 @@
 import { GetStaticProps } from "next";
+import { QueryClient, dehydrate } from "@tanstack/react-query";
 
-import { IHomeProps } from "@/models/pages/IHomeProps";
+import Home from "@/containers/Home";
+
 import { EnterpriseService } from "@/services/enterprise.service";
 import { AppLayout } from "@/components/AppLayout";
-import Home from "@/containers/Home";
 import { PromotionService } from "@/services/promotion.service";
 import { getWeekDay } from "@/helpers/date.helper";
-import { QueryClient, dehydrate } from "@tanstack/react-query";
 // import { Inter } from 'next/font/google'
 
 // const inter = Inter({ subsets: ['latin'] })

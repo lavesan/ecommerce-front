@@ -1,24 +1,25 @@
 import { GetStaticProps, GetStaticPaths } from "next";
 import { QueryClient, dehydrate } from "@tanstack/react-query";
 
-import { AppLayout } from "@/components/AppLayout";
 import EnterpriseMenu from "@/containers/EnterpriseMenu";
+
+import { AppLayout } from "@/components/AppLayout";
 import { EnterpriseService } from "@/services/enterprise.service";
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  // const enterpriseService = EnterpriseService.getInstance();
+  const enterpriseService = EnterpriseService.getInstance();
 
-  // const enterprises = await enterpriseService.findAll();
+  const enterprises = await enterpriseService.findAll();
 
-  // const paths = enterprises.map(({ id }) => ({
-  //   params: {
-  //     enterpriseId: id,
-  //   },
-  // }));
+  const paths = enterprises.map(({ id }) => ({
+    params: {
+      enterpriseId: id,
+    },
+  }));
 
   return {
-    paths: [],
-    fallback: "blocking",
+    paths,
+    fallback: true,
   };
 };
 
