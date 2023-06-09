@@ -18,11 +18,16 @@ import { elemCategoryId } from "@/helpers/category.helper";
 import { AddProductModal } from "@/components/AddProductModal";
 import { useResponsive } from "@/hooks/useResponsive";
 import { useRouter } from "next/router";
+import { useEnterpriseMenuQuery } from "@/hooks/fetch/useEnterpriseMenuQuery";
 
-const EnterpriseMenu = ({ menu }: IEnterpriseMenuProps) => {
+const EnterpriseMenu = () => {
   const { isMobile } = useResponsive();
 
   const router = useRouter();
+
+  const { data: menu } = useEnterpriseMenuQuery(
+    router.query.enterpriseId as string
+  );
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedProd, setSelectedProd] = useState<IEnterpriseMenuProduct>();
@@ -31,7 +36,7 @@ const EnterpriseMenu = ({ menu }: IEnterpriseMenuProps) => {
   let categoryRefs: HTMLDivElement[] = [];
 
   const openModal = (product: IEnterpriseMenuProduct) => {
-    if (isMobile) return router.push(`/produto/${menu.id}/${product.id}`);
+    if (isMobile) return router.push(`/produto/${menu?.id}/${product.id}`);
 
     setSelectedProd(product);
     setModalIsOpen(true);

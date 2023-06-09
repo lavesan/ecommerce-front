@@ -13,8 +13,10 @@ export interface IEnterpriseMenuCategory extends ICategory {
   products?: IEnterpriseMenuProduct[];
 }
 
+export type EnterpriseMenuFormattedType = IEnterprise & {
+  categories?: IEnterpriseMenuCategory[];
+};
+
 export interface IEnterpriseMenuProps {
-  menu: IEnterprise & {
-    categories?: IEnterpriseMenuCategory[];
-  };
+  menu: EnterpriseMenuFormattedType;
 }
