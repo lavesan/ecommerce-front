@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import {
   Card,
   CardMedia,
@@ -11,9 +11,10 @@ import {
 import Link from "next/link";
 import DeliveryDiningIcon from "@mui/icons-material/DeliveryDining";
 
-import { useResponsive } from "@/hooks/useResponsive";
 import { IEnterprise } from "@/models/entities/IEnterprise";
 import { getImgUrl } from "@/helpers/image.helper";
+import { useAppContext } from "@/hooks/useAppContext";
+import { enterpriseIsClosed } from "@/helpers/enterprise.helper";
 
 interface IEnterpriseCardProps extends MUILinkProps {
   enterprise: IEnterprise;
@@ -23,12 +24,17 @@ export const EnterpriseCard = ({
   enterprise,
   ...linkProps
 }: IEnterpriseCardProps) => {
-  const { isMobile } = useResponsive();
+  const { isDarkMode } = useAppContext();
 
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
 
   const imgRef = useRef<HTMLImageElement>(null);
+
+  const isClosed = useMemo(() => {
+    if (enterprise.isDisabled) return true;
+    return enterpriseIsClosed(enterprise);
+  }, [enterprise]);
 
   useEffect(() => {
     if (imgRef.current?.complete) setIsLoading(false);
@@ -52,6 +58,11 @@ export const EnterpriseCard = ({
           ":hover": {
             boxShadow: "1px 1px 8px gray",
           },
+          filter: isClosed
+            ? isDarkMode
+              ? "brightness(30%)"
+              : "brightness(80%)"
+            : "brightness(100%)",
         }}
       >
         {isLoading ? (

@@ -1,11 +1,15 @@
+import { useAppContext } from "@/hooks/useAppContext";
 import { Box, Skeleton, Stack, BoxProps } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 
 interface IBannerProps extends BoxProps {
   src: string;
+  isClosed: boolean;
 }
 
-export const Banner = ({ src, ...boxProps }: IBannerProps) => {
+export const Banner = ({ src, isClosed, ...boxProps }: IBannerProps) => {
+  const { isDarkMode } = useAppContext();
+
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
 
@@ -50,6 +54,11 @@ export const Banner = ({ src, ...boxProps }: IBannerProps) => {
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
+        filter: isClosed
+          ? isDarkMode
+            ? "brightness(30%)"
+            : "brightness(60%)"
+          : "brightness(100%)",
       }}
     />
   );

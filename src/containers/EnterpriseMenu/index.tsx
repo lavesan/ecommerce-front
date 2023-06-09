@@ -1,11 +1,11 @@
-import { useRef, useEffect, useState, useCallback } from "react";
-import { Stack, Typography, Box } from "@mui/material";
+import { useRef, useEffect, useState, useCallback, useMemo } from "react";
+import { Stack, Typography, Box, Button } from "@mui/material";
+import { useRouter } from "next/router";
 
 import { getImgUrl } from "@/helpers/image.helper";
 import {
   IEnterpriseMenuCategory,
   IEnterpriseMenuProduct,
-  IEnterpriseMenuProps,
 } from "@/models/pages/IEnterpriseMenuProps";
 import { Banner } from "./Banner";
 import { Logo } from "./Logo";
@@ -17,8 +17,9 @@ import { getOffset } from "@/helpers/document.helper";
 import { elemCategoryId } from "@/helpers/category.helper";
 import { AddProductModal } from "@/components/AddProductModal";
 import { useResponsive } from "@/hooks/useResponsive";
-import { useRouter } from "next/router";
 import { useEnterpriseMenuQuery } from "@/hooks/fetch/useEnterpriseMenuQuery";
+import { enterpriseIsClosed } from "@/helpers/enterprise.helper";
+import { formatSchedule, getWeekDay } from "@/helpers/date.helper";
 
 const EnterpriseMenu = () => {
   const { isMobile } = useResponsive();
@@ -34,6 +35,27 @@ const EnterpriseMenu = () => {
   const categoriesTabsRef = useRef<IUseCategoriesTabsRef>(null);
 
   let categoryRefs: HTMLDivElement[] = [];
+
+  const isClosed = useMemo(() => {
+    if (!menu) return true;
+    if (menu.isDisabled) return true;
+
+    return enterpriseIsClosed(menu);
+  }, [menu]);
+
+  const todaySchedule = useMemo(() => {
+    const todayWeekDay = getWeekDay();
+
+    return menu?.schedules?.find((sched) => sched.weekDay === todayWeekDay);
+  }, [menu]);
+
+  const scheduleFormatted = useMemo(() => {
+    if (!todaySchedule) return "";
+
+    const { from, to } = formatSchedule(todaySchedule);
+
+    return `${from} até ${to}`;
+  }, [todaySchedule]);
 
   const openModal = (product: IEnterpriseMenuProduct) => {
     if (isMobile) return router.push(`/produto/${menu?.id}/${product.id}`);
@@ -88,21 +110,46 @@ const EnterpriseMenu = () => {
   return (
     <Stack direction="column" spacing={{ xs: 1, sm: 2, md: 4 }}>
       <Box paddingX={4} marginBottom={[4, 0]}>
-        <Banner src={getImgUrl(menu.bannerKey)} width="100%" />
+        <Banner
+          isClosed={isClosed}
+          src={getImgUrl(menu.bannerKey)}
+          width="100%"
+        />
       </Box>
-      <Stack direction="row" alignItems="center" spacing={2} paddingX={4}>
-        <Logo src={getImgUrl(menu.imageKey)} />
-        <Typography variant="h2" fontSize="large" fontWeight="bold">
-          {menu.name}
-        </Typography>
-        {/* <Button
-          type="button"
-          size="large"
-          sx={{ marginLeft: "auto", textTransform: "none" }}
+      <Box
+        display="flex"
+        flexDirection={["column", "row"]}
+        justifyContent="space-between"
+        width="100%"
+        gap={2}
+        paddingX={4}
+      >
+        <Stack direction="row" alignItems="center" spacing={2}>
+          <Logo src={getImgUrl(menu.imageKey)} />
+          <Typography variant="h2" fontSize="large" fontWeight="bold">
+            {menu.name}
+          </Typography>
+        </Stack>
+        <Box
+          display="flex"
+          flexDirection="column"
+          justifyContent="center"
+          alignItems={["flex-start", "flex-end"]}
         >
-          Ver mais
-        </Button> */}
-      </Stack>
+          {isClosed && (
+            <Typography variant="body2">
+              <Box component="span" color="red">
+                Fechado
+              </Box>{" "}
+              - Pode fazer o pedido e ele será preparado assim que o restaurante
+              abrir
+            </Typography>
+          )}
+          <Typography variant="body2">
+            Horário de funcionamento: {scheduleFormatted}
+          </Typography>
+        </Box>
+      </Box>
       <CategoriesTabs ref={categoriesTabsRef} categories={menu.categories} />
       <Box paddingX={4} paddingBottom={4}>
         {menu.categories?.map((category, index) => (
