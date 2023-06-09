@@ -2,22 +2,35 @@ import { getWeekDay } from "@/helpers/date.helper";
 import { EnterpriseService } from "@/services/enterprise.service";
 import { useQuery } from "@tanstack/react-query";
 import { EnterpriseMenuFormattedType } from "@/models/pages/IEnterpriseMenuProps";
-import { IEnterprise } from "@/models/entities/IEnterprise";
 import { maskMoney } from "@/helpers/money.helper";
 import { IPromotionProduct } from "@/models/entities/IPromotionProduct";
 import { IPromotion } from "@/models/entities/IPromotion";
+import { useMemo } from "react";
+import { useFindAllPromotionsQuery } from "./useFindAllPromotionsQuery";
 
-export const useEnterpriseMenuQuery = (enterpriseId: string) => {
+interface IUseEnterpriseMenuQueryReturn {
+  result: EnterpriseMenuFormattedType | null;
+}
+
+export const useEnterpriseMenuQuery = (
+  enterpriseId: string
+): IUseEnterpriseMenuQueryReturn => {
   const enterpriseService = EnterpriseService.getInstance();
 
-  const fetchMenu = async (): Promise<EnterpriseMenuFormattedType> => {
-    const menu: IEnterprise = await enterpriseService.findMenu(enterpriseId);
+  const todayWeekDay = getWeekDay();
 
-    const todayWeekDay = getWeekDay();
+  const { data: promotions } = useFindAllPromotionsQuery({
+    weekDay: todayWeekDay,
+  });
 
-    const todayPromotions = menu.promotions?.filter(
-      ({ weekDay }) => weekDay === todayWeekDay
-    );
+  const { data: menu } = useQuery({
+    queryKey: ["menu", enterpriseId],
+    queryFn: () => enterpriseService.findMenu(enterpriseId),
+    refetchInterval: 10 * 60000,
+  });
+
+  const result = useMemo(() => {
+    if (!menu) return null;
 
     const mappedMenu = {
       ...menu,
@@ -29,7 +42,7 @@ export const useEnterpriseMenuQuery = (enterpriseId: string) => {
               let promoProduct: IPromotionProduct = {} as IPromotionProduct;
               let promotion: IPromotion = {} as IPromotion;
 
-              todayPromotions?.every(({ promotionProducts, ...promo }) => {
+              promotions?.every(({ promotionProducts, ...promo }) => {
                 return promotionProducts?.every((prodPromo) => {
                   if (prodPromo.product?.id === product.id) {
                     promoProduct = prodPromo;
@@ -52,11 +65,9 @@ export const useEnterpriseMenuQuery = (enterpriseId: string) => {
     };
 
     return mappedMenu;
-  };
+  }, [menu, promotions]);
 
-  return useQuery({
-    queryKey: ["menu", enterpriseId],
-    queryFn: fetchMenu,
-    refetchInterval: 10 * 60000,
-  });
+  return {
+    result,
+  };
 };

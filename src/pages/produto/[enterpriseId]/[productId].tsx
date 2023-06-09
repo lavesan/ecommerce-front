@@ -12,45 +12,46 @@ import { maskMoney } from "@/helpers/money.helper";
 import { IPromotionProduct } from "@/models/entities/IPromotionProduct";
 import { IEnterpriseMenuProduct } from "@/models/pages/IEnterpriseMenuProps";
 import { EnterpriseService } from "@/services/enterprise.service";
+import { QueryClient, dehydrate } from "@tanstack/react-query";
 
-interface IPathParams {
-  params: {
-    productId: string;
-    enterpriseId: string;
-  };
-}
+// interface IPathParams {
+//   params: {
+//     productId: string;
+//     enterpriseId: string;
+//   };
+// }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const enterpriseService = EnterpriseService.getInstance();
+  // const enterpriseService = EnterpriseService.getInstance();
 
-  const enterprises = await enterpriseService.findAllWithProducts();
+  // const enterprises = await enterpriseService.findAllWithProducts();
 
-  const paths: IPathParams[] = [];
+  // const paths: IPathParams[] = [];
 
-  enterprises.map(({ id: enterpriseId, categories }) => {
-    if (categories) {
-      const categoriesWithProducts = categories.filter(
-        (cat) => cat.products?.length
-      );
+  // enterprises.map(({ id: enterpriseId, categories }) => {
+  //   if (categories) {
+  //     const categoriesWithProducts = categories.filter(
+  //       (cat) => cat.products?.length
+  //     );
 
-      categoriesWithProducts.forEach(({ products }) => {
-        if (products) {
-          products.forEach(({ id: productId }) => {
-            paths.push({
-              params: {
-                productId,
-                enterpriseId,
-              },
-            });
-          });
-        }
-      });
-    }
-  });
+  //     categoriesWithProducts.forEach(({ products }) => {
+  //       if (products) {
+  //         products.forEach(({ id: productId }) => {
+  //           paths.push({
+  //             params: {
+  //               productId,
+  //               enterpriseId,
+  //             },
+  //           });
+  //         });
+  //       }
+  //     });
+  //   }
+  // });
 
   return {
-    paths,
-    fallback: true,
+    paths: [],
+    fallback: "blocking",
   };
 };
 
@@ -59,9 +60,9 @@ const defaultProps = {
 };
 
 // SSG
-export const getStaticProps: GetStaticProps<IProductProps> = async ({
-  params,
-}) => {
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  const queryClient = new QueryClient();
+
   const productService = ProductService.getInstance();
   const promotionService = PromotionService.getInstance();
   const enterpriseService = EnterpriseService.getInstance();
@@ -69,58 +70,40 @@ export const getStaticProps: GetStaticProps<IProductProps> = async ({
   // @ts-ignore
   const { productId, enterpriseId } = params;
 
-  const product: IProduct = await productService.findById(productId);
-
-  if (!product) {
-    return {
-      props: {
-        promotion: null,
-        product: null,
-        enterprise: null,
-      },
-      ...defaultProps,
-    };
-  }
-
   const todayWeekDay = getWeekDay();
 
-  const promotions = await promotionService.findAll({
-    weekDay: todayWeekDay,
-    enterpriseId,
-  });
+  await queryClient.prefetchQuery(["product", productId], () =>
+    productService.findById(productId)
+  );
 
-  let promotionProduct: IPromotionProduct | undefined;
+  await queryClient.prefetchQuery(
+    [
+      "promotions",
+      {
+        weekDay: todayWeekDay,
+        enterpriseId,
+      },
+    ],
+    () =>
+      promotionService.findAll({
+        weekDay: todayWeekDay,
+        enterpriseId,
+      })
+  );
 
-  const promotion =
-    promotions.find((promotion) => {
-      promotionProduct = promotion.promotionProducts?.find((prodPromo) => {
-        return prodPromo.product?.id === productId;
-      });
-
-      return !!promotionProduct;
-    }) || null;
-
-  const formattedProduct: IEnterpriseMenuProduct = {
-    ...product,
-    promotionId: promotion?.id || null,
-    promotionValue: promotionProduct?.value || null,
-    promotionValueFormat: maskMoney(promotionProduct?.value) || null,
-    valueFormat: maskMoney(product.value),
-  };
-
-  const enterprise = (await enterpriseService.findById(enterpriseId)) || null;
+  await queryClient.prefetchQuery(["enterprise", enterpriseId], () =>
+    enterpriseService.findById(enterpriseId)
+  );
 
   return {
     props: {
-      promotion,
-      enterprise,
-      product: formattedProduct,
+      dehydratedState: dehydrate(queryClient),
     },
     ...defaultProps,
   };
 };
 
-const ProductPage = (props: IProductProps) => {
+const ProductPage = (props: any) => {
   return (
     <ReturnStepLayout>
       <Product {...props} />

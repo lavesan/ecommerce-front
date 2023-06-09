@@ -4,11 +4,11 @@ import { OrderService } from "@/services/order.service";
 import { useAppContext } from "../useAppContext";
 import { ICheckoutProduct } from "@/models/checkout/ICheckoutProduct";
 import { orderProdToCheckoutProd } from "@/helpers/orderProdToCheckoutProd.helper";
-import { PromotionService } from "@/services/promotion.service";
 import { getWeekDay } from "@/helpers/date.helper";
 import { IOrder } from "@/models/entities/IOrder";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { isActiveOrder } from "@/constants/order.constants";
+import { useFindAllPromotionsQuery } from "./useFindAllPromotionsQuery";
 
 interface IUseFetchOrderParams {
   orderId: string;
@@ -20,7 +20,6 @@ export interface IUseFetchOrderData extends IOrder {
 
 export const useFetchOrder = ({ orderId }: IUseFetchOrderParams) => {
   const orderService = OrderService.getInstance();
-  const promotionService = PromotionService.getInstance();
 
   const { setIsLoading } = useAppContext();
 
@@ -28,36 +27,46 @@ export const useFetchOrder = ({ orderId }: IUseFetchOrderParams) => {
 
   const todayWeekDay = getWeekDay();
 
-  const fetchOrder = async (): Promise<IUseFetchOrderData> => {
-    const order = await orderService.findById(orderId);
-    const promotions = await promotionService.findAll({
-      weekDay: todayWeekDay,
-    });
+  const { data: promotions, isFetching } = useFindAllPromotionsQuery({
+    weekDay: todayWeekDay,
+  });
 
-    const checkoutProducts: ICheckoutProduct[] = orderProdToCheckoutProd(
-      order.orderProducts || [],
-      promotions
-    );
-
-    const isActive = isActiveOrder(order.status);
-
-    if (!isActive) {
-      setEnabled(false);
-    }
-
-    return {
-      ...order,
-      products: checkoutProducts || [],
-    };
-  };
-
-  return useQuery({
+  const { data: order } = useQuery({
     queryKey: ["order", orderId],
-    queryFn: fetchOrder,
+    queryFn: async () => {
+      const orderDb = await orderService.findById(orderId);
+
+      const isActive = isActiveOrder(orderDb.status);
+
+      if (!isActive) {
+        setEnabled(false);
+      }
+
+      return orderDb;
+    },
     onSettled() {
       setIsLoading(false);
     },
     refetchInterval: 1 * 60000,
     enabled,
   });
+
+  const result = useMemo(() => {
+    if (!promotions || !order) return null;
+
+    const checkoutProducts: ICheckoutProduct[] = orderProdToCheckoutProd(
+      order.orderProducts || [],
+      promotions
+    );
+
+    return {
+      ...order,
+      products: checkoutProducts || [],
+    };
+  }, [promotions, order]);
+
+  return {
+    result,
+    isFetching,
+  };
 };

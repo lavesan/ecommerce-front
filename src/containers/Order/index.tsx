@@ -17,7 +17,7 @@ const Order = () => {
   const [firstLoad, setFirstLoad] = useState(true);
   const [isActive, setIsActive] = useState(true);
 
-  const { data: order, isFetching } = useFetchOrder({
+  const { result: order, isFetching } = useFetchOrder({
     orderId: query.orderId as string,
   });
 

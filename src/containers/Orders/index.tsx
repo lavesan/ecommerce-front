@@ -4,14 +4,19 @@ import { SwiperSlide } from "swiper/react";
 
 import { OrderCard } from "./OrderCard";
 import { useResponsive } from "@/hooks/useResponsive";
-import { useTodayPromotionsQuery } from "@/hooks/fetch/useTodayPromotionsQuery";
 import { usePaginateOrders } from "@/hooks/fetch/usePaginateOrders";
 import { VerticalSlider } from "./VerticalSlider";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { useAppContext } from "@/hooks/useAppContext";
+import { getWeekDay } from "@/helpers/date.helper";
+import { useFindAllPromotionsQuery } from "@/hooks/fetch/useFindAllPromotionsQuery";
 
 const Orders = () => {
-  const { data: promotions } = useTodayPromotionsQuery();
+  const todayWeekDay = getWeekDay();
+
+  const { data: promotions } = useFindAllPromotionsQuery({
+    weekDay: todayWeekDay,
+  });
 
   const { user } = useAuthContext();
   const { setIsLoading } = useAppContext();

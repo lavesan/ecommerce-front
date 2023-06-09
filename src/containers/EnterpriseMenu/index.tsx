@@ -25,7 +25,7 @@ const EnterpriseMenu = () => {
 
   const router = useRouter();
 
-  const { data: menu } = useEnterpriseMenuQuery(
+  const { result: menu } = useEnterpriseMenuQuery(
     router.query.enterpriseId as string
   );
 
