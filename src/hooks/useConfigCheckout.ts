@@ -166,6 +166,7 @@ export const useConfigCheckout = (
       if (storedCheckout.products.length)
         setCheckoutEnterprise(storedCheckout.enterprise);
       else clearEnterprise();
+
       setCheckoutProducts(storedCheckout.products);
     }
   }, []);

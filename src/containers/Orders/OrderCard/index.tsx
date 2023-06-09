@@ -20,6 +20,7 @@ import { IPromotion } from "@/models/entities/IPromotion";
 import { orderProdToCheckoutProd } from "@/helpers/orderProdToCheckoutProd.helper";
 import { useAppContext } from "@/hooks/useAppContext";
 import { LinearProgressOrder } from "@/components/LinearProgressOrder";
+import { useEnterpriseMenuQuery } from "@/hooks/fetch/useEnterpriseMenuQuery";
 
 interface IOrderCardProps {
   order: IOrder;
@@ -76,7 +77,9 @@ export const OrderCard = ({
 }: IOrderCardProps) => {
   const { setCart, setAddress, openCheckout } = useCheckoutContext();
 
-  const { isDarkMode } = useAppContext();
+  const { result: menu } = useEnterpriseMenuQuery(order.enterprise?.id || "");
+
+  const { isDarkMode, showToast } = useAppContext();
 
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -89,9 +92,22 @@ export const OrderCard = ({
   const saveToCart = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
 
+    if (!menu)
+      return showToast({
+        status: "error",
+        message:
+          "Aconteceu um erro ao adicionar ao carrinho. Recarregue a página por favor.",
+      });
+
     if (order.enterprise && order.orderProducts && promotions) {
+      const onlyExistingProducts = order.orderProducts.filter((orderProd) => {
+        return menu.categories?.some((cat) =>
+          cat.products?.some((prod) => prod.id === orderProd.product?.id)
+        );
+      });
+
       const checkoutProducts: ICheckoutProduct[] = orderProdToCheckoutProd(
-        order.orderProducts,
+        onlyExistingProducts,
         promotions
       );
 
