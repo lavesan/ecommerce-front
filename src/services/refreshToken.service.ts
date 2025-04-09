@@ -3,11 +3,16 @@ import axios from "axios";
 import { server } from "@/config/axios.config";
 import { getCredentialsToken } from "@/helpers/auth.helper";
 import { ICredentialsToken } from "@/models/context/ICredentialsToken";
+import { BaseMockService } from "@/mocks/types/IMockService";
 
-export class RefreshTokenService {
+export class RefreshTokenService extends BaseMockService {
   private static INSTANCE: RefreshTokenService;
 
   async logout(): Promise<{ ok: boolean }> {
+    if (this.useMock()) {
+      return { ok: true }; // Simulando sucesso no logout
+    }
+
     const storedCredentials = getCredentialsToken();
 
     if (!storedCredentials) throw new Error("Não existe um token salvo");
@@ -24,6 +29,13 @@ export class RefreshTokenService {
   }
 
   async refresh(): Promise<ICredentialsToken> {
+    if (this.useMock()) {
+      return {
+        accessToken: "mock-jwt-token",
+        refreshToken: "mock-refresh-token",
+      }; // Simulando retorno do refresh token
+    }
+
     const storedCredentials = getCredentialsToken();
 
     if (!storedCredentials) throw new Error("Não existe um token salvo");

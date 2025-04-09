@@ -1,0 +1,32 @@
+import { IEnterprise } from "@/models/entities/IEnterprise";
+
+export const enterpriseMock: IEnterprise[] = [
+  {
+    id: "1",
+    email: "empresa@exemplo.com",
+    name: "Empresa Exemplo",
+    description: "Descrição da empresa",
+    cnpj: "12.345.678/0001-90",
+    cep: "01001-000",
+    estimatedTime: "30-45 min",
+    isDisabled: false,
+    phone: "11999999999",
+    street: "Rua Comercial",
+    complement: "Sala 10",
+    number: "1000",
+    district: "Centro",
+    state: "SP",
+    city: "São Paulo",
+    imageKey: "empresa-logo.jpg",
+    bannerKey: "empresa-banner.jpg",
+    created_at: new Date(),
+    updated_at: new Date(),
+    deleted_at: undefined,
+    categories: [],
+    orders: [],
+    freights: [],
+    promotions: [],
+    users: [],
+    schedules: [],
+  },
+];
